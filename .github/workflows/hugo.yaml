@@ -6,7 +6,7 @@ on:
     branches:
       - main  # 确保这里跟你的分支名一致，现在一般默认是 main
 
-workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: read
