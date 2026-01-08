@@ -3,6 +3,7 @@ languageCode = 'en-us'
 title = 'BlueArctic'
 theme = 'ananke'
 defaultContentLanguage = 'en'
+defaultContentLanguageInSubdir = true
 
 # 2. 社交链接 (会显示在每个页面底部)
 [params]
@@ -14,44 +15,44 @@ defaultContentLanguage = 'en'
     [markup.goldmark.renderer]
       unsafe = true
 
-# 3. 双语与菜单配置核心区
 [languages]
-  # --- 英文版设置 ---
+
   [languages.en]
     languageName = "English"
+    languageCode = "en-us"
     title = "BlueArctic"  # 左上角显示的网站名(建议短一点)
     weight = 1
-    contentDir = "content"
+    contentDir = "content/en"
 
-    # 英文菜单 (5个栏目)
     [[languages.en.menu.main]]
       name = "About Me"
-      url = "/about/"
+      url = "/en/about/"
       weight = 10
     [[languages.en.menu.main]]
       name = "Projects"
-      url = "/projects/"
+      url = "/en/projects/"
       weight = 20
     [[languages.en.menu.main]]
       name = "AI4S Literature"
-      url = "/literature/"
+      url = "/en/literature/"
       weight = 30
     [[languages.en.menu.main]]
       name = "AI4S Tutorial"
-      url = "/tutorial/"
+      url = "/en/tutorial/"
       weight = 40
     [[languages.en.menu.main]]
       name = "My Whisper"
-      url = "/whisper/"
+      url = "/en/whisper/"
       weight = 50
 
   # --- 中文版设置 ---
   [languages.zh]
     languageName = "中文"
-    title = "蓝极 BlueArctic" # 左上角显示的网站名
-    weight = 2
     languageCode = "zh-cn"
-
+    title = "蓝极" 
+    weight = 2
+    contentDir = "content/zh"
+    
     # 中文菜单 (对应上面的5个，但显示中文)
     [[languages.zh.menu.main]]
       name = "我是谁"

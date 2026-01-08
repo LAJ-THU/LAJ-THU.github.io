@@ -6,8 +6,8 @@
     <lastmod>2026-01-09T00:00:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tutorial/tamarind/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/tutorial/tamarind/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -19,8 +19,8 @@
     <lastmod>2026-01-09T00:00:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/ai4s/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/tags/ai4s/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -32,8 +32,8 @@
     <lastmod>2026-01-09T00:00:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tutorial/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/tutorial/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -45,8 +45,8 @@
     <lastmod>2026-01-09T00:00:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/protein-design/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/tags/protein-design/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -58,8 +58,8 @@
     <lastmod>2026-01-09T00:00:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -71,8 +71,8 @@
     <lastmod>2026-01-09T00:00:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/tutorial/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/tags/tutorial/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -80,25 +80,12 @@
                 href="http://localhost:1313/zh/tags/tutorial/"
                 />
   </url><url>
-    <loc>http://localhost:1313/zh/about/</loc>
+    <loc>http://localhost:1313/zh/</loc>
     <lastmod>2026-01-07T20:25:49+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/about/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-cn"
-                href="http://localhost:1313/zh/about/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/zh/</loc>
-    <lastmod>2026-01-07T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -106,11 +93,24 @@
                 href="http://localhost:1313/zh/"
                 />
   </url><url>
+    <loc>http://localhost:1313/zh/about/</loc>
+    <lastmod>2026-01-07T20:25:49+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en-us"
+                href="http://localhost:1313/en/about/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="http://localhost:1313/zh/about/"
+                />
+  </url><url>
     <loc>http://localhost:1313/zh/literature/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/literature/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/literature/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -121,8 +121,8 @@
     <loc>http://localhost:1313/zh/categories/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/categories/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -133,8 +133,8 @@
     <loc>http://localhost:1313/zh/projects/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/projects/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/projects/"
                 />
     <xhtml:link
                 rel="alternate"
@@ -145,8 +145,8 @@
     <loc>http://localhost:1313/zh/whisper/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/whisper/"
+                hreflang="en-us"
+                href="http://localhost:1313/en/whisper/"
                 />
     <xhtml:link
                 rel="alternate"
