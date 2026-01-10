@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>EvoBind2：基于蛋白质序列信息设计不同长度的线性与环状肽结合物 | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="深度解读 EvoBind2 方法：通过 AlphaFold2 与 AlphaFold-Multimer 联合驱动的序列优化策略，实现从纯序列到功能性肽结合物的直接设计，为无结构靶点的肽药开发与功能探针设计提供通用新路径。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="EvoBind2：基于蛋白质序列信息设计不同长度的线性与环状肽结合物">
+  <meta property="og:description" content="深度解读 EvoBind2 方法：通过 AlphaFold2 与 AlphaFold-Multimer 联合驱动的序列优化策略，实现从纯序列到功能性肽结合物的直接设计，为无结构靶点的肽药开发与功能探针设计提供通用新路径。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2025-07-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-09T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="Binder">
+    <meta property="article:tag" content="Peptide">
+    <meta property="article:tag" content="Peptide Drug">
+    <meta property="article:tag" content="Protein Design">
+    <meta property="article:tag" content="De Novo Design">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/cover.png">
+
+  <meta itemprop="name" content="EvoBind2：基于蛋白质序列信息设计不同长度的线性与环状肽结合物">
+  <meta itemprop="description" content="深度解读 EvoBind2 方法：通过 AlphaFold2 与 AlphaFold-Multimer 联合驱动的序列优化策略，实现从纯序列到功能性肽结合物的直接设计，为无结构靶点的肽药开发与功能探针设计提供通用新路径。">
+  <meta itemprop="datePublished" content="2025-07-09T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-07-09T00:00:00+00:00">
+  <meta itemprop="wordCount" content="255">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/cover.png">
+  <meta itemprop="keywords" content="EvoBind2,blind peptide design,sequence-based binder design,cyclic peptide design,linear peptide binder,AlphaFold-Multimer,adversarial filtering,AI4S">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/cover.png">
+  <meta name="twitter:title" content="EvoBind2：基于蛋白质序列信息设计不同长度的线性与环状肽结合物">
+  <meta name="twitter:description" content="深度解读 EvoBind2 方法：通过 AlphaFold2 与 AlphaFold-Multimer 联合驱动的序列优化策略，实现从纯序列到功能性肽结合物的直接设计，为无结构靶点的肽药开发与功能探针设计提供通用新路径。">
+
+	
+<meta name="keywords" content="EvoBind2, blind peptide design, sequence-based binder design, cyclic peptide design, linear peptide binder, AlphaFold-Multimer, adversarial filtering, AI4S">
+
+
+
+<meta name="description" content="深度解读 EvoBind2 方法：通过 AlphaFold2 与 AlphaFold-Multimer 联合驱动的序列优化策略，实现从纯序列到功能性肽结合物的直接设计，为无结构靶点的肽药开发与功能探针设计提供通用新路径。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/cover.png');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">EvoBind2：基于蛋白质序列信息设计不同长度的线性与环状肽结合物</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              深度解读 EvoBind2 方法：通过 AlphaFold2 与 AlphaFold-Multimer 联合驱动的序列优化策略，实现从纯序列到功能性肽结合物的直接设计，为无结构靶点的肽药开发与功能探针设计提供通用新路径。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        EvoBind2：基于蛋白质序列信息设计不同长度的线性与环状肽结合物
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2025-07-09T00:00:00Z">
+        七月 9, 2025
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p><img src="/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/images/image-4.png" alt=""></p>
+<p><strong>作者</strong>：Qiuzhen Li, Efstathios Nikolaos Vlachos, Patrick Bryant</p>
+<p><strong>单位</strong>：斯德哥尔摩大学 Wenner-Gren研究所 &amp; Science for Life Laboratory</p>
+<p><strong>预印本链接</strong>：<a href="https://doi.org/10.1101/2024.06.20.599739">https://doi.org/10.1101/2024.06.20.599739</a></p>
+<hr>
+<p><img src="/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/images/image-1.png" alt=""></p>
+<h2 id="一研究背景"><strong>一、研究背景</strong></h2>
+<p>蛋白质的结构预测已因AlphaFold等AI技术取得突破性进展。然而，<strong>如何从序列信息直接设计具有功能（如结合能力）的蛋白质或肽分子</strong>，仍然是合成生物学和蛋白质工程中的重大挑战。</p>
+<p>传统的结合物设计依赖于：</p>
+<ul>
+<li>
+<p>靶标蛋白的<strong>三维结构</strong></p>
+</li>
+<li>
+<p>已知的<strong>结合位点</strong></p>
+</li>
+<li>
+<p>事先定义的<strong>肽长度</strong>或<strong>骨架模板</strong></p>
+</li>
+</ul>
+<p>这种依赖限制了新靶点的开发和筛选能力。为了解决这个问题，本文提出了一个<strong>“盲设计”策略（EvoBind2)</strong>，即在<strong>没有</strong>结构或靶点位置信息的情况下，直接从序列设计肽类结合分子。</p>
+<hr>
+<h2 id="二与传统方法的对比"><strong>二、与传统方法的对比</strong></h2>
+<p><img src="/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/images/image-5.png" alt=""></p>
+<h4 id="-核心创新点"><strong>🔍 核心创新点</strong></h4>
+<ol>
+<li><strong>全盲设计（Blind Design）能力：</strong></li>
+</ol>
+<p>EvoBind2是目前首个实现无需结构、位点、模板信息、即可全自动生成肽结合物的系统。</p>
+<ul>
+<li><strong>结构预测+进化优化联动：</strong></li>
+</ul>
+<p>通过结构预测驱动序列迭代，结合预测可信度和几何距离进行优化，增强设计合理性。</p>
+<ul>
+<li><strong>对抗性过滤机制：</strong></li>
+</ul>
+<p>引入AlphaFold-Multimer辅助交叉验证，有效剔除“高评分但不真实结合”的序列。</p>
+<hr>
+<h2 id="三无结构输入设计的科学难点与意义">三、“无结构输入设计”的科学难点与意义</h2>
+<h4 id="-科学难点"><strong>🧩 科学难点</strong></h4>
+<h5 id="1-缺乏结构信息导致搜索空间极大"><strong>1.</strong> <strong>缺乏结构信息导致搜索空间极大</strong></h5>
+<ul>
+<li>
+<p>在没有已知结构或结合位点指导的情况下，肽设计必须<strong>同时决定肽的位置、结构与序列</strong>，这使得设计空间呈指数级增长（20^L 种序列 + 无限种结构构象）。</p>
+</li>
+<li>
+<p>对于传统方法而言，这相当于在没有地图的情况下寻找目标。</p>
+</li>
+</ul>
+<h5 id="2-无共进化信息降低预测可靠性"><strong>2.</strong> <strong>无共进化信息，降低预测可靠性</strong></h5>
+<ul>
+<li>
+<p>AlphaFold2 等工具在结构预测上依赖于多序列比对（MSA）中的<strong>共进化信号</strong>。</p>
+</li>
+<li>
+<p>设计新肽时，仅有目标蛋白序列，缺乏MSA背景，这导致结构预测准确性下降。</p>
+</li>
+</ul>
+<h5 id="3-高评分真实结合对抗性设计问题"><strong>3.</strong> <strong>高评分≠真实结合：对抗性设计问题</strong></h5>
+<ul>
+<li>
+<p>AI模型可能“过拟合”某些结构特征，生成“看起来可信”的但实际上无功能的序列（即“adversarial designs”）。</p>
+</li>
+<li>
+<p>判断哪些预测结果是“假阳性”非常困难，需要额外机制避免模型欺骗。</p>
+</li>
+</ul>
+<h5 id="4-评估标准缺失"><strong>4.</strong> <strong>评估标准缺失</strong></h5>
+<ul>
+<li>传统的评分标准如 plDDT、interface RMSD 等，在这种完全盲设计中<strong>难以预测真实亲和力</strong>，缺少可靠的后验验证机制。</li>
+</ul>
+<h4 id="-科学意义与潜力"><strong>🌟 科学意义与潜力</strong></h4>
+<h5 id="1-摆脱结构依赖解放设计范围"><strong>1.</strong> <strong>摆脱结构依赖，解放设计范围</strong></h5>
+<ul>
+<li>绝大多数天然蛋白无已解析结构，EvoBind2 的方法可用于<strong>任意蛋白靶点</strong>，极大拓宽设计空间，推动生物工程的“结构自由化”。</li>
+</ul>
+<h5 id="2-实现从功能导向而非结构导向的设计"><strong>2.</strong> <strong>实现从“功能导向”而非“结构导向”的设计</strong></h5>
+<ul>
+<li>传统设计路径是“结构→功能”，而EvoBind2探索“序列→功能”，更贴近生物自然进化机制。</li>
+</ul>
+<h5 id="3-推进通用蛋白药物开发平台"><strong>3.</strong> <strong>推进通用蛋白药物开发平台</strong></h5>
+<ul>
+<li>EvoBind2使得<strong>无需结构就能设计潜在结合物药物</strong>成为可能，为靶点验证、疫苗设计、抗体工程等提供新工具。</li>
+</ul>
+<h5 id="4-推动蛋白ai模型的交叉验证机制发展"><strong>4.</strong> <strong>推动蛋白AI模型的交叉验证机制发展</strong></h5>
+<ul>
+<li>本研究引入AlphaFold-Multimer作为“第二判断者”，为AI预测建立了对抗过滤思路，这对未来蛋白AI模型的“可信度体系”建设具有示范作用。</li>
+</ul>
+<hr>
+<h2 id="三方法概述evobind2-设计框架"><strong>三、方法概述：EvoBind2 设计框架</strong></h2>
+<p><img src="/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/images/image-2.png" alt=""></p>
+<ol>
+<li><strong>核心技术</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>EvoBind2：</strong> 一个基于AlphaFold2和AlphaFold-Multimer的AI设计平台</p>
+</li>
+<li>
+<p><strong>输入：</strong> 目标蛋白的氨基酸序列</p>
+</li>
+<li>
+<p><strong>输出：</strong> 具有预测高亲和力的线性或环状肽结合物（长度8–20残基）</p>
+</li>
+<li>
+<p><strong>优化策略</strong></p>
+</li>
+</ul>
+<ul>
+<li>利用（1）结构预测可信度（plDDT）+ （2）肽与蛋白距离最小化的损失函数进行迭代优化</li>
+</ul>
+<p>$$
+\text{Loss 1} = \left(\text{peptide } plDDT^{-1}\right) \cdot \left( \frac{1}{n} \sum_{j=1}^{n} d_j \right)</p>
+<p>$$</p>
+<ul>
+<li>使用AlphaFold-Multimer辅助验证，避免生成虚假高评分但不结合的肽序列</li>
+</ul>
+<p>$$\text{Loss 2} = \left( \text{peptide } plDDT^{-1} \right) \cdot \left( \frac{1}{m} \sum_{i=1}^{m} d_i + \frac{1}{n} \sum_{j=1}^{n} d_j \right) \cdot \frac{1}{2} \cdot \Delta COM$$</p>
+<ul>
+<li>
+<p><strong>$$\text{peptide} \ plDDT^{-1}$$</strong>: 预测肽链的平均可信度（plDDT）的倒数，可信度越高，该项越小（更优）</p>
+</li>
+<li>
+<p>$$\frac{1}{m} \sum_{i=1}^{m} d_i$$ : 设计中肽原子与靶蛋白关键位点之间的平均最短距离</p>
+</li>
+<li>
+<p>$$\frac{1}{n} \sum_{j=1}^{n} d_j$$: 设计肽与整体蛋白界面的平均距离</p>
+</li>
+<li>
+<p>$$\frac{1}{2}$$:  权重因子，标准化整个损失值</p>
+</li>
+<li>
+<p>$$\Delta COM$$: EvoBind2中的AF2 和 AFM 预测中肽链质心（center of mass）之间的偏差，表示两个模型对结构的预测一致性</p>
+</li>
+<li>
+<p><strong>Cyclic offset 技术</strong></p>
+</li>
+</ul>
+<ul>
+<li>支持设计<strong>“头尾环化”</strong>的环状肽，提高稳定性与细胞膜穿透性</li>
+</ul>
+<blockquote>
+<p><em>To design cyclic binders, we implement a cyclic offset informing the structure prediction network to connect the peptide amino acids in a continuous cycle. This feature is called the relative positional encoding in the AlphaFold2 and AlphaFold-multimer networks</em></p>
+</blockquote>
+<p> 在 AlphaFold 的结构推理过程中，每个残基对的空间关系都受到“相对位置信息”影响。作者在这个过程中引入了一个“环化偏移量（cyclic offset）”，让网络<strong>认为序列的起始和终止残基是邻近的</strong>，即构造出“闭环”的结构。</p>
+<hr>
+<h2 id="四实验验证与结果"><strong>四、实验验证与结果</strong></h2>
+<h3 id="1-实验设置">1. <strong>实验设置</strong></h3>
+<ul>
+<li>
+<p>靶蛋白：半合成核糖核酸酶（PDB ID: 1SSC），具有已知的肽结合能力</p>
+</li>
+<li>
+<p>设计并合成13种不同长度（8–20残基）的线性肽，每个长度选取 一个得分最优的序列。</p>
+</li>
+<li>
+<p>使用SPR（表面等离子共振）测试亲和力，使用 Biacore 8K 设备进行结合动力学测试，测得结合常数 $$K_d$$。</p>
+</li>
+</ul>
+<h3 id="2-实验结果">2. <strong>实验结果</strong></h3>
+<table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>数值/说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>测试的线性肽数量</td>
+          <td>13条</td>
+      </tr>
+      <tr>
+          <td>显示有效结合的肽</td>
+          <td>6条（约46%成功率）</td>
+      </tr>
+      <tr>
+          <td>最强结合肽Kd</td>
+          <td><strong>19nM</strong> （远低于正对照的35nM）</td>
+      </tr>
+      <tr>
+          <td>最弱有效肽Kd</td>
+          <td><strong>7.93uM</strong></td>
+      </tr>
+      <tr>
+          <td>正对照肽Kd(已知序列）</td>
+          <td>35nm</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="-附加实验对抗性验证"><strong>🔍 附加实验：对抗性验证</strong></h4>
+<ul>
+<li>
+<p>比较 EvoBind2 与 AlphaFold-Multimer 预测不一致的序列（疑似“欺骗性设计”）：</p>
+<ul>
+<li>
+<p>仅有 <strong>2/13 条对抗性序列显示结合</strong>；</p>
+</li>
+<li>
+<p>与此同时，在 EvoBind2 与 AFM <strong>均同意</strong>的设计中，成功率是 <strong>6/13</strong>；</p>
+</li>
+<li>
+<p>说明引入 AFM 检查可 <strong>将成功率提高约三倍</strong>。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/images/image-3.png" alt="肽长度与亲和力（Kd)关系"></p>
+<p><img src="/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/images/image.png" alt="
+Kd 与各种 in silico 评分指标的相关性"></p>
+<h4 id="环状肽初步结果"><strong>环状肽初步结果</strong></h4>
+<ul>
+<li>
+<p>使用相同输入设计环状肽，<strong>结构预测成功</strong></p>
+</li>
+<li>
+<p>尚未进行实验验证，但理论上可行</p>
+</li>
+</ul>
+<hr>
+<h2 id="五关键结论与意义"><strong>五、关键结论与意义</strong></h2>
+<ul>
+<li>
+<p>EvoBind2能从<strong>纯序列信息</strong>设计出功能性结合肽，无需结构模板或靶点知识</p>
+</li>
+<li>
+<p>提供了一个快速、高效、可扩展的蛋白靶点设计方案</p>
+</li>
+<li>
+<p><strong>对抗性验证机制</strong>将设计成功率提升至3倍（从约15%提高到46%）</p>
+</li>
+<li>
+<p>为<strong>新药开发、生物探针设计、蛋白功能研究</strong>提供了新途径</p>
+</li>
+</ul>
+<hr>
+<h2 id="六局限与展望"><strong>六、局限与展望</strong></h2>
+<h3 id="当前限制"><strong>当前限制：</strong></h3>
+<ul>
+<li>
+<p>无法通过预测分数精确区分nM和μM级亲和力</p>
+</li>
+<li>
+<p>仍需实验验证环状肽功能</p>
+</li>
+</ul>
+<h3 id="未来方向"><strong>未来方向：</strong></h3>
+<ul>
+<li>
+<p>融合更多物理-化学特征提升预测准确度</p>
+</li>
+<li>
+<p>推广至复杂靶标、膜蛋白、多肽复合物等</p>
+</li>
+</ul>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/qsf4zYpsOS6TBoyeH7OKig"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/binder/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Binder</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/peptide/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Peptide</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/peptide-drug/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Peptide Drug</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/de-novo-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">De Novo Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/alphafold/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Alphafold</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/biorxiv/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">BioRxiv</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

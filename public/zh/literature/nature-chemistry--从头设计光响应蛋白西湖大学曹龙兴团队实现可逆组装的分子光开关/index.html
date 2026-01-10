@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Nature Chemistry｜从头设计光响应蛋白：实现可逆组装的分子“光开关” | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="深度解读 Nature Chemistry 工作：结合计算蛋白设计、遗传密码扩展与非天然氨基酸工程，构建出可被光精准调控的同源寡聚体与异源二聚体，并成功应用于光控水凝胶与细胞信号系统，展示出高度可编程的分子级控制能力。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="Nature Chemistry｜从头设计光响应蛋白：实现可逆组装的分子“光开关”">
+  <meta property="og:description" content="深度解读 Nature Chemistry 工作：结合计算蛋白设计、遗传密码扩展与非天然氨基酸工程，构建出可被光精准调控的同源寡聚体与异源二聚体，并成功应用于光控水凝胶与细胞信号系统，展示出高度可编程的分子级控制能力。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-02T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="De Novo Design">
+    <meta property="article:tag" content="Protein Engineering">
+    <meta property="article:tag" content="Optogenetics">
+    <meta property="article:tag" content="Synthetic Biology">
+    <meta property="article:tag" content="Protein Assembly">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/cover.png">
+
+  <meta itemprop="name" content="Nature Chemistry｜从头设计光响应蛋白：实现可逆组装的分子“光开关”">
+  <meta itemprop="description" content="深度解读 Nature Chemistry 工作：结合计算蛋白设计、遗传密码扩展与非天然氨基酸工程，构建出可被光精准调控的同源寡聚体与异源二聚体，并成功应用于光控水凝胶与细胞信号系统，展示出高度可编程的分子级控制能力。">
+  <meta itemprop="datePublished" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-02T00:00:00+00:00">
+  <meta itemprop="wordCount" content="296">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/cover.png">
+  <meta itemprop="keywords" content="light-responsive protein,azobenzene amino acid,non-canonical amino acid,AzoF,reversible protein assembly,optogenetic protein design,protein–protein interaction design,AI4S">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/cover.png">
+  <meta name="twitter:title" content="Nature Chemistry｜从头设计光响应蛋白：实现可逆组装的分子“光开关”">
+  <meta name="twitter:description" content="深度解读 Nature Chemistry 工作：结合计算蛋白设计、遗传密码扩展与非天然氨基酸工程，构建出可被光精准调控的同源寡聚体与异源二聚体，并成功应用于光控水凝胶与细胞信号系统，展示出高度可编程的分子级控制能力。">
+
+	
+<meta name="keywords" content="light-responsive protein, azobenzene amino acid, non-canonical amino acid, AzoF, reversible protein assembly, optogenetic protein design, protein–protein interaction design, AI4S">
+
+
+
+<meta name="description" content="深度解读 Nature Chemistry 工作：结合计算蛋白设计、遗传密码扩展与非天然氨基酸工程，构建出可被光精准调控的同源寡聚体与异源二聚体，并成功应用于光控水凝胶与细胞信号系统，展示出高度可编程的分子级控制能力。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/cover.png');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">Nature Chemistry｜从头设计光响应蛋白：实现可逆组装的分子“光开关”</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              深度解读 Nature Chemistry 工作：结合计算蛋白设计、遗传密码扩展与非天然氨基酸工程，构建出可被光精准调控的同源寡聚体与异源二聚体，并成功应用于光控水凝胶与细胞信号系统，展示出高度可编程的分子级控制能力。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        Nature Chemistry｜从头设计光响应蛋白：实现可逆组装的分子“光开关”
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2025-09-02T00:00:00Z">
+        九月 2, 2025
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <h2 id="蓝极说"><strong>蓝极说：</strong></h2>
+<p>在生命世界里，光不仅仅是能量的来源，更是一种无处不在的信息信号。植物通过光来判断昼夜、季节；动物的视觉系统依赖光来感知环境；甚至细菌也能利用光来调控行为。支撑这一切的，就是 <strong>光响应蛋白</strong> ——它们能够感知光照，发生构象变化，并进一步触发一系列生命过程。</p>
+<p>近年来，科学家们发现，如果能把光当作“开关”，用它来控制蛋白功能，就能实现对生命活动的 <strong>精准、可逆、无创调节</strong>。这也是光遗传学（optogenetics）兴起的根源。比如常用的 LOV 域、phytochrome，都已经成为光控工具箱里的明星分子。</p>
+<p>但是，这些天然光受体有一个共性：<strong>它们的架构和机制，受限于进化赋予的天然功能</strong>。这意味着，如果我们想要设计出结构更小、更稳定，或者可以执行全新任务的光控蛋白，仅仅改造天然蛋白远远不够。</p>
+<p>于是，问题来了：能否<strong>从零开始（de novo）设计一种全新的光响应蛋白</strong>，既能在特定光照下组装，又能在另一波长光照下解离？</p>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-9.png" alt=""></p>
+<p>这正是曹龙兴老师团队在刚发表（2025.08.28）在<strong>Nature Chemistry</strong>上的《<strong>De novo design of light-responsive protein–protein interactions enables reversible formation of protein assemblies</strong>》这篇文章中要回答的核心问题。</p>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-4.png" alt=""></p>
+<hr>
+<h2 id="第二部分设计策略核心创新"><strong>第二部分：设计策略（核心创新）</strong></h2>
+<p>如果说第一部分是提出问题，那么这一部分就是作者团队给出的“解题思路”。</p>
+<blockquote>
+<p><strong>关键词有三个：非天然氨基酸 AzoF、遗传密码扩展、计算机设计。</strong></p>
+</blockquote>
+<p>首先，作者团队选择了一种“光开关”——<strong>phenylalanine-4′-azobenzene（AzoF）</strong>。</p>
+<p>AzoF 的特别之处在于，它的分子里有一个 <strong>偶氮苯基团</strong>，在 340 nm 紫外光下会从稳定的 <strong>trans 构象</strong>翻转成 <strong>cis 构象</strong>，而在 420 nm 光照或加热时，又能恢复到 trans 状态。这就好比是一个分子级别的“开关按钮”。</p>
+<p>接着，研究团队借助 <strong>遗传密码扩展技术</strong>，把 AzoF 精确地嵌入蛋白界面上。这样，蛋白的组装和解离就完全取决于 AzoF 的构象：</p>
+<ul>
+<li>
+<p><strong>trans 构象</strong>：AzoF 体积小巧，能与邻近残基形成紧密疏水作用，帮助蛋白界面“咬合”在一起；</p>
+</li>
+<li>
+<p><strong>cis 构象</strong>：AzoF 变得弯折，产生空间冲突（steric clash），迫使蛋白界面解离。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-3.png" alt=""></p>
+<p>最后，为了确保这一策略能够真正奏效，团队开发了一整套 <strong>计算机辅助设计流程</strong>（Fig. 1b）：</p>
+<ol>
+<li>
+<p>先生成一批三、四螺旋束的蛋白骨架（scaffold）；</p>
+</li>
+<li>
+<p>再在界面位置尝试“植入”AzoF，并快速评估它在 trans 和 cis 构象下的能量与空间匹配情况；</p>
+</li>
+<li>
+<p>通过蒙特卡洛搜索 + Rosetta + ProteinMPNN 等工具，优化氨基酸序列，确保在 trans 下界面稳定，在 cis 下则产生强烈冲突。</p>
+</li>
+</ol>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-6.png" alt=""></p>
+<p>这套流程有一个很巧妙的点：他们不是随意把 AzoF 放进去，而是 <strong>在设计阶段就让 AzoF 的空间需求参与“筛选”</strong>。这样保证最终的蛋白既能在暗态下稳固组装，又能在光照下可逆解离。</p>
+<blockquote>
+<p>换句话说，<strong>这是一次真正意义上的“分子开关内置化”设计</strong>。</p>
+</blockquote>
+<hr>
+<h2 id="第三部分从设计到验证homo-oligomer-的成果"><strong>第三部分：从设计到验证（homo-oligomer 的成果）</strong></h2>
+<p>设计只是第一步，能不能真的工作，才是检验的关键。</p>
+<p>曹龙兴老师团队首先把他们的方法应用在了 <strong>环状同源寡聚体（cyclic homo-oligomers）</strong> 上，包括二聚体（C2）、三聚体（C3）、四聚体（C4）和五聚体（C5）。</p>
+<p>他们一共设计并测试了 200 多个构型，最后有十几个表现出了 <strong>明显的光响应特性</strong>。</p>
+<p>最典型的例子包括：</p>
+<ul>
+<li>
+<p><strong>LRO-C2-5（二聚体）</strong></p>
+</li>
+<li>
+<p><strong>LRO-C3-7（三聚体）</strong></p>
+</li>
+<li>
+<p><strong>LRO-C4-13（四聚体）</strong></p>
+</li>
+<li>
+<p>这些蛋白在 340 nm 光照下能够几乎完全解离成单体，而再照射 420 nm 光，就能恢复到原本的寡聚状态。</p>
+</li>
+<li>
+<p>这种“可逆组装 ↔ 解离”的效果，就像是一个分子级别的“呼吸循环”。</p>
+</li>
+</ul>
+<p>更令人惊艳的是，团队对这些设计的晶体结构进行了测定（Fig. 2a–b）。</p>
+<p>结果发现：实验解析的结构和计算机模型几乎 <strong>原子级别吻合</strong>，Cα 的均方根偏差（r.m.s.d.）在 1~1.5 Å 左右。这说明，不仅思路可行，<strong>设计的精度也达到了非常高的水平</strong>。</p>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-8.png" alt=""></p>
+<p>在生物物理层面，他们用 <strong>SEC（凝胶过滤色谱）</strong>和 <strong>AUC（分析超速离心）</strong>进一步验证了光响应行为（Fig. 2c–d）：</p>
+<ul>
+<li>
+<p>在 trans 构象下，蛋白维持在设计好的多聚体状态；</p>
+</li>
+<li>
+<p>在 cis 构象下，蛋白解离为单体；</p>
+</li>
+<li>
+<p>重复光照循环依然能保持稳定的可逆性。</p>
+</li>
+</ul>
+<p>其中一个例子，<strong>LRO-C5-1（五聚体）</strong>，在解离后会部分聚成不规则的复合物。作者分析这是因为它的界面太疏水，解离后容易自发结合。但整体来说，这也揭示了 <strong>设计界面疏水性与光响应效率之间的联系</strong>。</p>
+<blockquote>
+<p>总结来说，这部分验证了两个关键点：</p>
+<ol>
+<li>
+<p><strong>从头设计的光控蛋白是真的能工作</strong>；</p>
+</li>
+<li>
+<p><strong>设计模型与实际结构高度一致</strong>，证明计算设计的可靠性。</p>
+</li>
+</ol>
+</blockquote>
+<hr>
+<h2 id="第四部分异源二聚体的突破heterodimer"><strong>第四部分：异源二聚体的突破（heterodimer）</strong></h2>
+<p>在生物学研究和合成生物学应用中，不同蛋白之间的 <strong>特异性结合</strong> 往往比同源寡聚更有用。比如，研究者常常需要在细胞内精确地把两个不同的功能模块拉到一起。</p>
+<p>为此，曹龙兴老师团队将他们的策略扩展到了 <strong>异源二聚体（heterodimer）</strong> 的设计。</p>
+<p>设计思路是这样的：</p>
+<ul>
+<li>
+<p>其中一条链携带 <strong>AzoF（记作 LRD-XA）</strong>，负责光响应；</p>
+</li>
+<li>
+<p>另一条链则是普通氨基酸序列（记作 LRD-XV），提供配对界面。</p>
+</li>
+<li>
+<p>这对组合就像“钥匙和锁”，但开锁与否完全取决于光照。</p>
+</li>
+</ul>
+<p>经过实验筛选，他们得到了几个表现优异的设计，例如 <strong>LRD-2、LRD-7、LRD-10</strong>。</p>
+<p>实验结果显示（Fig. 3c）：</p>
+<ul>
+<li>
+<p>在暗态（trans 构象）下，异源二聚体结合紧密；</p>
+</li>
+<li>
+<p>在 340 nm 光照后，二聚体迅速解离；</p>
+</li>
+<li>
+<p>再用 420 nm 光，就能恢复原本的结合状态。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-7.png" alt=""></p>
+<p>更关键的是，团队用 <strong>生物层干涉技术（BLI）</strong> 测量了亲和力（Fig. 3d–e）：</p>
+<ul>
+<li>
+<p>这些异源二聚体在暗态下亲和力高（纳摩尔级）；</p>
+</li>
+<li>
+<p>光照后，亲和力下降最高可达 <strong>167 倍（LRD-7）</strong>；</p>
+</li>
+<li>
+<p>这种变化完全可逆，可以在多轮光照循环中稳定重复。</p>
+</li>
+</ul>
+<p>晶体结构进一步证实了 AzoF 的关键作用（Fig. 3a–b）。</p>
+<p>比如在 <strong>LRD-7</strong> 的结构中，偶氮苯的两个苯环甚至能在电子密度图中被清晰分辨出来，和设计模型高度吻合。</p>
+<p>另外，团队还测试了特异性（Fig. 3f）：</p>
+<ul>
+<li>
+<p>每个 AzoF 链只与对应的 vanilla 链结合；</p>
+</li>
+<li>
+<p>不会“串门”结合到其他设计。</p>
+</li>
+<li>
+<p>这种“只认自己对象”的特性，使得这些光控异源二聚体 <strong>堪比天然蛋白的特异性</strong>。</p>
+</li>
+</ul>
+<p>总结来说，异源二聚体的设计展示了：</p>
+<ol>
+<li>
+<p>光控作用可以精确调节两条不同链的相互作用；</p>
+</li>
+<li>
+<p>结合力的光控调节幅度可以达到两位数以上；</p>
+</li>
+<li>
+<p>特异性媲美天然蛋白，为未来的细胞内应用打下了基础。</p>
+</li>
+</ol>
+<hr>
+<h2 id="第五部分应用展示从材料到细胞信号"><strong>第五部分：应用展示（从材料到细胞信号）</strong></h2>
+<p>到这里，前面几部分已经证明：</p>
+<ul>
+<li>
+<p>光控蛋白可以从头设计出来；</p>
+</li>
+<li>
+<p>它们不仅能组装/解离，还能做到异源二聚体的特异性。</p>
+</li>
+</ul>
+<p>那么，这些分子“开关”能做些什么？</p>
+<p>团队给出了两个非常直观的应用展示：<strong>材料工程（光控水凝胶）</strong> 和 <strong>细胞信号调控（光控受体系统）</strong>。</p>
+<hr>
+<ol>
+<li><strong>光控水凝胶 ——“固 ↔ 液”的可逆切换</strong></li>
+</ol>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-5.png" alt=""></p>
+<p>研究团队用 <strong>五聚体 LRO-C5-1</strong> 作为关键构件，通过 SpyTag/SpyCatcher 技术把它和一个同源二聚体交联，构建成蛋白质水凝胶（Fig. 4a–b）。</p>
+<p>实验现象非常直观（Fig. 4c）：</p>
+<ul>
+<li>
+<p>在 340 nm 光下，五聚体解离，凝胶塌陷成液体；</p>
+</li>
+<li>
+<p>在 420 nm 光下，五聚体重组，液体又迅速恢复成凝胶。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image.png" alt=""></p>
+<p>流变学测试（Fig. 4d–f）进一步证明，这个水凝胶的机械性能可以被光照可逆调节，至少能稳定循环 12 次以上。</p>
+<p>这意味着研究者们可以用光来控制材料的 <strong>流动性和硬度</strong>，非常适合在 <strong>药物释放、组织工程</strong> 等领域应用。</p>
+<hr>
+<ul>
+<li><strong>光控受体系统 ——精准操纵细胞信号</strong></li>
+</ul>
+<p>在合成生物学中，如果能用光来控制细胞信号通路，就能实现对细胞行为的时空精准调控。</p>
+<p>作者团队基于他们设计的 <strong>异源二聚体 LRD-7</strong>，构建了一个合成的 <strong>配体–受体对</strong>（Fig. 5a）：</p>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-2.png" alt=""></p>
+<ul>
+<li>
+<p>把 “vanilla 链” 融合到 GEMS（Generalized Extracellular Molecule Sensor）受体的胞外部分；</p>
+</li>
+<li>
+<p>把 “AzoF 链” 设计成二聚化配体。</p>
+</li>
+</ul>
+<p>实验结果非常亮眼（Fig. 5b–e）：</p>
+<ul>
+<li>
+<p>在暗态下，配体能触发受体二聚化，激活下游 <strong>JAK/STAT、MAPK、PLCG</strong> 等信号通路；</p>
+</li>
+<li>
+<p>在 340 nm 光下，配体解离，信号关闭；</p>
+</li>
+<li>
+<p>再用 420 nm 光，就能恢复信号；</p>
+</li>
+<li>
+<p>甚至还能精确控制 <strong>信号恢复的时间点</strong>，真正实现了“分子开关”对细胞命运的操纵。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature-chemistry--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%85%89%E5%93%8D%E5%BA%94%E8%9B%8B%E7%99%BD%E8%A5%BF%E6%B9%96%E5%A4%A7%E5%AD%A6%E6%9B%B9%E9%BE%99%E5%85%B4%E5%9B%A2%E9%98%9F%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%80%86%E7%BB%84%E8%A3%85%E7%9A%84%E5%88%86%E5%AD%90%E5%85%89%E5%BC%80%E5%85%B3/images/image-1.png" alt=""></p>
+<hr>
+<h3 id="小结"><strong>小结</strong></h3>
+<p>通过这两个例子，作者团队展示了 <strong>从材料到细胞的跨层次应用潜力</strong>：</p>
+<ul>
+<li>
+<p>光控水凝胶，证明了这种设计能用于生物材料与医用材料；</p>
+</li>
+<li>
+<p>光控受体系统，展示了其在合成生物学和光遗传学中的应用前景。</p>
+</li>
+</ul>
+<hr>
+<h2 id="第六部分总结与展望"><strong>第六部分：总结与展望</strong></h2>
+<p>这篇工作展示了一条完整的路线：</p>
+<ul>
+<li>
+<p>从零开始，借助计算设计与遗传密码扩展，把 <strong>光响应的非天然氨基酸 AzoF</strong> 精确嵌入蛋白界面；</p>
+</li>
+<li>
+<p>实现了 <strong>可逆的、可控的蛋白组装与解离</strong>；</p>
+</li>
+<li>
+<p>验证了同源寡聚体和异源二聚体两种构型，晶体结构与设计几乎原子级吻合；</p>
+</li>
+<li>
+<p>进一步展示了在 <strong>材料（光控水凝胶）</strong> 和 <strong>合成生物学（光控受体信号）</strong> 中的实际应用。</p>
+</li>
+</ul>
+<p>这项研究的意义在于，它不仅仅是“多了一个光控蛋白”，而是提出了一种 <strong>新的设计范式</strong>：</p>
+<blockquote>
+<p>在分子设计阶段就内置一个可控的“光开关”。</p>
+</blockquote>
+<p>这与过去改造天然光受体的方式完全不同，它为未来打开了更广阔的想象空间。</p>
+<p>展望未来，有几个方向尤其值得期待：</p>
+<ol>
+<li>
+<p><strong>扩展非天然氨基酸的种类</strong>：不仅限于 AzoF，还可以设计对金属离子、pH、甚至其他小分子敏感的“开关”。</p>
+</li>
+<li>
+<p><strong>优化光谱特性</strong>：通过化学修饰偶氮苯，可以拓展到红光、近红外光等波长，更加适合深层组织应用。</p>
+</li>
+<li>
+<p><strong>构建复杂的分子机器</strong>：将这种光控开关嵌入到更大规模的蛋白复合体中，或许能实现真正意义上的 <strong>光驱动纳米机械</strong>。</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>蓝极总结：</strong></p>
+<p>这篇文章不仅解决了一个长期存在的挑战（如何从头设计光响应蛋白），还为 <strong>光控生物学、合成生物学和生物材料学</strong> 打开了新的大门。</p>
+</blockquote>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/qTm2nDzulrK6YfwVQxtz0g"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/de-novo-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">De Novo Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-engineering/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Engineering</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/optogenetics/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Optogenetics</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/synthetic-biology/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Synthetic Biology</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-assembly/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Assembly</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-materials/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Materials</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/nature-chemistry/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Nature Chemistry</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

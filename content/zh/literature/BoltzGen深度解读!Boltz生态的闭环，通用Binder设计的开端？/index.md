@@ -1,9 +1,17 @@
 ---
 title: "BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？"
 date: 2025-10-28
+
+
+tags: ["AI4S", "蛋白设计", "BoltzGen", "Binder"]
+categories: ["文献解读"]
+
+keywords: ["AI4S", "protein design", "BoltzGen", "binder design"]
+
 featured_image: "cover.jpg"
 externalLink: "https://mp.weixin.qq.com/s/yvN5CreAH4_D08lwhbQMXg"
 summary: "BoltzGen也许是Boltz生态的闭环，但仅仅是通用Binder设计的开端"
+description: "BoltzGen也许是Boltz生态的闭环，但仅仅是通用Binder设计的开端"
 ---
 
 > 蓝极说：

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computational Biology on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/computational-biology/</link>
+    <description>Recent content in Computational Biology on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 05 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/computational-biology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式</title>
+      <link>http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/</guid>
+      <description>ICML 2025 Spotlight 工作 Pallatom 提出直接建模 P(all-atom) 的蛋白生成框架，通过 atom14 表示与双轨道架构，实现序列与结构的端到端耦合生成，在设计性、多样性与新颖性上全面超越现有方法，开启全原子蛋白设计新范式。</description>
+    </item>
+    <item>
+      <title>Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？</title>
+      <link>http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/</link>
+      <pubDate>Fri, 29 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/</guid>
+      <description>BindCraft 正式发表于 Nature，展示出“one-shot”式蛋白 binder 设计能力：无需高通量筛选，仅通过计算设计即可在多类真实靶点上获得纳摩尔级高亲和力结合蛋白，并已被多家跨国药企实际采用。</description>
+    </item>
+    <item>
+      <title>通用 Binder 设计新工具：BoltzDesign1 的野心与突破</title>
+      <link>http://localhost:1313/zh/literature/boltzdesign1/</link>
+      <pubDate>Tue, 26 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/boltzdesign1/</guid>
+      <description>BoltzDesign1 利用 Boltz 全原子模型进行反向优化，在无需扩散模型的情况下实现高成功率与高多样性的结合物设计，并首次系统性展示其在小分子、金属、核酸及翻译后修饰靶标上的通用潜力。</description>
+    </item>
+    <item>
+      <title>BindCraft：一站式设计功能性蛋白 Binder 的自动化平台</title>
+      <link>http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/</link>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/</guid>
+      <description>BindCraft 提出一个全自动蛋白 binder 设计平台，通过反向优化 AlphaFold2 并结合 MPNN 与 Rosetta，在无需高通量筛选的情况下实现接近 50% 成功率的功能性结合剂设计。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="今天要和大家分享一篇来自华盛顿大学（University of Washington）蛋白设计研究所（Institute for Protein Design, IPD）的文章，发表在 Nature Nanotechnology（2024 年 7 月刊）上，题为：
+《De novo design of pH-responsive self-assembling helical protein filaments》
+（“从头设计可对 pH 响应的自组装螺旋蛋白丝”）
+
+这篇论文的通讯作者是蛋白设计领域的标志性人物 David Baker 教授，第一作者为 沈浩（Hao Shen）博士 —— 他是 Baker 团队的重要成员，长期从事“蛋白质自组装体系的计算设计”。这项工作由华盛顿大学、剑桥大学、以及太平洋西北国家实验室多方合作完成。
+这篇文章的核心问题是：
+
+“我们能否用计算机设计出一类能感知环境变化、并像天然材料一样自发重构的蛋白质结构？”
+
+简单来说，研究团队成功地 从头设计（de novo design）了一种在 pH 改变时能自行组装或解组的螺旋蛋白纤维。而且这种响应极为灵敏——仅仅 0.3 个 pH 单位的变化，就能让纤维在几百毫秒内“瞬间消失”；当 pH 恢复时，它们又会重新长回去。
+在接下来的内容中，我们将带大家一起从图文角度出发，看看 Baker 团队是如何一步步实现这个看似“自然界才会做的事”：
+
+
+他们如何在计算机中设计这种 pH 响应的自组装单元；
+
+
+如何通过 冷冻电镜（Cryo-EM）验证原子级精度的结构一致性；
+
+
+以及如何用显微镜和 AFM 动态观察 纳米级“丝的生与灭”。
+
+
+
+一、从自然界的智慧到计算机的设计
+自然界早已在分子层面玩出了“环境响应材料”的巅峰操作。
+当蜘蛛在吐丝时，丝蛋白在腺体内会经历一个从中性到酸性的微小 pH 变化——这种变化就像一个分子开关，使蛋白质链自发组装成坚韧的丝纤维。
+在酵母中，CTP 合酶在低 pH 条件下聚合成丝状结构，帮助细胞在饥饿时维持代谢平衡；而某些细菌的 R bodies，则能在酸性环境下“伸展爆裂”，突破宿主膜释放物质。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/nature-biotechnology--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%8F%AF%E5%AF%B9-ph-%E5%93%8D%E5%BA%94%E7%9A%84%E8%87%AA%E7%BB%84%E8%A3%85%E8%9E%BA%E6%97%8B%E8%9B%8B%E7%99%BD%E4%B8%9D/nature-biotechnology--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%8F%AF%E5%AF%B9-ph-%E5%93%8D%E5%BA%94%E7%9A%84%E8%87%AA%E7%BB%84%E8%A3%85%E8%9E%BA%E6%97%8B%E8%9B%8B%E7%99%BD%E4%B8%9D/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/nature-biotechnology--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%8F%AF%E5%AF%B9-ph-%E5%93%8D%E5%BA%94%E7%9A%84%E8%87%AA%E7%BB%84%E8%A3%85%E8%9E%BA%E6%97%8B%E8%9B%8B%E7%99%BD%E4%B8%9D/nature-biotechnology--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%8F%AF%E5%AF%B9-ph-%E5%93%8D%E5%BA%94%E7%9A%84%E8%87%AA%E7%BB%84%E8%A3%85%E8%9E%BA%E6%97%8B%E8%9B%8B%E7%99%BD%E4%B8%9D/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="今天要和大家分享一篇来自华盛顿大学（University of Washington）蛋白设计研究所（Institute for Protein Design, IPD）的文章，发表在 Nature Nanotechnology（2024 年 7 月刊）上，题为：
+《De novo design of pH-responsive self-assembling helical protein filaments》
+（“从头设计可对 pH 响应的自组装螺旋蛋白丝”）
+这篇论文的通讯作者是蛋白设计领域的标志性人物 David Baker 教授，第一作者为 沈浩（Hao Shen）博士 —— 他是 Baker 团队的重要成员，长期从事“蛋白质自组装体系的计算设计”。这项工作由华盛顿大学、剑桥大学、以及太平洋西北国家实验室多方合作完成。
+这篇文章的核心问题是：
+“我们能否用计算机设计出一类能感知环境变化、并像天然材料一样自发重构的蛋白质结构？”
+简单来说，研究团队成功地 从头设计（de novo design）了一种在 pH 改变时能自行组装或解组的螺旋蛋白纤维。而且这种响应极为灵敏——仅仅 0.3 个 pH 单位的变化，就能让纤维在几百毫秒内“瞬间消失”；当 pH 恢复时，它们又会重新长回去。
+在接下来的内容中，我们将带大家一起从图文角度出发，看看 Baker 团队是如何一步步实现这个看似“自然界才会做的事”：
+他们如何在计算机中设计这种 pH 响应的自组装单元；
+如何通过 冷冻电镜（Cryo-EM）验证原子级精度的结构一致性；
+以及如何用显微镜和 AFM 动态观察 纳米级“丝的生与灭”。
+一、从自然界的智慧到计算机的设计 自然界早已在分子层面玩出了“环境响应材料”的巅峰操作。
+当蜘蛛在吐丝时，丝蛋白在腺体内会经历一个从中性到酸性的微小 pH 变化——这种变化就像一个分子开关，使蛋白质链自发组装成坚韧的丝纤维。
+在酵母中，CTP 合酶在低 pH 条件下聚合成丝状结构，帮助细胞在饥饿时维持代谢平衡；而某些细菌的 R bodies，则能在酸性环境下“伸展爆裂”，突破宿主膜释放物质。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="今天要和大家分享一篇来自华盛顿大学（University of Washington）蛋白设计研究所（Institute for Protein Design, IPD）的文章，发表在 Nature Nanotechnology（2024 年 7 月刊）上，题为：
+《De novo design of pH-responsive self-assembling helical protein filaments》
+（“从头设计可对 pH 响应的自组装螺旋蛋白丝”）
+这篇论文的通讯作者是蛋白设计领域的标志性人物 David Baker 教授，第一作者为 沈浩（Hao Shen）博士 —— 他是 Baker 团队的重要成员，长期从事“蛋白质自组装体系的计算设计”。这项工作由华盛顿大学、剑桥大学、以及太平洋西北国家实验室多方合作完成。
+这篇文章的核心问题是：
+“我们能否用计算机设计出一类能感知环境变化、并像天然材料一样自发重构的蛋白质结构？”
+简单来说，研究团队成功地 从头设计（de novo design）了一种在 pH 改变时能自行组装或解组的螺旋蛋白纤维。而且这种响应极为灵敏——仅仅 0.3 个 pH 单位的变化，就能让纤维在几百毫秒内“瞬间消失”；当 pH 恢复时，它们又会重新长回去。
+在接下来的内容中，我们将带大家一起从图文角度出发，看看 Baker 团队是如何一步步实现这个看似“自然界才会做的事”：
+他们如何在计算机中设计这种 pH 响应的自组装单元；
+如何通过 冷冻电镜（Cryo-EM）验证原子级精度的结构一致性；
+以及如何用显微镜和 AFM 动态观察 纳米级“丝的生与灭”。
+一、从自然界的智慧到计算机的设计 自然界早已在分子层面玩出了“环境响应材料”的巅峰操作。
+当蜘蛛在吐丝时，丝蛋白在腺体内会经历一个从中性到酸性的微小 pH 变化——这种变化就像一个分子开关，使蛋白质链自发组装成坚韧的丝纤维。
+在酵母中，CTP 合酶在低 pH 条件下聚合成丝状结构，帮助细胞在饥饿时维持代谢平衡；而某些细菌的 R bodies，则能在酸性环境下“伸展爆裂”，突破宿主膜释放物质。">
+  <meta itemprop="wordCount" content="457">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="今天要和大家分享一篇来自华盛顿大学（University of Washington）蛋白设计研究所（Institute for Protein Design, IPD）的文章，发表在 Nature Nanotechnology（2024 年 7 月刊）上，题为：
+《De novo design of pH-responsive self-assembling helical protein filaments》
+（“从头设计可对 pH 响应的自组装螺旋蛋白丝”）
+这篇论文的通讯作者是蛋白设计领域的标志性人物 David Baker 教授，第一作者为 沈浩（Hao Shen）博士 —— 他是 Baker 团队的重要成员，长期从事“蛋白质自组装体系的计算设计”。这项工作由华盛顿大学、剑桥大学、以及太平洋西北国家实验室多方合作完成。
+这篇文章的核心问题是：
+“我们能否用计算机设计出一类能感知环境变化、并像天然材料一样自发重构的蛋白质结构？”
+简单来说，研究团队成功地 从头设计（de novo design）了一种在 pH 改变时能自行组装或解组的螺旋蛋白纤维。而且这种响应极为灵敏——仅仅 0.3 个 pH 单位的变化，就能让纤维在几百毫秒内“瞬间消失”；当 pH 恢复时，它们又会重新长回去。
+在接下来的内容中，我们将带大家一起从图文角度出发，看看 Baker 团队是如何一步步实现这个看似“自然界才会做的事”：
+他们如何在计算机中设计这种 pH 响应的自组装单元；
+如何通过 冷冻电镜（Cryo-EM）验证原子级精度的结构一致性；
+以及如何用显微镜和 AFM 动态观察 纳米级“丝的生与灭”。
+一、从自然界的智慧到计算机的设计 自然界早已在分子层面玩出了“环境响应材料”的巅峰操作。
+当蜘蛛在吐丝时，丝蛋白在腺体内会经历一个从中性到酸性的微小 pH 变化——这种变化就像一个分子开关，使蛋白质链自发组装成坚韧的丝纤维。
+在酵母中，CTP 合酶在低 pH 条件下聚合成丝状结构，帮助细胞在饥饿时维持代谢平衡；而某些细菌的 R bodies，则能在酸性环境下“伸展爆裂”，突破宿主膜释放物质。">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>今天要和大家分享一篇来自华盛顿大学（University of Washington）蛋白设计研究所（Institute for Protein Design, IPD）的文章，发表在 <em>Nature Nanotechnology</em>（2024 年 7 月刊）上，题为：</p>
+<p><strong>《De novo design of pH-responsive self-assembling helical protein filaments》</strong></p>
+<p>（<strong>“从头设计可对 pH 响应的自组装螺旋蛋白丝”</strong>）</p>
+<p><img src="images/image-6.png" alt=""></p>
+<p>这篇论文的通讯作者是蛋白设计领域的标志性人物 <strong>David Baker 教授</strong>，第一作者为 <strong>沈浩（Hao Shen）博士</strong> —— 他是 Baker 团队的重要成员，长期从事“蛋白质自组装体系的计算设计”。这项工作由华盛顿大学、剑桥大学、以及太平洋西北国家实验室多方合作完成。</p>
+<p>这篇文章的核心问题是：</p>
+<blockquote>
+<p>“我们能否<strong>用计算机设计出一类能感知环境变化、并像天然材料一样自发重构的蛋白质结构？</strong>”</p>
+</blockquote>
+<p>简单来说，研究团队成功地 <strong>从头设计（de novo design）了一种在 pH 改变时能自行组装或解组的螺旋蛋白纤维。</strong>而且这种响应极为灵敏——仅仅 <strong>0.3 个 pH 单位的变化</strong>，就能让纤维在几百毫秒内“瞬间消失”；当 pH 恢复时，它们又会重新长回去。</p>
+<p>在接下来的内容中，我们将带大家一起从图文角度出发，看看 Baker 团队是如何一步步实现这个看似“自然界才会做的事”：</p>
+<ol>
+<li>
+<p>他们如何在计算机中设计这种 <strong>pH 响应的自组装单元</strong>；</p>
+</li>
+<li>
+<p>如何通过 <strong>冷冻电镜（Cryo-EM）验证原子级精度的结构一致性</strong>；</p>
+</li>
+<li>
+<p>以及如何用显微镜和 AFM 动态观察 <strong>纳米级“丝的生与灭”</strong>。</p>
+</li>
+</ol>
+<hr>
+<h2 id="一从自然界的智慧到计算机的设计"><strong>一、从自然界的智慧到计算机的设计</strong></h2>
+<p>自然界早已在分子层面玩出了“环境响应材料”的巅峰操作。</p>
+<p>当蜘蛛在吐丝时，丝蛋白在腺体内会经历一个<strong>从中性到酸性</strong>的微小 pH 变化——这种变化就像一个分子开关，使蛋白质链自发组装成坚韧的丝纤维。</p>
+<p>在酵母中，<strong>CTP 合酶</strong>在低 pH 条件下聚合成丝状结构，帮助细胞在饥饿时维持代谢平衡；而某些细菌的 <strong>R bodies</strong>，则能在酸性环境下“伸展爆裂”，突破宿主膜释放物质。</p>
+<p>这些例子共同说明了一件事：<strong>pH 变化可以被生物系统精准地“编程”成结构变化的信号。</strong></p>
+<p>但是，<strong>要从零开始设计一种能像天然体系那样精准响应的人工蛋白丝，却非常困难。</strong></p>
+<p>天然系统依赖数百万年的演化优化，而人工设计需要计算机在原子层级上同时考虑折叠稳定性、组装几何、以及响应性残基的网络效应——这几乎是“分子工程中的珠穆朗玛峰”。</p>
+<hr>
+<h3 id="1-baker-团队的构想从-ph-响应三聚体出发">1. <strong>Baker 团队的构想：从 pH 响应三聚体出发</strong></h3>
+<p><img src="images/image-7.png" alt=""></p>
+<p>研究团队选择以一个已经验证过的 <strong>pH 响应三聚体结构（pRO-2.3）</strong> 为基础。</p>
+<p>这个三聚体内部埋藏着 <strong>六个组氨酸（His）残基</strong>，它们通过氢键网络稳定整个结构。</p>
+<p>当 pH 降低、组氨酸被质子化时，氢键网络被破坏，三聚体就会解体——这正是一个“天然的分子开关”。</p>
+<p>在图 1a 的上半部分，可以看到研究者通过添加短 <strong>连接肽环（loop）</strong> 把这三个亚基连成了一个<strong>单链结构单元（monomer）</strong>。</p>
+<p>这样一来，他们打破了原本的三重对称性，为后续设计“非对称界面”创造了空间。</p>
+<p>而在图 1a 的下半部分标出了那些关键的氢键网络——其中每个组氨酸都像一个敏感的触点，决定着结构何时会“开”与“关”。</p>
+<hr>
+<h3 id="2-从单体到纤维计算设计的螺旋装配">2. <strong>从单体到纤维：计算设计的螺旋装配</strong></h3>
+<p>接下来，研究团队利用 <strong>Rosetta 设计平台</strong>，探索了 <strong>45,000 种可能的螺旋堆叠方式</strong>。</p>
+<p>他们像搭积木一样，让这些单体沿着不同的旋转角度与上升距离组合成各种螺旋模型（Fig. 1b）。</p>
+<p>每种构型都经过能量评估、形状互补性和界面面积的筛选，最终选出了 18 种能量最低、理论上最稳定的方案。</p>
+<p>在图 1c 中，每个亚基用不同颜色的棒状螺旋表示，之间的红色棒状结构就是 pH 敏感的氢键网络。</p>
+<p>这些“带有敏感神经的模块”堆叠在一起，就构成了一根可以<strong>对环境微小变化迅速响应的蛋白质丝</strong>。</p>
+<p>最终，18 种候选设计在 <em>E. coli</em> 中表达后，只有两个设计成功形成丝状结构——<strong>DpHF7 与 DpHF18</strong>。</p>
+<p>这意味着，计算预测的能量最低模型，确实能在实验中自组装成纤维，验证了设计逻辑的可行性。</p>
+<hr>
+<h2 id="x20二从计算机到显微镜原子级别的精准复刻"> <strong>二、从计算机到显微镜：原子级别的“精准复刻”</strong></h2>
+<p>当设计完成后，最关键的问题是：</p>
+<blockquote>
+<p>“计算机画出来的蛋白丝，真的能在实验中按照那个形状自组装吗？”</p>
+</blockquote>
+<p>这正是 Fig. 2 要回答的核心问题。研究团队通过 <strong>冷冻电镜（Cryo-EM）</strong>，分别解析了两种设计的结构：</p>
+<p>早期版本 <strong>DpHF18</strong> 和优化后的 <strong>DpHF19</strong>。</p>
+<ol>
+<li><strong>结构验证：从模型到真实结构</strong></li>
+</ol>
+<p><img src="images/image.png" alt=""></p>
+<p>在 Fig. 2a 的第一列，是计算机预测的设计模型；第二列，是冷冻电镜拍到的纤维照片；第三、第四列分别展示了 DpHF18 和 DpHF19 的三维密度图。</p>
+<p>可以清楚地看到：</p>
+<ul>
+<li>
+<p><strong>DpHF18</strong> 虽然能形成纤维，但实际装配方式略有偏差；</p>
+</li>
+<li>
+<p><strong>DpHF19</strong> 经过五个关键位点突变后，结构与模型几乎<strong>完美重合</strong>（界面残基 RMSD 仅 1.4 Å！）。</p>
+</li>
+</ul>
+<p>这意味着，<strong>Baker 团队在原子层面实现了结构设计与实验结果的对齐</strong>。</p>
+<p>这在“从头蛋白设计（de novo design）”领域是极其罕见的成就。</p>
+<hr>
+<h3 id="2-从反平行到完美对称五个突变的艺术"><strong>2. 从反平行到完美对称：五个突变的艺术</strong></h3>
+<p><img src="images/image-1.png" alt=""></p>
+<p>在早期版本 DpHF18 中，纤维的亚基以一种“<strong>反平行排列（D1 对称性）</strong>”方式堆叠，这会导致纤维内部出现“非设计的界面”，造成结构偏差。</p>
+<p>研究团队发现这个问题后，通过对界面残基的精准改造——仅仅<strong>五个氨基酸替换</strong>，就让结构转变为他们原本设计的“<strong>平行螺旋（C1 对称性）</strong>”。</p>
+<p>在 Fig. 2b 中，左侧是 DpHF18 的反平行结构，右侧是优化后的 DpHF19 的平行结构；方向箭头标出了两者完全不同的对称性。而 Fig. 2c 展示的，就是那几个至关重要的突变位点：两个突变（V29D 和 L82D）破坏了非目标界面，另外三个突变（E32D、E33K、E87K）强化了目标界面的氢键网络。</p>
+<p>可以说，这一轮微调让整个体系从“能装”变成了“精准装”。</p>
+<hr>
+<h3 id="3-一致性验证原子级重合"><strong>3. 一致性验证：原子级“重合”</strong></h3>
+<p><img src="images/image-2.png" alt=""></p>
+<p>在 Fig. 2d–e 中，研究者将 DpHF19 的 cryo-EM 结构（青色）与计算模型（灰色）叠合，</p>
+<p>结果几乎无法分辨差异——这意味着模型中的每一圈旋转、每一个氨基酸朝向、每一个亚基的相对位移，</p>
+<p>都与实验观测一致。</p>
+<p>这不仅是一次设计成功，更是一次<strong>理论可预测性的证明</strong>：</p>
+<blockquote>
+<p>“我们可以在计算机中精确地设计出一个会自组装、可响应的蛋白纳米结构。”</p>
+</blockquote>
+<hr>
+<h2 id="三在-1-秒之间蛋白丝的呼吸"><strong>三、在 1 秒之间：蛋白丝的“呼吸”</strong></h2>
+<p>当这些设计好的蛋白丝真正组装起来后，研究团队开始测试它们对 pH 的响应。</p>
+<p>结果令人震撼——<strong>只要溶液的 pH 略微下降 0.3 个单位，丝就会瞬间解体；而当 pH 恢复，它们又能在几秒内重新组装成形。</strong></p>
+<p>就像自然界的丝蛋白在腺体里由液体变为固体，这些“人造丝”也在实验室中展现出同样的灵敏性与可逆性。</p>
+<hr>
+<h3 id="1-分步降-ph纤维的呼吸周期"><strong>1. 分步降 pH：纤维的“呼吸周期”</strong></h3>
+<p><img src="images/image-3.png" alt=""></p>
+<p>研究者首先用负染电镜观察了三种设计：</p>
+<p><strong>DpHF18、DpHF19 和 DpHF19_9his</strong>（后者含 9 个埋藏组氨酸）。他们逐步调节溶液 pH（从 8 降到 6、5、4.2、3.5、3），然后再升回中性（pH 8），观察纤维长度的变化。</p>
+<p>从 Fig. 3a 的箱线图中可以看到：</p>
+<ul>
+<li>
+<p>在中性条件（pH 8）下，纤维整齐而延展；</p>
+</li>
+<li>
+<p>当 pH 降到临界点时，纤维长度骤减至零；</p>
+</li>
+<li>
+<p>当 pH 再度升高，纤维又重新出现。</p>
+</li>
+</ul>
+<p>更令人印象深刻的是：</p>
+<p><strong>不同设计的解装 pH 点不同</strong>，</p>
+<ul>
+<li>
+<p>DpHF18 在 <strong>pH 3.5</strong> 解装；</p>
+</li>
+<li>
+<p>DpHF19 在 <strong>pH 3.0</strong> 解装；</p>
+</li>
+<li>
+<p>DpHF19_9his（9 个组氨酸）在 <strong>pH 4.2</strong> 解装。</p>
+</li>
+<li>
+<p>这说明 <strong>通过调节组氨酸数量，就能精确“调节响应阈值”</strong>。</p>
+</li>
+<li>
+<p>这在蛋白设计领域是一个极其重要的控制能力。</p>
+</li>
+</ul>
+<p>可以把这幅图理解成分子的“呼吸曲线”：</p>
+<p>pH 降低——蛋白丝呼出一口气（解装）；pH 回升——它又吸气复位（重组）。</p>
+<hr>
+<h3 id="2-分子显微镜下的丝的生长"><strong>2. 分子显微镜下的“丝的生长”</strong></h3>
+<p><img src="images/image-5.png" alt=""></p>
+<p>接下来，团队用 <strong>全内反射荧光显微镜（TIRFM）</strong> 拍摄了纤维的组装过程。他们将红色荧光（Cy5）标记的“老纤维”与绿色荧光（Oregon488）标记的“新单体”混合，结果看到：绿色的荧光信号<strong>只在红色纤维的两端延伸</strong>，意味着这些蛋白丝的生长是从“末端”延伸的，就像细胞骨架微管那样有极性。</p>
+<p>这说明这些人造丝不仅能组装，还能<strong>动态延伸与修复</strong>，具备天然蛋白聚合体系才有的方向性装配行为。</p>
+<hr>
+<h3 id="3-毫秒级解装一个真正的分子开关"><strong>3. 毫秒级解装：一个真正的“分子开关”</strong></h3>
+<p><img src="images/image-4.png" alt=""></p>
+<p>团队在流动池中让溶液 pH 从 8 快速降低到 3，并实时拍摄 DpHF18–Cy5 纤维的变化。</p>
+<p>结果几乎令人不敢相信：<strong>不到 1 秒钟，整根纤维就完全解体</strong>（见 Fig. 3d）。</p>
+<p>在 Fig. 3e 的折线图中可以看到——当 pH 仅从 3.4 降到 3.1，纤维长度曲线瞬间坍塌；而在 3.4 时却依然稳定存在。</p>
+<p>换句话说，这个体系对 pH 的响应<strong>锐度达到 0.3 个 pH 单位以内</strong>，</p>
+<p>是一个真正意义上的“分子级数字开关（molecular digital switch）”。</p>
+<hr>
+<h3 id="4-总结分子层级的灵敏与可逆"><strong>4. 总结：分子层级的灵敏与可逆</strong></h3>
+<p>这组实验揭示出几个极具启发性的结论：</p>
+<ul>
+<li>
+<p>设计的蛋白丝可在中性 pH 下稳定存在，在酸性下完全解装；</p>
+</li>
+<li>
+<p>响应过程<strong>极快（&lt;1 秒）且完全可逆</strong>；</p>
+</li>
+<li>
+<p>增加埋藏组氨酸的数量，可<strong>精确调节开关的触发点</strong>；</p>
+</li>
+<li>
+<p>自组装与解组过程都遵循高度协同性，体现出精细的能量调控。</p>
+</li>
+</ul>
+<hr>
+<h2 id="四在显微镜下看见分子的解体"><strong>四、在显微镜下“看见”分子的解体</strong></h2>
+<p>前一节我们看到了这些蛋白丝能在宏观层面上实现可逆组装。</p>
+<p>但 Baker 团队想更进一步——</p>
+<blockquote>
+<p>“这一切到底是怎么发生的？</p>
+<p>一根丝，在解体时，会从哪里开始崩解？</p>
+<p>解装是瞬间碎裂，还是从端点一点点消融？”</p>
+</blockquote>
+<p>为了回答这些问题，他们使用了<strong>液相原子力显微镜（AFM）</strong>——一种能够在溶液中实时观察纳米结构表面动态变化的技术。</p>
+<hr>
+<h3 id="1-ph-下降时的融化电影"><strong>1. pH 下降时的“融化电影”</strong></h3>
+<p><img src="images/image-8.png" alt=""></p>
+<p>在实验中，研究者将 DpHF19_9his（含 9 个组氨酸）的纤维轻轻铺在云母片上，然后缓缓将溶液 pH 从 8 降到 4.5、4.4、4.1。</p>
+<p>接着，他们连续拍摄了每一分钟的形貌变化（如 Fig. 4a–c 所示）。</p>
+<p>画面中，我们看到的场景是这样的：</p>
+<ul>
+<li>
+<p>在 pH 4.5 时，丝还纹理清晰、几乎不动；</p>
+</li>
+<li>
+<p>当降到 pH 4.4，丝的末端开始轻微塌陷，局部变短；</p>
+</li>
+<li>
+<p>再到 pH 4.1，整条丝快速“融化”消失，仿佛被酸轻轻“抹去”。</p>
+</li>
+</ul>
+<p>AFM 的高度曲线显示，<strong>丝的平均长度缩短速率在 pH 4.1 时达到 108 nm/min，而在 4.4 时仅为 21 nm/min</strong>。</p>
+<p>短短 0.3 个 pH 单位的差异，就能带来五倍的速度变化。</p>
+<p>这再次证明：这些丝的响应是<strong>高度协同、超灵敏的</strong>。</p>
+<hr>
+<h3 id="2-解装机制从两端开始的分子消解"><strong>2. 解装机制：从两端开始的“分子消解”</strong></h3>
+<p>进一步的单丝追踪分析表明：</p>
+<ul>
+<li>
+<p>大多数纤维在两端同时解体，长度对称地缩短；</p>
+</li>
+<li>
+<p>但也有一些纤维因为一端吸附在表面上，只从另一端“融化”；</p>
+</li>
+<li>
+<p>有时，纤维会先<strong>断裂成几个短段</strong>，再从各段两端继续分解。</p>
+</li>
+</ul>
+<p>这些现象说明，丝的解体并非单一模式，而是一种多机制协同过程。</p>
+<p>每一根丝都像有“自己的命运”，但总体规律却非常一致。</p>
+<hr>
+<h3 id="3-光控酸触发用光写图案的分子艺术"><strong>3. 光控酸触发：用光“写图案”的分子艺术</strong></h3>
+<p>Baker 团队在这一节做了一个非常酷的实验 ——</p>
+<p>他们往溶液里加入一种叫 <strong>2-硝基苯甲醛（2-nitrobenzaldehyde）</strong> 的<strong>光酸分子（photoacid）</strong>。</p>
+<p>当光酸被紫外光照射后，会释放质子，使局部 pH 降低。</p>
+<p>于是他们有了一个大胆的设想：</p>
+<blockquote>
+<p>“如果我们用光照局部区域，能不能只让那一块的丝解体，而其他区域保持完整？”</p>
+</blockquote>
+<p>实验结果堪称艺术品。</p>
+<p>如 Fig. 4e 所示：</p>
+<ul>
+<li>
+<p>当用 <strong>405 nm 激光点照</strong>时，纤维只在照射区域内消失，形成精确的“点”或“线”图案；</p>
+</li>
+<li>
+<p>当用 <strong>364 nm 灯光全局照射</strong>时，整个样品表面的纤维都被同时“溶解”；</p>
+</li>
+<li>
+<p>而未照光或光酸耗尽的对照组中，纤维完好无损。</p>
+</li>
+</ul>
+<p>研究者相当于实现了一个<strong>“光控分子橡皮擦”</strong>：</p>
+<p>通过紫外光的照射，就能在纳米尺度上精准地擦除、重构这些蛋白丝的分布。</p>
+<p>这是一个非常未来感的概念——</p>
+<blockquote>
+<p><strong>用光操控分子结构，实现空间可编程的纳米装配。</strong></p>
+</blockquote>
+<hr>
+<h3 id="4-意义总结从响应到可控响应"><strong>4. 意义总结：从“响应”到“可控响应”</strong></h3>
+<p>这一系列实验揭示出三个关键科学突破：</p>
+<ol>
+<li>
+<p><strong>时间分辨率</strong>：首次在液相中实时捕捉到蛋白丝逐步解体的全过程；</p>
+</li>
+<li>
+<p><strong>灵敏度极高</strong>：pH 仅改变 0.1–0.3 即可触发显著动力学变化；</p>
+</li>
+<li>
+<p><strong>外部可控性</strong>：通过光酸实现局部、可逆、空间精准的响应。</p>
+</li>
+</ol>
+<p>这意味着，<strong>Baker 团队设计的体系不仅会“响应环境”，还可以被“人类控制”。</strong></p>
+<p>从此，“蛋白质材料”的设计不再只是被动的结构模仿，而开始走向<strong>主动的分子编程（programmable molecular engineering）</strong>。</p>
+<hr>
+<h2 id="五总结与展望"><strong>五、总结与展望</strong></h2>
+<p>这项工作展示了 <strong>de novo 蛋白设计</strong> 在构建环境响应性材料方面的最新进展。</p>
+<p>研究团队通过理性设计，实现了一个能够在极窄 pH 范围内可逆组装的螺旋蛋白丝体系，并在原子层级上验证了设计与实验的一致性。</p>
+<p>该体系的几个关键特征值得强调：</p>
+<ol>
+<li>
+<p><strong>结构精度高</strong> —— cryo-EM 结构与设计模型几乎完全一致（界面 RMSD 仅 1.4 Å）；</p>
+</li>
+<li>
+<p><strong>响应极为灵敏</strong> —— 仅 0.3 个 pH 单位的变化即可触发丝的快速解装（&lt;1 s）；</p>
+</li>
+<li>
+<p><strong>可逆且可控</strong> —— 通过改变组氨酸数量或引入光酸，可实现对响应点与空间分布的精确调控。</p>
+</li>
+</ol>
+<p>这些成果说明，蛋白设计已从“稳定结构的构建”迈向“动态功能的控制”。</p>
+<p>通过结合计算设计与实验验证，研究者实现了<strong>对自组装蛋白体系响应行为的定量可编程化</strong>。</p>
+<p>未来，这类体系有潜力应用于：</p>
+<ul>
+<li>
+<p><strong>智能药物递送与可控释放</strong>，利用 pH 或光信号实现空间与时间选择性；</p>
+</li>
+<li>
+<p><strong>可逆水凝胶或生物复合材料</strong>，在组织工程与再生医学中提供环境敏感的结构支撑；</p>
+</li>
+<li>
+<p><strong>纳米级信号响应组件</strong>，作为合成生物系统或分子机器人中的动态模块。</p>
+</li>
+</ul>
+<p>总体来看，这篇工作为“可预测、可调控的蛋白自组装材料”<strong>提供了清晰的设计路线，也标志着计算蛋白设计正从结构可控进入</strong>功能可控的新阶段。</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

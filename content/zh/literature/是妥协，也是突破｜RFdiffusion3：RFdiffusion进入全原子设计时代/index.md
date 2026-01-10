@@ -1,9 +1,33 @@
 ---
-title: "“是妥协，也是突破｜RFdiffusion3：RFdiffusion进入全原子设计时代"
+title: "是妥协，也是突破｜RFdiffusion3：RFdiffusion进入全原子设计时代"
 date: 2025-09-20
+
+categories: ["文献解读"]
+
+tags:
+  - AI4S
+  - 蛋白设计
+  - RFdiffusion
+  - 扩散模型
+  - Baker Lab
+  - 结构生物学
+  - bioRxiv
+
+keywords:
+  - RFdiffusion3
+  - all-atom protein design
+  - diffusion model
+  - AI4S
+  - protein engineering
+  - de novo design
+
 featured_image: "cover.png"
-externalLink: https://mp.weixin.qq.com/s/Ijp_YuZszEBSvF7BxUdTfw
-summary: "RFdiffusion第一次真正进入了原子级的时代！"
+
+externalLink: "https://mp.weixin.qq.com/s/Ijp_YuZszEBSvF7BxUdTfw"
+
+summary: "RFdiffusion3 将扩散建模从残基级提升到原子级，标志着蛋白设计真正进入全原子分辨率时代。"
+
+description: "深度解读 RFdiffusion3：Baker 团队提出全原子扩散模型，在蛋白–蛋白、蛋白–DNA、小分子结合及酶设计任务上全面超越前代方法，并获得实验验证。"
 ---
 
 

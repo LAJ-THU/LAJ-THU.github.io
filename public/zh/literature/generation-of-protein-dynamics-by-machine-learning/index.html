@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>从静态到动态：AI 在蛋白质动力学建模中的新进展 | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="深度解读综述《Generation of protein dynamics by machine learning》：从构象集合建模、MD 加速采样、IDR 建模到实验引导生成，全面展示 AI 正在如何把蛋白质研究从“静态结构”推进到“动态过程”。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/generation-of-protein-dynamics-by-machine-learning/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/generation-of-protein-dynamics-by-machine-learning/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="从静态到动态：AI 在蛋白质动力学建模中的新进展">
+  <meta property="og:description" content="深度解读综述《Generation of protein dynamics by machine learning》：从构象集合建模、MD 加速采样、IDR 建模到实验引导生成，全面展示 AI 正在如何把蛋白质研究从“静态结构”推进到“动态过程”。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2025-08-31T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-31T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="Protein Dynamics">
+    <meta property="article:tag" content="Molecular Dynamics">
+    <meta property="article:tag" content="Cryo-EM">
+    <meta property="article:tag" content="Cryo-ET">
+    <meta property="article:tag" content="Structural Biology">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/generation-of-protein-dynamics-by-machine-learning/cover.png">
+
+  <meta itemprop="name" content="从静态到动态：AI 在蛋白质动力学建模中的新进展">
+  <meta itemprop="description" content="深度解读综述《Generation of protein dynamics by machine learning》：从构象集合建模、MD 加速采样、IDR 建模到实验引导生成，全面展示 AI 正在如何把蛋白质研究从“静态结构”推进到“动态过程”。">
+  <meta itemprop="datePublished" content="2025-08-31T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-31T00:00:00+00:00">
+  <meta itemprop="wordCount" content="245">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/generation-of-protein-dynamics-by-machine-learning/cover.png">
+  <meta itemprop="keywords" content="protein conformational ensemble,machine learning molecular dynamics,diffusion model protein,AlphaFlow,BioEmu,IDR modeling,experimental restraints,AI4S">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/generation-of-protein-dynamics-by-machine-learning/cover.png">
+  <meta name="twitter:title" content="从静态到动态：AI 在蛋白质动力学建模中的新进展">
+  <meta name="twitter:description" content="深度解读综述《Generation of protein dynamics by machine learning》：从构象集合建模、MD 加速采样、IDR 建模到实验引导生成，全面展示 AI 正在如何把蛋白质研究从“静态结构”推进到“动态过程”。">
+
+	
+<meta name="keywords" content="protein conformational ensemble, machine learning molecular dynamics, diffusion model protein, AlphaFlow, BioEmu, IDR modeling, experimental restraints, AI4S">
+
+
+
+<meta name="description" content="深度解读综述《Generation of protein dynamics by machine learning》：从构象集合建模、MD 加速采样、IDR 建模到实验引导生成，全面展示 AI 正在如何把蛋白质研究从“静态结构”推进到“动态过程”。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/generation-of-protein-dynamics-by-machine-learning/cover.png');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">从静态到动态：AI 在蛋白质动力学建模中的新进展</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              深度解读综述《Generation of protein dynamics by machine learning》：从构象集合建模、MD 加速采样、IDR 建模到实验引导生成，全面展示 AI 正在如何把蛋白质研究从“静态结构”推进到“动态过程”。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        从静态到动态：AI 在蛋白质动力学建模中的新进展
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2025-08-31T00:00:00Z">
+        八月 31, 2025
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>在过去几年，AlphaFold2 的横空出世几乎改变了整个结构生物学的研究格局。一个氨基酸序列，几乎可以“一键”得到对应的三维结构——这在十年前是难以想象的。</p>
+<p>但是，结构预测的革命同时也暴露了一个新的问题：<strong>蛋白质并不是一个固定不动的雕塑，而是一个在能量地形上不断“呼吸”、在多种构象之间切换的动态分子机器</strong>。静态结构虽然能告诉我们“长什么样”，却往往难以揭示“怎么动、为什么动”。而这些动态，恰恰是催化、结合、信号转导等功能的关键所在。</p>
+<p><img src="/zh/literature/generation-of-protein-dynamics-by-machine-learning/images/image-2.png" alt=""></p>
+<p>今天要介绍的这篇综述文章（《<em><strong>Generation of protein dynamics by machine learning</strong>》）</em>正是聚焦于这个前沿问题：<strong>如何用机器学习的方法，不仅预测蛋白质的单一构象，而是预测其动态构象集合（conformational ensembles）</strong>。文章中的配图（Figure 1）非常直观地把研究方向总结为四条主线：</p>
+<p><img src="/zh/literature/generation-of-protein-dynamics-by-machine-learning/images/image-5.png" alt=""></p>
+<ul>
+<li>
+<p>从单一结构到多态结构（PDB-like ensembles）；</p>
+</li>
+<li>
+<p>加速分子动力学模拟（accelerating MD）；</p>
+</li>
+<li>
+<p>非球状蛋白和无序区域的建模（non-globular proteins）；</p>
+</li>
+<li>
+<p>融合实验约束的综合模型（integrating experimental data）。</p>
+</li>
+</ul>
+<p>接下来，我们就结合这张图，逐一解读这四个方向的研究亮点与挑战。</p>
+<hr>
+<h3 id="1-pdb-like-ensembles从一个结构到多个状态">1. <strong>PDB-like Ensembles：从“一个结构”到“多个状态”</strong></h3>
+<p><img src="/zh/literature/generation-of-protein-dynamics-by-machine-learning/images/image.png" alt=""></p>
+<p>看 Figure 1(a)，我们可以直观感受到作者想传递的核心信息：<strong>同一个蛋白质，并不是只有一个固定结构，而是可能存在多种功能相关的状态</strong>。在 PDB 数据库里，其实早就能找到一些蛋白的多态结构——比如同一个蛋白在有配体（holo）和无配体（apo）条件下的不同状态，又或者激活/非激活状态的跨膜受体。</p>
+<p>然而，AlphaFold2 的局限在这里就显现出来了。它的训练目标是 <strong>“一条序列 → 一个最可能的结构”</strong>，因此它很难自然地给出“一个序列 → 一组结构分布”。这也是为什么它在预测 holo/apo 或 fold-switching 蛋白时表现不佳。</p>
+<p>研究者们于是开始尝试各种“曲线救国”的办法：</p>
+<ul>
+<li>
+<p><strong>MSA 修改</strong>：通过改变输入的多序列比对（MSA），可以诱导 AlphaFold 给出不同的构象。比如 AFsample2 会随机屏蔽 MSA 列，从而在开放/闭合状态的蛋白里得到多态结构。</p>
+</li>
+<li>
+<p><strong>聚类策略</strong>：像 AF-cluster，通过对 MSA 做聚类，捕捉到大构象转换（如 KaiB 这种可折叠切换的蛋白）。</p>
+</li>
+<li>
+<p><strong>生成模型（Generative Models）</strong>：这是更“根本”的方向，把 AlphaFold 从确定性回归模型转化为生成式模型。例如 AlphaFlow、UFConf 这样的 diffusion model，可以直接学到“同一序列对应多个可能构象”的分布。</p>
+</li>
+</ul>
+<p>这些方法的亮点在于，它们开始让计算机模型能够“想象”蛋白质的不同功能状态，而不是只锁定在唯一的静态解。但它们的瓶颈也很明显：</p>
+<ul>
+<li>
+<p>目前还难以保证不同状态的<strong>相对概率是否正确</strong>，也就是说，哪个构象更常见、哪个只是低概率事件，模型给不出准确答案。</p>
+</li>
+<li>
+<p>对超出训练集的折叠切换蛋白，泛化性依旧不足。</p>
+</li>
+</ul>
+<blockquote>
+<p>总结来说，Panel (a) 展示的是整个领域的第一步跨越：<strong>从单一结构预测，走向构象集合生成</strong>。这一步虽然还不完美，但它让我们看到了用 AI 捕捉蛋白质“多态性”的可能。</p>
+</blockquote>
+<hr>
+<h3 id="2-accelerating-molecular-simulations让分子动力学加速跑">2. <strong>Accelerating Molecular Simulations：让分子动力学“加速跑”</strong></h3>
+<p><img src="/zh/literature/generation-of-protein-dynamics-by-machine-learning/images/image-3.png" alt=""></p>
+<p>如果说 Panel (a) 的主题是“如何生成更多状态”，那么 Panel (b) 就回答了另一个问题：<strong>如何更快地采样这些状态？</strong></p>
+<p>看 Figure 1(b)，图示了能量地形（energy landscape），上面分布着不同的构象状态。传统上，我们依赖分子动力学模拟（MD）来探索这个能量地形，让蛋白质在时间轴上不断演化，逐步采样到不同状态。问题是，<strong>MD 计算量极其庞大</strong>，尤其是想要捕捉到大尺度的构象变化时，可能需要耗费几个月甚至更久的超级计算资源。</p>
+<p>机器学习提供了几条加速思路：</p>
+<ol>
+<li><strong>基于 MD 数据训练生成模型</strong></li>
+</ol>
+<p>这些模型直接从 MD 数据中学习到统计分布，然后能快速生成彼此独立的构象样本。这样就像“跳过”了冗长的时间积分，直接拿到模拟结果。</p>
+<ul>
+<li>
+<p>代表：<strong>AlphaFlow</strong> 在 ATLAS 数据集上训练，能高效生成不同蛋白的结构集合。</p>
+</li>
+<li>
+<p><strong>神经网络粗粒化力场（CG force fields）</strong></p>
+</li>
+</ul>
+<p>通过神经网络拟合原子间作用力，把全原子的复杂系统压缩成简化模型，再进行模拟，既快又保留主要物理特征。</p>
+<ul>
+<li><strong>“时间跳跃”模型</strong></li>
+</ul>
+<p>与其一步步积分时间，不如让生成模型学会直接预测“未来更远时间的状态”。这样就能跨越原本需要成千上万步积分才能到达的时间尺度。</p>
+<ul>
+<li><strong>混合增强采样</strong></li>
+</ul>
+<p>比如 AlphaFold2-RAVE，把 AF2 生成的多态结构输入到 MD，再用机器学习方法学习反应坐标，帮助 MD 更高效地在构象空间里采样。</p>
+<p>这些方法有各自的亮点与局限：</p>
+<ul>
+<li>
+<p>生成模型采样快，但通常只能给出<strong>热力学分布</strong>（各状态出现的概率），却不一定能还原动力学过程（不同状态之间的转换速率）。</p>
+</li>
+<li>
+<p>时间跳跃模型能提供动力学信息，但对复杂能量地形（多稳态系统）还不够稳健。</p>
+</li>
+<li>
+<p>混合方法能恢复多个状态，但普适性和可迁移性还不足，每个新体系都要重新训练。</p>
+</li>
+</ul>
+<blockquote>
+<p>总结来看，Panel (b) 告诉我们：<strong>机器学习不是要取代分子动力学，而是让它“加速跑”</strong>。通过生成模型和混合策略，我们或许能在保证物理真实性的同时，把过去几个月的模拟压缩到几小时甚至更短。</p>
+</blockquote>
+<hr>
+<h3 id="3-non-globular-proteins让无序也有可预测性">3. <strong>Non-globular Proteins：让“无序”也有可预测性</strong></h3>
+<p><img src="/zh/literature/generation-of-protein-dynamics-by-machine-learning/images/image-4.png" alt=""></p>
+<p>在前面，我们主要讨论了类似“球状”蛋白（globular proteins）在不同状态下的多态性。但在生物体内，还有一类蛋白更加棘手：<strong>非球状、甚至完全无序的蛋白</strong>。</p>
+<p>看 Figure 1(c)，你会看到那些长链状、松散的构象，这就是 <strong>IDRs（intrinsically disordered regions）</strong> 的典型特征。它们不像球状蛋白那样有稳定折叠的三维结构，却在调控、信号传导、相分离等过程中发挥关键作用。问题是：</p>
+<ul>
+<li>
+<p><strong>实验测不到清晰结构</strong>，因为它们本身就是一堆不同构象的混合。</p>
+</li>
+<li>
+<p><strong>AF2 给不出合理预测</strong>，虽然能识别出哪些片段是无序的（通过低置信度分数），但预测出来的构象往往过于“理想化”，和真实的动态集合相差甚远。</p>
+</li>
+</ul>
+<p>于是，研究者们开始尝试开发专门的 ML 方法来应对这类系统：</p>
+<ul>
+<li>
+<p><strong>idpGAN</strong>：用 coarse-grained 模拟数据训练生成模型，可以快速生成不同 IDR 的结构集合。</p>
+</li>
+<li>
+<p><strong>IDPFold</strong>：采用“混合训练策略”，先用 PDB 和 NMR 的高分辨率数据预训练，再用低分辨率模拟数据微调，从而能捕捉到 IDR 的实验可观测特征（比如化学位移、半径分布）。</p>
+</li>
+<li>
+<p><strong>BioEmu</strong>：虽然并没有针对 IDR 专门训练，但在测试时展现了“零样本”能力，能生成接近实验的构象集合。这说明“混合数据+生成模型”是一条很有前景的路线。</p>
+</li>
+</ul>
+<blockquote>
+<p>这些工作揭示了一个重要趋势：<strong>未来的蛋白质建模，不仅仅是给出“一个漂亮的结构”，而是要能生成“一个构象集合”，并且让集合的统计特征尽量吻合实验观测。</strong></p>
+</blockquote>
+<p>挑战也很现实：</p>
+<ul>
+<li>
+<p><strong>数据稀缺</strong>：无序蛋白在 PDB 里几乎没什么代表性结构。</p>
+</li>
+<li>
+<p><strong>泛化难题</strong>：如何处理超长 IDR（&gt;200 氨基酸），目前几乎只能依赖粗粒化模拟，精细度受限。</p>
+</li>
+</ul>
+<blockquote>
+<p>总结来说，Panel (c) 向我们展示了一个新前沿：<strong>机器学习正在帮助我们用统计学的方式理解“无序中的秩序”</strong>。这不仅有助于解释 IDR 的生物学功能，也可能为神经退行性疾病（如与 amyloid 相关的病理）带来新的研究工具。</p>
+</blockquote>
+<hr>
+<h3 id="4-integrating-experimental-data用实验校正ai-的想象力">4. <strong>Integrating Experimental Data：用实验“校正”AI 的想象力</strong></h3>
+<p><img src="/zh/literature/generation-of-protein-dynamics-by-machine-learning/images/image-1.png" alt=""></p>
+<p>到这里，大家可能会问：机器学习模型预测出来的这些构象集合，究竟有多接近真实？这正是 Panel (d) 想回答的问题。</p>
+<p>看 Figure 1(d)，配图里展示了实验数据（比如 NMR、Cryo-EM、红外光谱等）与机器学习模型结合的过程。思路很简单：</p>
+<ul>
+<li>
+<p><strong>单靠 AI</strong>，它可能生成一些“看起来合理”的构象，但未必反映真实概率分布。</p>
+</li>
+<li>
+<p><strong>单靠实验</strong>，又往往捕捉不到完整的动力学集合，只能提供一些“投影信息”。</p>
+</li>
+<li>
+<p><strong>两者结合</strong>，才能让预测既高效，又更贴近真实世界。</p>
+</li>
+</ul>
+<p>目前主要有两条策略：</p>
+<ol>
+<li>
+<p><strong>训练阶段引入实验约束</strong></p>
+<ul>
+<li>
+<p><strong>DynamICE</strong>：在训练时直接用 NMR 数据对模型进行微调，让生成的构象集合符合实验观测。</p>
+</li>
+<li>
+<p><strong>DEERFold</strong>：在 AlphaFold 基础上引入双电子自旋共振（DEER）数据，得到更符合实验的结构。</p>
+</li>
+<li>
+<p><strong>Dyna-1</strong>：用大规模 NMR 弛豫数据训练，直接捕捉毫秒级的蛋白动力学。</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>
+<p><strong>推理阶段引入实验引导</strong></p>
+<ul>
+<li>
+<p>不改变模型本身，而是在生成时给它“加偏置”。</p>
+</li>
+<li>
+<p>例如 <strong>idpSAM</strong> 在采样过程中引入 radius-of-gyration 约束，<strong>IDPForge</strong> 更进一步，能结合 NMR 数据、Rg 分布、甚至已有的折叠域信息。</p>
+</li>
+<li>
+<p>在球状蛋白里，也出现了类似思路：比如 <strong>ROCKET 算法</strong>，让 AlphaFold 生成的模型更好地贴合 X-ray 或 Cryo-EM 数据；<strong>实验引导的 AlphaFold3</strong> 则把电子密度直接融入扩散过程，使动态区域更接近实验结果。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>这两种策略各有优势：</p>
+<ul>
+<li>
+<p>训练时引入约束，能让模型从根本上“学会”物理规律，但需要大量高质量实验数据。</p>
+</li>
+<li>
+<p>推理时加入偏置，灵活性更高，也能针对不同实验条件快速适配。</p>
+</li>
+</ul>
+<blockquote>
+<p>总结来说，Panel (d) 向我们展示了一个未来愿景：<strong>机器学习与实验不再是平行的两条路，而是互相补充的伙伴</strong>。AI 提供速度与想象力，实验提供真实性与校正能力，两者结合有望让蛋白质动力学建模迈向真正的“精准预测”。</p>
+</blockquote>
+<hr>
+<h3 id="总结从静态雕塑到动态生命"><strong>总结：从静态雕塑到动态生命</strong></h3>
+<p>回顾全文，我们可以看到一个清晰的趋势：</p>
+<ul>
+<li>
+<p>AlphaFold2 解决了“<strong>蛋白质长什么样</strong>”的问题；</p>
+</li>
+<li>
+<p>而新一代的机器学习方法，正在解决“<strong>蛋白质是怎么动的</strong>”这一更关键的问题。</p>
+</li>
+</ul>
+<p>无论是 Panel (a) 的多态生成，Panel (b) 的模拟加速，Panel (c) 的无序蛋白建模，还是 Panel (d) 的实验结合，它们都指向同一个未来：</p>
+<blockquote>
+<p><strong>AI 将帮助我们不仅看见蛋白质的“照片”，还将捕捉到它们的“电影”</strong>。</p>
+</blockquote>
+<p>对于蛋白质设计和药物研发来说，这意味着我们将更有可能预测并调控蛋白质的功能状态，为靶向设计和精确干预开辟全新道路。</p>
+<p>🔗原文链接：https://doi.org/10.1016/j.sbi.2025.103115</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/iZXz7MzpwSXk8f5_zOm1rw"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-dynamics/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Dynamics</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/molecular-dynamics/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Molecular Dynamics</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/cryo-em/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Cryo-EM</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/cryo-et/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Cryo-ET</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/structural-biology/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Structural Biology</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/machine-learning/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Machine Learning</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/review/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Review</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

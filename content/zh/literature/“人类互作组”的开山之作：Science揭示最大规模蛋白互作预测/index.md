@@ -1,9 +1,16 @@
 ---
 title: "“人类互作组”的开山之作：Science揭示最大规模蛋白互作预测"
 date: 2025-09-29
+
+tags: ["AI4S", "蛋白互作", "PPI", "Science", "结构生物学"]
+categories: ["文献解读"]
+keywords: ["protein-protein interaction", "human interactome", "AI4S", "PPI prediction", "RF2-PPI"]
+
 featured_image: "cover.jpg"
-externalLink: https://mp.weixin.qq.com/s/-nfks14vBtoNQdmedK55lA
+externalLink: "https://mp.weixin.qq.com/s/-nfks14vBtoNQdmedK55lA"
+
 summary: "我愿称这篇文章为“人类互作组”的开山之作！"
+description: "解读Science重磅工作：首次构建大规模高精度人类蛋白互作图谱，揭示AI在结构生物学与互作预测中的突破。"
 ---
 
 

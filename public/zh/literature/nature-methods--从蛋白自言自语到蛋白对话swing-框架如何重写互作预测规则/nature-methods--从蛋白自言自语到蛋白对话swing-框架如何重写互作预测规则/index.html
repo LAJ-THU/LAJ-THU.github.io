@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="今天要和大家分享一篇刚刚发表在 Nature Methods（2025 年 8 月）的重磅工作——Sliding Window Interaction Grammar (SWING)。
+
+这是由匹兹堡大学团队提出的一种全新蛋白–蛋白/蛋白–肽段互作语言模型，它不仅在免疫学核心任务——pMHC 结合预测中表现出色，还展现了跨等位基因、跨 MHC 类别、跨物种的惊人泛化能力，甚至能识别氨基酸变异导致的特异性互作破坏。
+为什么值得关注？
+
+
+方法创新：它并没有依赖更深更复杂的网络，而是换了一个“视角”——先用生化差异把互作编码成一种“语言”，再让模型去学。
+
+
+应用广度：从疫苗设计、疾病表位预测，到蛋白互作网络中的变异致病机制研究，都有直接落地价值。
+
+
+泛化能力：在完全零样本的场景下（未见等位基因、跨 MHC 类别、跨物种），依然保持高精度，这对蛋白设计与免疫组学来说是非常罕见的能力。
+
+
+接下来，我们就结合文章配图，一步步拆解 SWING 是如何从“氨基酸序列”读懂“蛋白对话”，并在多个领域实现全能预测的。
+
+1. 引言：为什么需要新的“蛋白互作语言模型”
+在蛋白质科学里，我们常说“结构决定功能”，但更准确的说法可能是“互作决定功能”(虽然结构决定互作）。绝大多数蛋白并不是孤立发挥作用，而是依赖与其他蛋白或肽段的精确结合。然而，即便有了 AlphaFold 这样的结构预测神器，现有的蛋白语言模型（protein language models, pLMs）在“读懂”蛋白互作上依然存在短板。
+为什么？
+答案如下图所示：
+
+
+
+传统 pLM 通常会分别对两条蛋白序列做 embedding（序列编码），然后把结果拼在一起预测互作可能性。
+
+
+问题是，这样的编码方式忽略了真正发生结合的局部残基（residue contact points），相当于把两篇文章直接合并，而不去关注它们交互的那几句对话。
+
+
+结果是模型能捕捉到单条序列的特征，却对互作的“语法”理解不深。
+
+
+这篇文章提出了一个全新的思路：
+把蛋白互作当作一种语言，把每一次残基配对当作一个“单词”，用滑动窗口的方式读出整段“对话”。
+
+这个模型被作者命名为 Sliding Window Interaction Grammar（SWING）——字面意思就是“滑动窗口交互语法”。它的核心创新是直接在 embedding 前，把两条序列的配对信息转换成一个“生化词汇表”（interaction vocabulary），再交给语言模型去学习。
+换句话说，如果说传统 pLM 是在学习“蛋白的自我独白”，那么 SWING 学的是“蛋白之间的对话脚本”。
+
+2. SWING 核心机制拆解——从生化差异到交互语法
+SWING 的核心思想是：在建模前，将两条互作序列的局部配对信息编码为“交互语言”，再让语言模型去学习其统计规律。 这一点在 Fig. 1b–d 中有清晰展示。
+（1）滑动窗口匹配（Sliding Window）">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/nature-methods--%E4%BB%8E%E8%9B%8B%E7%99%BD%E8%87%AA%E8%A8%80%E8%87%AA%E8%AF%AD%E5%88%B0%E8%9B%8B%E7%99%BD%E5%AF%B9%E8%AF%9Dswing-%E6%A1%86%E6%9E%B6%E5%A6%82%E4%BD%95%E9%87%8D%E5%86%99%E4%BA%92%E4%BD%9C%E9%A2%84%E6%B5%8B%E8%A7%84%E5%88%99/nature-methods--%E4%BB%8E%E8%9B%8B%E7%99%BD%E8%87%AA%E8%A8%80%E8%87%AA%E8%AF%AD%E5%88%B0%E8%9B%8B%E7%99%BD%E5%AF%B9%E8%AF%9Dswing-%E6%A1%86%E6%9E%B6%E5%A6%82%E4%BD%95%E9%87%8D%E5%86%99%E4%BA%92%E4%BD%9C%E9%A2%84%E6%B5%8B%E8%A7%84%E5%88%99/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/nature-methods--%E4%BB%8E%E8%9B%8B%E7%99%BD%E8%87%AA%E8%A8%80%E8%87%AA%E8%AF%AD%E5%88%B0%E8%9B%8B%E7%99%BD%E5%AF%B9%E8%AF%9Dswing-%E6%A1%86%E6%9E%B6%E5%A6%82%E4%BD%95%E9%87%8D%E5%86%99%E4%BA%92%E4%BD%9C%E9%A2%84%E6%B5%8B%E8%A7%84%E5%88%99/nature-methods--%E4%BB%8E%E8%9B%8B%E7%99%BD%E8%87%AA%E8%A8%80%E8%87%AA%E8%AF%AD%E5%88%B0%E8%9B%8B%E7%99%BD%E5%AF%B9%E8%AF%9Dswing-%E6%A1%86%E6%9E%B6%E5%A6%82%E4%BD%95%E9%87%8D%E5%86%99%E4%BA%92%E4%BD%9C%E9%A2%84%E6%B5%8B%E8%A7%84%E5%88%99/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="今天要和大家分享一篇刚刚发表在 Nature Methods（2025 年 8 月）的重磅工作——Sliding Window Interaction Grammar (SWING)。
+这是由匹兹堡大学团队提出的一种全新蛋白–蛋白/蛋白–肽段互作语言模型，它不仅在免疫学核心任务——pMHC 结合预测中表现出色，还展现了跨等位基因、跨 MHC 类别、跨物种的惊人泛化能力，甚至能识别氨基酸变异导致的特异性互作破坏。
+为什么值得关注？
+方法创新：它并没有依赖更深更复杂的网络，而是换了一个“视角”——先用生化差异把互作编码成一种“语言”，再让模型去学。
+应用广度：从疫苗设计、疾病表位预测，到蛋白互作网络中的变异致病机制研究，都有直接落地价值。
+泛化能力：在完全零样本的场景下（未见等位基因、跨 MHC 类别、跨物种），依然保持高精度，这对蛋白设计与免疫组学来说是非常罕见的能力。
+接下来，我们就结合文章配图，一步步拆解 SWING 是如何从“氨基酸序列”读懂“蛋白对话”，并在多个领域实现全能预测的。
+1. 引言：为什么需要新的“蛋白互作语言模型” 在蛋白质科学里，我们常说“结构决定功能”，但更准确的说法可能是“互作决定功能”(虽然结构决定互作）。绝大多数蛋白并不是孤立发挥作用，而是依赖与其他蛋白或肽段的精确结合。然而，即便有了 AlphaFold 这样的结构预测神器，现有的蛋白语言模型（protein language models, pLMs）在“读懂”蛋白互作上依然存在短板。
+为什么？
+答案如下图所示：
+传统 pLM 通常会分别对两条蛋白序列做 embedding（序列编码），然后把结果拼在一起预测互作可能性。
+问题是，这样的编码方式忽略了真正发生结合的局部残基（residue contact points），相当于把两篇文章直接合并，而不去关注它们交互的那几句对话。
+结果是模型能捕捉到单条序列的特征，却对互作的“语法”理解不深。
+这篇文章提出了一个全新的思路：
+把蛋白互作当作一种语言，把每一次残基配对当作一个“单词”，用滑动窗口的方式读出整段“对话”。
+这个模型被作者命名为 Sliding Window Interaction Grammar（SWING）——字面意思就是“滑动窗口交互语法”。它的核心创新是直接在 embedding 前，把两条序列的配对信息转换成一个“生化词汇表”（interaction vocabulary），再交给语言模型去学习。
+换句话说，如果说传统 pLM 是在学习“蛋白的自我独白”，那么 SWING 学的是“蛋白之间的对话脚本”。
+2. SWING 核心机制拆解——从生化差异到交互语法 SWING 的核心思想是：在建模前，将两条互作序列的局部配对信息编码为“交互语言”，再让语言模型去学习其统计规律。 这一点在 Fig. 1b–d 中有清晰展示。
+（1）滑动窗口匹配（Sliding Window）">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="今天要和大家分享一篇刚刚发表在 Nature Methods（2025 年 8 月）的重磅工作——Sliding Window Interaction Grammar (SWING)。
+这是由匹兹堡大学团队提出的一种全新蛋白–蛋白/蛋白–肽段互作语言模型，它不仅在免疫学核心任务——pMHC 结合预测中表现出色，还展现了跨等位基因、跨 MHC 类别、跨物种的惊人泛化能力，甚至能识别氨基酸变异导致的特异性互作破坏。
+为什么值得关注？
+方法创新：它并没有依赖更深更复杂的网络，而是换了一个“视角”——先用生化差异把互作编码成一种“语言”，再让模型去学。
+应用广度：从疫苗设计、疾病表位预测，到蛋白互作网络中的变异致病机制研究，都有直接落地价值。
+泛化能力：在完全零样本的场景下（未见等位基因、跨 MHC 类别、跨物种），依然保持高精度，这对蛋白设计与免疫组学来说是非常罕见的能力。
+接下来，我们就结合文章配图，一步步拆解 SWING 是如何从“氨基酸序列”读懂“蛋白对话”，并在多个领域实现全能预测的。
+1. 引言：为什么需要新的“蛋白互作语言模型” 在蛋白质科学里，我们常说“结构决定功能”，但更准确的说法可能是“互作决定功能”(虽然结构决定互作）。绝大多数蛋白并不是孤立发挥作用，而是依赖与其他蛋白或肽段的精确结合。然而，即便有了 AlphaFold 这样的结构预测神器，现有的蛋白语言模型（protein language models, pLMs）在“读懂”蛋白互作上依然存在短板。
+为什么？
+答案如下图所示：
+传统 pLM 通常会分别对两条蛋白序列做 embedding（序列编码），然后把结果拼在一起预测互作可能性。
+问题是，这样的编码方式忽略了真正发生结合的局部残基（residue contact points），相当于把两篇文章直接合并，而不去关注它们交互的那几句对话。
+结果是模型能捕捉到单条序列的特征，却对互作的“语法”理解不深。
+这篇文章提出了一个全新的思路：
+把蛋白互作当作一种语言，把每一次残基配对当作一个“单词”，用滑动窗口的方式读出整段“对话”。
+这个模型被作者命名为 Sliding Window Interaction Grammar（SWING）——字面意思就是“滑动窗口交互语法”。它的核心创新是直接在 embedding 前，把两条序列的配对信息转换成一个“生化词汇表”（interaction vocabulary），再交给语言模型去学习。
+换句话说，如果说传统 pLM 是在学习“蛋白的自我独白”，那么 SWING 学的是“蛋白之间的对话脚本”。
+2. SWING 核心机制拆解——从生化差异到交互语法 SWING 的核心思想是：在建模前，将两条互作序列的局部配对信息编码为“交互语言”，再让语言模型去学习其统计规律。 这一点在 Fig. 1b–d 中有清晰展示。
+（1）滑动窗口匹配（Sliding Window）">
+  <meta itemprop="wordCount" content="618">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="今天要和大家分享一篇刚刚发表在 Nature Methods（2025 年 8 月）的重磅工作——Sliding Window Interaction Grammar (SWING)。
+这是由匹兹堡大学团队提出的一种全新蛋白–蛋白/蛋白–肽段互作语言模型，它不仅在免疫学核心任务——pMHC 结合预测中表现出色，还展现了跨等位基因、跨 MHC 类别、跨物种的惊人泛化能力，甚至能识别氨基酸变异导致的特异性互作破坏。
+为什么值得关注？
+方法创新：它并没有依赖更深更复杂的网络，而是换了一个“视角”——先用生化差异把互作编码成一种“语言”，再让模型去学。
+应用广度：从疫苗设计、疾病表位预测，到蛋白互作网络中的变异致病机制研究，都有直接落地价值。
+泛化能力：在完全零样本的场景下（未见等位基因、跨 MHC 类别、跨物种），依然保持高精度，这对蛋白设计与免疫组学来说是非常罕见的能力。
+接下来，我们就结合文章配图，一步步拆解 SWING 是如何从“氨基酸序列”读懂“蛋白对话”，并在多个领域实现全能预测的。
+1. 引言：为什么需要新的“蛋白互作语言模型” 在蛋白质科学里，我们常说“结构决定功能”，但更准确的说法可能是“互作决定功能”(虽然结构决定互作）。绝大多数蛋白并不是孤立发挥作用，而是依赖与其他蛋白或肽段的精确结合。然而，即便有了 AlphaFold 这样的结构预测神器，现有的蛋白语言模型（protein language models, pLMs）在“读懂”蛋白互作上依然存在短板。
+为什么？
+答案如下图所示：
+传统 pLM 通常会分别对两条蛋白序列做 embedding（序列编码），然后把结果拼在一起预测互作可能性。
+问题是，这样的编码方式忽略了真正发生结合的局部残基（residue contact points），相当于把两篇文章直接合并，而不去关注它们交互的那几句对话。
+结果是模型能捕捉到单条序列的特征，却对互作的“语法”理解不深。
+这篇文章提出了一个全新的思路：
+把蛋白互作当作一种语言，把每一次残基配对当作一个“单词”，用滑动窗口的方式读出整段“对话”。
+这个模型被作者命名为 Sliding Window Interaction Grammar（SWING）——字面意思就是“滑动窗口交互语法”。它的核心创新是直接在 embedding 前，把两条序列的配对信息转换成一个“生化词汇表”（interaction vocabulary），再交给语言模型去学习。
+换句话说，如果说传统 pLM 是在学习“蛋白的自我独白”，那么 SWING 学的是“蛋白之间的对话脚本”。
+2. SWING 核心机制拆解——从生化差异到交互语法 SWING 的核心思想是：在建模前，将两条互作序列的局部配对信息编码为“交互语言”，再让语言模型去学习其统计规律。 这一点在 Fig. 1b–d 中有清晰展示。
+（1）滑动窗口匹配（Sliding Window）">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>今天要和大家分享一篇刚刚发表在 <em>Nature Methods</em>（2025 年 8 月）的重磅工作——<strong>Sliding Window Interaction Grammar (SWING)</strong>。</p>
+<p><img src="images/image-14.png" alt=""></p>
+<p>这是由匹兹堡大学团队提出的一种全新<strong>蛋白–蛋白/蛋白–肽段互作语言模型</strong>，它不仅在免疫学核心任务——pMHC 结合预测中表现出色，还展现了跨等位基因、跨 MHC 类别、跨物种的惊人泛化能力，甚至能识别氨基酸变异导致的特异性互作破坏。</p>
+<p>为什么值得关注？</p>
+<ul>
+<li>
+<p><strong>方法创新</strong>：它并没有依赖更深更复杂的网络，而是换了一个“视角”——先用生化差异把互作编码成一种“语言”，再让模型去学。</p>
+</li>
+<li>
+<p><strong>应用广度</strong>：从疫苗设计、疾病表位预测，到蛋白互作网络中的变异致病机制研究，都有直接落地价值。</p>
+</li>
+<li>
+<p><strong>泛化能力</strong>：在完全零样本的场景下（未见等位基因、跨 MHC 类别、跨物种），依然保持高精度，这对蛋白设计与免疫组学来说是非常罕见的能力。</p>
+</li>
+</ul>
+<p>接下来，我们就结合文章配图，一步步拆解 SWING 是如何从“氨基酸序列”读懂“蛋白对话”，并在多个领域实现全能预测的。</p>
+<hr>
+<h3 id="1-引言为什么需要新的蛋白互作语言模型">1. <strong>引言：为什么需要新的“蛋白互作语言模型”</strong></h3>
+<p>在蛋白质科学里，我们常说“结构决定功能”，但更准确的说法可能是“互作决定功能”(虽然结构决定互作）。绝大多数蛋白并不是孤立发挥作用，而是依赖与其他蛋白或肽段的精确结合。然而，即便有了 AlphaFold 这样的结构预测神器，现有的<strong>蛋白语言模型（protein language models, pLMs）</strong>在“读懂”蛋白互作上依然存在短板。</p>
+<p><strong>为什么？</strong></p>
+<p>答案如下图所示：</p>
+<p><img src="images/image-9.png" alt=""></p>
+<ul>
+<li>
+<p>传统 pLM 通常会分别对两条蛋白序列做 embedding（序列编码），然后把结果拼在一起预测互作可能性。</p>
+</li>
+<li>
+<p>问题是，这样的编码方式忽略了真正发生结合的局部残基（residue contact points），相当于把两篇文章直接合并，而不去关注它们交互的那几句对话。</p>
+</li>
+<li>
+<p>结果是模型能捕捉到单条序列的特征，却对互作的“语法”理解不深。</p>
+</li>
+</ul>
+<p>这篇文章提出了一个全新的思路：</p>
+<p><strong>把蛋白互作当作一种语言，把每一次残基配对当作一个“单词”，用滑动窗口的方式读出整段“对话”。</strong></p>
+<p><img src="images/image-12.png" alt=""></p>
+<p>这个模型被作者命名为 <strong>Sliding Window Interaction Grammar（SWING）</strong>——字面意思就是“滑动窗口交互语法”。它的核心创新是直接在 embedding 前，把两条序列的配对信息转换成一个“生化词汇表”（interaction vocabulary），再交给语言模型去学习。</p>
+<p>换句话说，如果说传统 pLM 是在学习“蛋白的自我独白”，那么 SWING 学的是“蛋白之间的对话脚本”。</p>
+<hr>
+<h3 id="2-swing-核心机制拆解从生化差异到交互语法">2. <strong>SWING 核心机制拆解——从生化差异到交互语法</strong></h3>
+<p>SWING 的核心思想是：<strong>在建模前，将两条互作序列的局部配对信息编码为“交互语言”，再让语言模型去学习其统计规律。</strong> 这一点在 <strong>Fig. 1b–d</strong> 中有清晰展示。</p>
+<p><strong>（1）滑动窗口匹配（Sliding Window）</strong></p>
+<p><img src="images/image-13.png" alt=""></p>
+<ul>
+<li>
+<p>设定一个窗口长度 <em>n</em>（例如与肽段长度相同），将该窗口依次滑动匹配到互作伙伴的每一个可能位置。</p>
+</li>
+<li>
+<p>在每个位置，对窗口内的氨基酸逐一配对，计算它们在某一生化尺度上的差异（如极性、疏水性等）。</p>
+</li>
+<li>
+<p>得到的差异值是绝对值，经离散化（rounding + ordinal encoding）后，形成一个整数序列——这就是“交互语言”的基础符号。</p>
+</li>
+</ul>
+<p><strong>（2）生成 k-mer 词汇（Vocabulary Generation）</strong></p>
+<ul>
+<li>
+<p>将上述整数序列进一步分割成长度为 <em>k</em> 的重叠子序列（k-mers），每个 k-mer 对应一个“词（word）”，而整段滑动窗口配对结果就像是一篇“文档（document）”。</p>
+</li>
+<li>
+<p>在 SWING 的语境中，每一次蛋白-蛋白或肽-蛋白互作就是一篇文档，k-mers 则是文档的词汇。</p>
+</li>
+</ul>
+<p><strong>（3）Doc2Vec 嵌入（Embedding）</strong></p>
+<p><img src="images/image-10.png" alt=""></p>
+<ul>
+<li>
+<p>这些“交互文档”被输入到 <strong>Doc2Vec</strong> 架构中（Fig. 1c），生成固定维度的向量表示（interaction embedding）。</p>
+</li>
+<li>
+<p>与直接用 pLM 对单条序列编码不同，这里的 embedding 是对<strong>配对关系本身</strong>进行建模，不再依赖对每条序列独立建模的结果。</p>
+</li>
+</ul>
+<p><strong>（4）下游分类（Supervised Learning）</strong></p>
+<ul>
+<li>
+<p>嵌入向量被输入到一个监督学习模型（文中使用 <strong>XGBoost</strong>）进行任务预测，如 pMHC 结合预测、变异致病机制解析等。</p>
+</li>
+<li>
+<p>这种分离式架构的好处是，Doc2Vec 提供的交互嵌入具有高度的任务泛化能力，可以被任意分类器复用。</p>
+</li>
+</ul>
+<p><strong>（5）关键创新（Fig. 1d）</strong></p>
+<p><img src="images/image-8.png" alt=""></p>
+<ul>
+<li>
+<p><strong>长度无关性（length-agnostic）</strong>：不受序列长度限制，适用于跨物种和不同 MHC 类别。</p>
+</li>
+<li>
+<p><strong>跨上下文泛化（cross-context generalization）</strong>：能在 Class I 与 Class II pMHC、甚至跨物种任务中保持高预测性能。</p>
+</li>
+<li>
+<p><strong>无依赖特定等位基因训练集（allele-independent）</strong>：相比依赖等位基因特异性实验数据的方法，SWING 能对未见过的等位基因直接推断。</p>
+</li>
+</ul>
+<p>用更形象的比喻来说，传统方法是在“各说各话”后再猜测两个人会不会合作，而 SWING 则是<strong>直接分析他们在每一次眼神、每一句对话中的化学反应</strong>，从而精确建模互作模式。</p>
+<hr>
+<h3 id="3-pmhc-预测能力从-class-i-到-class-ii-再到跨类迁移">3. <strong>pMHC 预测能力：从 Class I 到 Class II 再到跨类迁移</strong></h3>
+<h4 id="31-从已知到未知泛化能力验证"><strong>3.1 从已知到未知：泛化能力验证</strong></h4>
+<p>在 <strong>Fig. 2b–g</strong> 中，作者首先在 <strong>人类 MHC Class I 数据集</strong>上评估 SWING。</p>
+<p><img src="images/image-7.png" alt=""></p>
+<ul>
+<li>
+<p><strong>标准交叉验证（SCV）</strong>：训练集与测试集共享部分等位基因，但 pMHC 配对不重叠。SWING 在这一设置下的 AUC 为 <strong>0.72</strong>（P &lt; 0.001），显著高于随机水平（Fig. 2e）。</p>
+</li>
+<li>
+<p><strong>跨预测（Cross-prediction）</strong>：训练集与测试集的等位基因完全不同，模拟真实“零样本”推断场景。SWING 依然在功能上差异较大的未见等位基因（如 HLA-A32:01、HLA-B38:01、HLA-C03:03）上取得 <strong>0.63–0.70</strong> 的 AUC（Fig. 2g）。</p>
+</li>
+</ul>
+<p><img src="images/image-4.png" alt=""></p>
+<p><img src="images/image-5.png" alt=""></p>
+<p>相似实验在 <strong>Class II</strong> 中重复（Fig. 2h–j），AUC 更高：</p>
+<ul>
+<li>
+<p>SCV 下为 <strong>0.90</strong>（P &lt; 0.001）</p>
+</li>
+<li>
+<p>未见 Class II 等位基因（DRB1_0102、DRB1_0404）上依旧保持 <strong>0.93–0.95</strong></p>
+</li>
+</ul>
+<p><img src="images/image-6.png" alt=""></p>
+<p>这说明 SWING 学到的是跨等位基因的“互作语法”，而不是死记某个特定 HLA 的结合模式。</p>
+<hr>
+<h4 id="32-生化尺度的可替换性"><strong>3.2 生化尺度的可替换性</strong></h4>
+<p>在 <strong>Fig. 3a–c</strong>，作者将编码时的生化指标从<strong>极性（polarity）替换为疏水性（hydrophobicity）</strong>，结果性能几乎不变（Class I: 0.72 → 0.72，Class II: 0.90 → 0.88）。</p>
+<p><img src="images/image-2.png" alt=""></p>
+<p>这表明 SWING 对生化指标具有鲁棒性，本质上是在学习相对生化差异的模式，而非依赖某个特定物理量。</p>
+<p><img src="images/image-11.png" alt=""></p>
+<hr>
+<h4 id="33-免疫学机制的生物学解释"><strong>3.3 免疫学机制的生物学解释</strong></h4>
+<p><strong>Fig. 3g–i</strong> 给出了一个重要的免疫学验证：</p>
+<p><img src="images/image-3.png" alt=""></p>
+<ul>
+<li>
+<p>对于 Class II，肽段的 <strong>9-AA 核心</strong>决定结合特异性，其两端的延伸区域（flanking residues）也会影响结合稳定性。</p>
+</li>
+<li>
+<p>当作者逐步截短肽段（从 21 AA 到 5 AA），AUC 在长度低于 9 AA 时出现明显断崖式下降（Fig. 3h）。</p>
+</li>
+<li>
+<p>这说明 SWING <strong>自动学会了核心区的决定性作用</strong>，而不是依赖人工定义的 motif。</p>
+</li>
+</ul>
+<p>这种“数据驱动学到免疫规则”的特性，使 SWING 有潜力在没有结构信息的情况下，推断未知等位基因或异常长度肽段的结合能力。</p>
+<hr>
+<h3 id="4-zero-shot-与跨领域泛化">4. <strong>Zero-shot 与跨领域泛化</strong></h3>
+<p>SWING 不仅能在单一 MHC 类别内部泛化，还展现了<strong>跨类别（Class I ↔ Class II）</strong>、**跨物种（人 ↔ 小鼠）**的零样本预测能力。这一部分在 <strong>Fig. 4a–i</strong> 中有系统展示。</p>
+<hr>
+<h4 id="41-class-i-模型预测-class-ii跨类别零样本"><strong>4.1 Class I 模型预测 Class II（跨类别零样本）</strong></h4>
+<p><img src="images/image.png" alt=""></p>
+<ul>
+<li>
+<p><strong>结构挑战</strong>：Class I 和 Class II MHC 的肽结合槽（binding groove）结构显著不同（Fig. 4a），前者两端封闭、限制肽长（8–12 AA），后者两端开放、允许更长肽段（14–25 AA）。</p>
+</li>
+<li>
+<p><strong>零样本结果</strong>：即便如此，<strong>只用 Class I 数据训练的 SWING 模型</strong>，在预测 Class II pMHC 时依然有 <strong>AUC = 0.74–0.77</strong>（Fig. 4b）。</p>
+</li>
+<li>
+<p>对比：NetMHCpan（Class I 模型）在该任务上接近随机，而 SWING 保持稳定预测性能（Fig. 4c）。这说明 SWING 嵌入捕捉到的是<strong>互作共性</strong>，而非单一类别特征。</p>
+</li>
+</ul>
+<hr>
+<h4 id="42-混合模型的联合预测能力"><strong>4.2 混合模型的联合预测能力</strong></h4>
+<p><img src="images/image-1.png" alt=""></p>
+<ul>
+<li>
+<p>作者训练了一个 <strong>混合模型</strong>（Class I + Class II 数据同时训练），用于预测两类任务（Fig. 4d–f）。</p>
+</li>
+<li>
+<p>结果显示，该模型在 Class I（AUC = 0.70–0.83）和 Class II（AUC = 0.88–0.93）上的表现，与单类别模型持平甚至更优。</p>
+</li>
+<li>
+<p>这对于需要同时分析 CD8+（Class I）与 CD4+（Class II）免疫应答的研究场景尤为重要，例如综合性疫苗设计或免疫病理机制研究。</p>
+</li>
+</ul>
+<hr>
+<h4 id="43-跨物种泛化人类模型--小鼠"><strong>4.3 跨物种泛化（人类模型 → 小鼠）</strong></h4>
+<p><img src="images/image-18.png" alt=""></p>
+<ul>
+<li>
+<p>人和小鼠的 MHC（HLA vs. H-2）在序列和结构上均有显著差异（Fig. 4g），这对于大多数基于 motif 的方法来说是巨大挑战。</p>
+</li>
+<li>
+<p><strong>零样本结果</strong>：</p>
+<ul>
+<li>
+<p>人类 Class II 模型预测小鼠 Class II（H-2-IAb）时，AUC = 0.88（Fig. 4h）</p>
+</li>
+<li>
+<p>混合模型预测同一任务，AUC = 0.85（Fig. 4i）</p>
+</li>
+</ul>
+</li>
+<li>
+<p>这一跨物种能力意味着，SWING 训练集可以完全基于人类数据，却能直接迁移到动物模型中进行免疫预测，大幅减少实验需求。</p>
+</li>
+</ul>
+<hr>
+<h4 id="44-疾病相关应用案例sle-与-t1d"><strong>4.4 疾病相关应用案例：SLE 与 T1D</strong></h4>
+<p><img src="images/image-22.png" alt=""></p>
+<ul>
+<li>
+<p><strong>系统性红斑狼疮（SLE）</strong>：小鼠 H-2-IEk 等位基因与狼疮性肾炎相关。SWING 在零样本条件下预测已知免疫渗透肽组（immunopeptidome），在各肽长上 recall 均优于 MixMHC2pred 和 NetMHCIIpan（Fig. 4j）。</p>
+</li>
+<li>
+<p><strong>1 型糖尿病（T1D）</strong>：小鼠 H-2-IAg7（人类 HLA-DQ8 同源物）是高风险等位基因。SWING 未经该等位基因训练即可达到最高准确率（Fig. 4k），且对肽长无偏倚（Fig. 4l）。</p>
+</li>
+</ul>
+<hr>
+<p>这一部分的结果说明，SWING 不仅是一个“特定任务高性能”模型，更是一个具备<strong>跨类别、跨物种、跨等位基因的统一互作语言框架</strong>。它的嵌入向量包含了互作的生化本质，因此在缺乏针对性数据的情形下，依然能做出可靠预测。</p>
+<hr>
+<h3 id="5-从免疫预测到变异致病机制解析">5. <strong>从免疫预测到变异致病机制解析</strong></h3>
+<p>除了 pMHC 预测，SWING 还被扩展到<strong>预测氨基酸变异（missense mutation）是否破坏特定蛋白互作</strong>这一更普适的任务。这一功能在 <strong>Fig. 5a–l</strong> 中有详细展示。</p>
+<hr>
+<h4 id="51-现有方法的局限"><strong>5.1 现有方法的局限</strong></h4>
+<ul>
+<li>
+<p>主流的变异效应预测（Variant Effect Prediction, VEP）工具，如 <strong>AlphaMissense（AM）</strong>、<strong>EVE</strong>、<strong>ESM1b</strong>，更多关注<strong>蛋白整体功能或致病性</strong>（organism-level pathogenicity），而非互作层面的特异性破坏（interaction-specific disruption）。</p>
+</li>
+<li>
+<p>这些方法在区分<strong>结合界面变异</strong>与<strong>非结合界面变异</strong>时表现良好（Fig. 5a），但在预测<strong>是否破坏特定 PPI</strong>时，性能显著下降（Fig. 5b–c）。</p>
+</li>
+</ul>
+<p><img src="images/image-23.png" alt=""></p>
+<hr>
+<h4 id="52-swing-的适配与训练策略"><strong>5.2 SWING 的适配与训练策略</strong></h4>
+<ul>
+<li>
+<p>在互作预测中，SWING 将滑动窗口对准<strong>包含变异的局部片段</strong>，与互作伙伴的序列进行生化差异编码（Fig. 5d）。</p>
+</li>
+<li>
+<p>每个变异样本同时包含其野生型（wild-type）版本作为“未破坏互作”对照，从而让模型学习破坏性与非破坏性模式的差异。</p>
+</li>
+</ul>
+<hr>
+<h4 id="53-性能评估"><strong>5.3 性能评估</strong></h4>
+<p><img src="images/image-19.png" alt=""></p>
+<ul>
+<li>
+<p><strong>孟德尔病相关变异</strong>（Mendelian mutations）：AUC = <strong>0.87</strong>（P &lt; 0.0001）（Fig. 5e）</p>
+</li>
+<li>
+<p><strong>人群常见与罕见变异</strong>（population variants）：AUC = <strong>0.80</strong>（P &lt; 0.0001）（Fig. 5f）</p>
+</li>
+<li>
+<p><strong>混合数据集</strong>（来源无关）：AUC = <strong>0.81</strong>（P &lt; 0.0001）（Fig. 5g）</p>
+</li>
+<li>
+<p>模型在**跨序列簇（cluster hold-out）**验证中依旧保持 AUC ~0.71（Fig. 5i），说明没有过拟合到特定序列背景。</p>
+</li>
+</ul>
+<p><img src="images/image-21.png" alt=""></p>
+<p>相比之下，AM、EVE、ESM1b 在相同任务中表现显著逊色（Fig. 5j）。</p>
+<hr>
+<h4 id="54-生物学解释与案例分析"><strong>5.4 生物学解释与案例分析</strong></h4>
+<p>作者展示了两个 SWING 预测的<strong>互作破坏变异</strong>实例（Fig. 5l）：</p>
+<ol>
+<li>
+<p><strong>PRKCH–BANP</strong>：</p>
+<ul>
+<li>
+<p>变异 rs2230500（Val374Ile）位于 PRKCH ATP 结合位点，同时也是 BANP 结合界面的一部分。</p>
+</li>
+<li>
+<p>该变异已知与类风湿关节炎及脑小血管病相关，可能通过改变自磷酸化水平及与 TP53 的间接互作，影响细胞增殖与肿瘤抑制通路。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>HPX–GLUD1</strong>：</p>
+<ul>
+<li>
+<p>变异 rs12117（Arg83Trp）位于 HPX 远离结合界面的区域，但 AlphaFold3 建模显示其导致构象变化，进而影响与 GLUD1 的结合。</p>
+</li>
+<li>
+<p>AM 将其预测为良性，而 SWING 能识别出该种“远距构象效应”。</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>这一部分的意义在于，SWING 从免疫学的 pMHC 特殊互作场景，扩展到了<strong>全局蛋白互作网络的变异致病机制预测</strong>。它不仅能识别直接界面破坏，还能捕捉到通过构象变化导致的远程效应。</p>
+<hr>
+<h3 id="6-与其他建模方法的全面对比">6. <strong>与其他建模方法的全面对比</strong></h3>
+<p>为了验证 SWING 框架在不同任务和泛化场景下的优势，作者将其与多种主流互作建模方法进行了系统对比（<strong>Fig. 6a–i</strong>）。</p>
+<hr>
+<h4 id="61-对比模型类型fig-6a"><strong>6.1 对比模型类型（Fig. 6a）</strong></h4>
+<p><img src="images/image-20.png" alt=""></p>
+<ul>
+<li>
+<p><strong>基于 pLM 的方法</strong>：</p>
+<ul>
+<li>
+<p><em>ESM1b-embedding</em>（直接取预训练 pLM 的蛋白嵌入）</p>
+</li>
+<li>
+<p><em>CEmbed-pLM / ESum-pLM</em>（将配对序列的嵌入进行拼接或求和）</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>交互语言模型（iLM）变体</strong>：</p>
+<ul>
+<li>
+<p><em>CNN-iLM</em>：用卷积神经网络直接学习交互语言</p>
+</li>
+<li>
+<p><em>SWING-iLM</em>：本文提出的方法，基于 Doc2Vec 对交互语言建模</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="62-在互作破坏预测任务中的表现fig-6b"><strong>6.2 在互作破坏预测任务中的表现（Fig. 6b）</strong></h4>
+<p><img src="images/image-16.png" alt=""></p>
+<ul>
+<li>
+<p>在“混合变异数据集（Mendelian + population）”的<strong>标准交叉验证（SCV）</strong>设置中：</p>
+<ul>
+<li>
+<p>SWING-iLM AUC ≈ <strong>0.81</strong>，优于 CNN-iLM（~0.77）和所有 pLM 基础方法（多数低于 0.75）</p>
+</li>
+<li>
+<p>随机分类器基线仅 0.5</p>
+</li>
+</ul>
+</li>
+<li>
+<p>这表明 SWING 对互作特异性模式的捕捉能力更强，而不是依赖单个序列特征。</p>
+</li>
+</ul>
+<hr>
+<h4 id="63-在-mhc-结合预测中的跨等位基因泛化fig-6ci"><strong>6.3 在 MHC 结合预测中的跨等位基因泛化（Fig. 6c–i）</strong></h4>
+<p>在多个 <strong>cross-prediction</strong> 场景下，SWING-iLM  consistently 领先：</p>
+<p><img src="images/image-15.png" alt=""></p>
+<ul>
+<li>
+<p><strong>混合等位基因模型 → 未见 Class II 等位基因</strong>（Fig. 6d）：SWING ~0.93，高于 CNN-iLM (~0.90) 和 pLM 方法（~0.85）</p>
+</li>
+<li>
+<p><strong>混合等位基因模型 → 未见 Class I 等位基因</strong>（Fig. 6e）：SWING ~0.82，对比 CNN-iLM (~0.79)</p>
+</li>
+<li>
+<p><strong>Class I 模型 → 未见 Class II 等位基因 DRB1_0102 / DRB1_0404</strong>（Fig. 6f–g）：SWING 分别保持 ~0.74 和 ~0.77</p>
+</li>
+<li>
+<p><strong>混合等位基因模型 → 小鼠等位基因 H-2-IEk / H-2-IAg7</strong>（Fig. 6h–i）：SWING 分别达 0.84 和 0.91，明显优于其他方法（大部分低于 0.8）</p>
+</li>
+</ul>
+<p><img src="images/image-17.png" alt=""></p>
+<hr>
+<h4 id="64-核心优势总结"><strong>6.4 核心优势总结</strong></h4>
+<ol>
+<li>
+<p><strong>生化差异驱动</strong>：编码直接来自氨基酸理化性质差异，不依赖特定结构或 motif 数据。</p>
+</li>
+<li>
+<p><strong>上下文无关性</strong>：可在跨类别、跨物种的零样本场景中保持高性能。</p>
+</li>
+<li>
+<p><strong>任务泛化性</strong>：同一嵌入可复用在免疫预测、PPI 破坏预测等完全不同的任务上。</p>
+</li>
+<li>
+<p><strong>长度无关性</strong>：不受输入序列长度限制，适应各种互作尺度。</p>
+</li>
+</ol>
+<hr>
+<p>这部分的对比结果强调了一个结论：<strong>SWING 不是在单一任务上“调优”出来的，而是一个可泛化到多类互作任务的统一框架</strong>。</p>
+<hr>
+<h3 id="7-总结与前景">7. <strong>总结与前景</strong></h3>
+<p>SWING（Sliding Window Interaction Grammar）通过一种全新的“交互语言”视角，将蛋白–蛋白及蛋白–肽段互作建模提升到新的高度。它的核心创新不在于更深的神经网络，而在于<strong>如何在建模前就把互作信息转化为语言结构</strong>：</p>
+<ul>
+<li>
+<p><strong>方法论创新</strong>：滑动窗口提取互作片段 → 生化差异编码 → k-mer 词汇化 → Doc2Vec 嵌入 → 下游预测</p>
+</li>
+<li>
+<p><strong>性能表现</strong>：在 pMHC 结合预测中，SWING 能跨等位基因、跨类别（Class I ↔ Class II）、跨物种（人 ↔ 小鼠）实现零样本泛化</p>
+</li>
+<li>
+<p><strong>任务拓展</strong>：不仅限于免疫学，在预测氨基酸变异导致的特定互作破坏上，SWING 也优于现有主流 VEP 工具</p>
+</li>
+<li>
+<p><strong>对比优势</strong>：在多种 cross-prediction 场景下，SWING consistently 高于 CNN-iLM 及基于 pLM 的嵌入方法</p>
+</li>
+</ul>
+<p><strong>未来潜力</strong>：</p>
+<ul>
+<li>
+<p><strong>免疫学应用</strong>：可辅助疫苗设计、稀有 MHC 等位基因免疫应答预测，以及疾病相关免疫表位的快速筛选</p>
+</li>
+<li>
+<p><strong>药物研发</strong>：用于小分子–蛋白、抗体–抗原等互作的亲和力预测，缩短早期筛选周期</p>
+</li>
+<li>
+<p><strong>结构未知互作推断</strong>：在缺乏高分辨率结构数据的情况下，利用序列级互作语言实现快速推断</p>
+</li>
+<li>
+<p><strong>大规模互作网络解析</strong>：在系统生物学层面，帮助识别关键互作节点和致病变异靶点</p>
+</li>
+</ul>
+<p>一句话总结：</p>
+<p><strong>SWING 不是一个“针对某个问题的专用模型”，而是一个能跨任务、跨类别、跨物种的通用互作语言框架</strong>。它为蛋白质设计与功能预测提供了新的思路——先理解“对话”，再设计“角色”。</p>
+<p>原文链接：https://doi.org/10.1038/s41592-025-02723-1</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="一、引子：我们为何需要Cryo-ET？
+传统结构生物学依赖于&quot;分而治之&quot;（divide and conquer）策略，通过X射线晶体学、核磁共振（NMR）光谱和单颗粒冷冻电镜（cryo-EM SPA）等方法，在原子分辨率下解析了数以千计的蛋白质结构。这些技术为蛋白质结构数据库（如PDB）奠定了坚实的基础。
+然而，细胞内蛋白质的功能并不是孤立发挥的，而是依赖于它们之间复杂且动态的相互作用。在细胞这一高度拥挤的环境中，蛋白质之间可能以短暂或稳定的方式结合，形成分子网络，共同调控生理活动。作者Cryo-ET领域的大牛Wolfgang Baumeister引用David Goodsell的水彩画（下图）来形容细胞内环境的“拥挤与复杂”，指出我们迫切需要一种能够原位、完整地观察细胞分子景观的方法。
+
+
+Cryo-ET（冷冻电子断层扫描）为解决这一挑战提供了突破口。它不仅能以接近生命自然状态的方式保持细胞结构，还能在无需荧光标签的前提下提供全面、真实的三维图像。这意味着研究者可以在不带偏见的前提下“看到全部”，观察预期与非预期的细胞结构。
+
+二、什么是Cryo-Electron Tomography？
+Cryo-ET 是“电子断层扫描”（electron tomography）与“冷冻电镜”（cryo-EM）技术的结合。它的核心原理是将细胞或组织快速冷冻到液氮温度（避免水结晶），然后在电子显微镜中从多个角度对其进行成像，再利用计算算法重建出三维图像。
+
+&ldquo;Cryo-ET provides holistic views of the inner space of cells and therefore has huge discovery potential.&rdquo;
+——Cryo-ET 能够以整体视角描绘细胞内部空间，具有巨大的发现潜力。
+
+与荧光显微镜相比，它不依赖预设标签，因此不受先验假设的限制；与单颗粒冷冻电镜不同，它不要求分子是重复、可平均的粒子，而能解析复杂、多样、非对称的细胞场景。
+
+
+
+三、Cryo-ET 的技术发展历程
+早在30年前，研究人员就证明通过自动化倾斜数据采集，可以将电子束对样本的辐射剂量控制在可接受范围内，使得对冰包埋的生物样本成像成为可能（Dierksen et al., 1993）。
+但最初Cryo-ET只能用于病毒或细菌等小而薄的样本，因为电子束无法穿透较厚的真核细胞。真核细胞只有靠近边缘的部位，如细胞膜、突起等，才能被观察。
+转机出现在FIB（Focused Ion Beam）技术被引入后。研究者可用离子束将厚样本局部研磨至电子透明厚度，形象地说是“在细胞上打开窗口”。这项技术极大拓宽了Cryo-ET的应用范围。
+尽管如此，整个实验流程——包括冷冻、研磨、转移、成像、重建与分析——仍然十分繁琐、效率有限。作者指出：“workflow &hellip; is long and often cumbersome”（整个流程漫长且常常繁重）。因此，Cryo-ET虽前景光明，但其实现仍需多方面技术革新。
+
+
+四、Cryo-ET 的完整工作流程
+Cryo-ET 包含以下关键步骤：
+
+
+冷冻固定（Vitrification）：将样本以极快速度冷却，形成非晶态冰，防止冰晶破坏结构。小样本采用液氮冲淬（plunge freezing），大体积样本如组织则需高压冷冻（high-pressure freezing）。
+
+
+薄层制备（FIB Milling）：由于细胞厚度不适合电子束透射，需使用离子束切割出100-200纳米厚的lamellae。此步骤耗时且效率低，是瓶颈之一。
+
+
+定位目标区域（Cryo-CLEM）：结合冷冻荧光显微镜（Cryo-correlative light electron microscopy），通过荧光标记帮助定位特定结构，如线粒体、内质网或病理聚集体。
+
+
+倾斜成像（Tilt series acquisition）：在电子显微镜中对样本从不同角度拍摄（通常每2度一个角度，共收集约100张投影图）。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="一、引子：我们为何需要Cryo-ET？ 传统结构生物学依赖于&#34;分而治之&#34;（divide and conquer）策略，通过X射线晶体学、核磁共振（NMR）光谱和单颗粒冷冻电镜（cryo-EM SPA）等方法，在原子分辨率下解析了数以千计的蛋白质结构。这些技术为蛋白质结构数据库（如PDB）奠定了坚实的基础。
+然而，细胞内蛋白质的功能并不是孤立发挥的，而是依赖于它们之间复杂且动态的相互作用。在细胞这一高度拥挤的环境中，蛋白质之间可能以短暂或稳定的方式结合，形成分子网络，共同调控生理活动。作者Cryo-ET领域的大牛Wolfgang Baumeister引用David Goodsell的水彩画（下图）来形容细胞内环境的“拥挤与复杂”，指出我们迫切需要一种能够原位、完整地观察细胞分子景观的方法。
+Cryo-ET（冷冻电子断层扫描）为解决这一挑战提供了突破口。它不仅能以接近生命自然状态的方式保持细胞结构，还能在无需荧光标签的前提下提供全面、真实的三维图像。这意味着研究者可以在不带偏见的前提下“看到全部”，观察预期与非预期的细胞结构。
+二、什么是Cryo-Electron Tomography？ Cryo-ET 是“电子断层扫描”（electron tomography）与“冷冻电镜”（cryo-EM）技术的结合。它的核心原理是将细胞或组织快速冷冻到液氮温度（避免水结晶），然后在电子显微镜中从多个角度对其进行成像，再利用计算算法重建出三维图像。
+“Cryo-ET provides holistic views of the inner space of cells and therefore has huge discovery potential.” ——Cryo-ET 能够以整体视角描绘细胞内部空间，具有巨大的发现潜力。
+与荧光显微镜相比，它不依赖预设标签，因此不受先验假设的限制；与单颗粒冷冻电镜不同，它不要求分子是重复、可平均的粒子，而能解析复杂、多样、非对称的细胞场景。
+三、Cryo-ET 的技术发展历程 早在30年前，研究人员就证明通过自动化倾斜数据采集，可以将电子束对样本的辐射剂量控制在可接受范围内，使得对冰包埋的生物样本成像成为可能（Dierksen et al., 1993）。
+但最初Cryo-ET只能用于病毒或细菌等小而薄的样本，因为电子束无法穿透较厚的真核细胞。真核细胞只有靠近边缘的部位，如细胞膜、突起等，才能被观察。
+转机出现在FIB（Focused Ion Beam）技术被引入后。研究者可用离子束将厚样本局部研磨至电子透明厚度，形象地说是“在细胞上打开窗口”。这项技术极大拓宽了Cryo-ET的应用范围。
+尽管如此，整个实验流程——包括冷冻、研磨、转移、成像、重建与分析——仍然十分繁琐、效率有限。作者指出：“workflow … is long and often cumbersome”（整个流程漫长且常常繁重）。因此，Cryo-ET虽前景光明，但其实现仍需多方面技术革新。
+四、Cryo-ET 的完整工作流程 Cryo-ET 包含以下关键步骤：
+冷冻固定（Vitrification）：将样本以极快速度冷却，形成非晶态冰，防止冰晶破坏结构。小样本采用液氮冲淬（plunge freezing），大体积样本如组织则需高压冷冻（high-pressure freezing）。
+薄层制备（FIB Milling）：由于细胞厚度不适合电子束透射，需使用离子束切割出100-200纳米厚的lamellae。此步骤耗时且效率低，是瓶颈之一。
+定位目标区域（Cryo-CLEM）：结合冷冻荧光显微镜（Cryo-correlative light electron microscopy），通过荧光标记帮助定位特定结构，如线粒体、内质网或病理聚集体。
+倾斜成像（Tilt series acquisition）：在电子显微镜中对样本从不同角度拍摄（通常每2度一个角度，共收集约100张投影图）。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="一、引子：我们为何需要Cryo-ET？ 传统结构生物学依赖于&#34;分而治之&#34;（divide and conquer）策略，通过X射线晶体学、核磁共振（NMR）光谱和单颗粒冷冻电镜（cryo-EM SPA）等方法，在原子分辨率下解析了数以千计的蛋白质结构。这些技术为蛋白质结构数据库（如PDB）奠定了坚实的基础。
+然而，细胞内蛋白质的功能并不是孤立发挥的，而是依赖于它们之间复杂且动态的相互作用。在细胞这一高度拥挤的环境中，蛋白质之间可能以短暂或稳定的方式结合，形成分子网络，共同调控生理活动。作者Cryo-ET领域的大牛Wolfgang Baumeister引用David Goodsell的水彩画（下图）来形容细胞内环境的“拥挤与复杂”，指出我们迫切需要一种能够原位、完整地观察细胞分子景观的方法。
+Cryo-ET（冷冻电子断层扫描）为解决这一挑战提供了突破口。它不仅能以接近生命自然状态的方式保持细胞结构，还能在无需荧光标签的前提下提供全面、真实的三维图像。这意味着研究者可以在不带偏见的前提下“看到全部”，观察预期与非预期的细胞结构。
+二、什么是Cryo-Electron Tomography？ Cryo-ET 是“电子断层扫描”（electron tomography）与“冷冻电镜”（cryo-EM）技术的结合。它的核心原理是将细胞或组织快速冷冻到液氮温度（避免水结晶），然后在电子显微镜中从多个角度对其进行成像，再利用计算算法重建出三维图像。
+“Cryo-ET provides holistic views of the inner space of cells and therefore has huge discovery potential.” ——Cryo-ET 能够以整体视角描绘细胞内部空间，具有巨大的发现潜力。
+与荧光显微镜相比，它不依赖预设标签，因此不受先验假设的限制；与单颗粒冷冻电镜不同，它不要求分子是重复、可平均的粒子，而能解析复杂、多样、非对称的细胞场景。
+三、Cryo-ET 的技术发展历程 早在30年前，研究人员就证明通过自动化倾斜数据采集，可以将电子束对样本的辐射剂量控制在可接受范围内，使得对冰包埋的生物样本成像成为可能（Dierksen et al., 1993）。
+但最初Cryo-ET只能用于病毒或细菌等小而薄的样本，因为电子束无法穿透较厚的真核细胞。真核细胞只有靠近边缘的部位，如细胞膜、突起等，才能被观察。
+转机出现在FIB（Focused Ion Beam）技术被引入后。研究者可用离子束将厚样本局部研磨至电子透明厚度，形象地说是“在细胞上打开窗口”。这项技术极大拓宽了Cryo-ET的应用范围。
+尽管如此，整个实验流程——包括冷冻、研磨、转移、成像、重建与分析——仍然十分繁琐、效率有限。作者指出：“workflow … is long and often cumbersome”（整个流程漫长且常常繁重）。因此，Cryo-ET虽前景光明，但其实现仍需多方面技术革新。
+四、Cryo-ET 的完整工作流程 Cryo-ET 包含以下关键步骤：
+冷冻固定（Vitrification）：将样本以极快速度冷却，形成非晶态冰，防止冰晶破坏结构。小样本采用液氮冲淬（plunge freezing），大体积样本如组织则需高压冷冻（high-pressure freezing）。
+薄层制备（FIB Milling）：由于细胞厚度不适合电子束透射，需使用离子束切割出100-200纳米厚的lamellae。此步骤耗时且效率低，是瓶颈之一。
+定位目标区域（Cryo-CLEM）：结合冷冻荧光显微镜（Cryo-correlative light electron microscopy），通过荧光标记帮助定位特定结构，如线粒体、内质网或病理聚集体。
+倾斜成像（Tilt series acquisition）：在电子显微镜中对样本从不同角度拍摄（通常每2度一个角度，共收集约100张投影图）。">
+  <meta itemprop="wordCount" content="151">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="一、引子：我们为何需要Cryo-ET？ 传统结构生物学依赖于&#34;分而治之&#34;（divide and conquer）策略，通过X射线晶体学、核磁共振（NMR）光谱和单颗粒冷冻电镜（cryo-EM SPA）等方法，在原子分辨率下解析了数以千计的蛋白质结构。这些技术为蛋白质结构数据库（如PDB）奠定了坚实的基础。
+然而，细胞内蛋白质的功能并不是孤立发挥的，而是依赖于它们之间复杂且动态的相互作用。在细胞这一高度拥挤的环境中，蛋白质之间可能以短暂或稳定的方式结合，形成分子网络，共同调控生理活动。作者Cryo-ET领域的大牛Wolfgang Baumeister引用David Goodsell的水彩画（下图）来形容细胞内环境的“拥挤与复杂”，指出我们迫切需要一种能够原位、完整地观察细胞分子景观的方法。
+Cryo-ET（冷冻电子断层扫描）为解决这一挑战提供了突破口。它不仅能以接近生命自然状态的方式保持细胞结构，还能在无需荧光标签的前提下提供全面、真实的三维图像。这意味着研究者可以在不带偏见的前提下“看到全部”，观察预期与非预期的细胞结构。
+二、什么是Cryo-Electron Tomography？ Cryo-ET 是“电子断层扫描”（electron tomography）与“冷冻电镜”（cryo-EM）技术的结合。它的核心原理是将细胞或组织快速冷冻到液氮温度（避免水结晶），然后在电子显微镜中从多个角度对其进行成像，再利用计算算法重建出三维图像。
+“Cryo-ET provides holistic views of the inner space of cells and therefore has huge discovery potential.” ——Cryo-ET 能够以整体视角描绘细胞内部空间，具有巨大的发现潜力。
+与荧光显微镜相比，它不依赖预设标签，因此不受先验假设的限制；与单颗粒冷冻电镜不同，它不要求分子是重复、可平均的粒子，而能解析复杂、多样、非对称的细胞场景。
+三、Cryo-ET 的技术发展历程 早在30年前，研究人员就证明通过自动化倾斜数据采集，可以将电子束对样本的辐射剂量控制在可接受范围内，使得对冰包埋的生物样本成像成为可能（Dierksen et al., 1993）。
+但最初Cryo-ET只能用于病毒或细菌等小而薄的样本，因为电子束无法穿透较厚的真核细胞。真核细胞只有靠近边缘的部位，如细胞膜、突起等，才能被观察。
+转机出现在FIB（Focused Ion Beam）技术被引入后。研究者可用离子束将厚样本局部研磨至电子透明厚度，形象地说是“在细胞上打开窗口”。这项技术极大拓宽了Cryo-ET的应用范围。
+尽管如此，整个实验流程——包括冷冻、研磨、转移、成像、重建与分析——仍然十分繁琐、效率有限。作者指出：“workflow … is long and often cumbersome”（整个流程漫长且常常繁重）。因此，Cryo-ET虽前景光明，但其实现仍需多方面技术革新。
+四、Cryo-ET 的完整工作流程 Cryo-ET 包含以下关键步骤：
+冷冻固定（Vitrification）：将样本以极快速度冷却，形成非晶态冰，防止冰晶破坏结构。小样本采用液氮冲淬（plunge freezing），大体积样本如组织则需高压冷冻（high-pressure freezing）。
+薄层制备（FIB Milling）：由于细胞厚度不适合电子束透射，需使用离子束切割出100-200纳米厚的lamellae。此步骤耗时且效率低，是瓶颈之一。
+定位目标区域（Cryo-CLEM）：结合冷冻荧光显微镜（Cryo-correlative light electron microscopy），通过荧光标记帮助定位特定结构，如线粒体、内质网或病理聚集体。
+倾斜成像（Tilt series acquisition）：在电子显微镜中对样本从不同角度拍摄（通常每2度一个角度，共收集约100张投影图）。">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <h4 id="一引子我们为何需要cryo-et">一、引子：我们为何需要Cryo-ET？</h4>
+<p>传统结构生物学依赖于&quot;分而治之&quot;（divide and conquer）策略，通过X射线晶体学、核磁共振（NMR）光谱和单颗粒冷冻电镜（cryo-EM SPA）等方法，在原子分辨率下解析了数以千计的蛋白质结构。这些技术为蛋白质结构数据库（如PDB）奠定了坚实的基础。</p>
+<p>然而，细胞内蛋白质的功能并不是孤立发挥的，而是依赖于它们之间复杂且动态的相互作用。在细胞这一高度拥挤的环境中，蛋白质之间可能以短暂或稳定的方式结合，形成分子网络，共同调控生理活动。作者Cryo-ET领域的大牛Wolfgang Baumeister引用David Goodsell的水彩画（下图）来形容细胞内环境的“拥挤与复杂”，指出我们迫切需要一种能够原位、完整地观察细胞分子景观的方法。</p>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-9.png" alt=""></p>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-8.png" alt=""></p>
+<p>Cryo-ET（冷冻电子断层扫描）为解决这一挑战提供了突破口。它不仅能以接近生命自然状态的方式保持细胞结构，还能在无需荧光标签的前提下提供全面、真实的三维图像。这意味着研究者可以在不带偏见的前提下“看到全部”，观察预期与非预期的细胞结构。</p>
+<hr>
+<h4 id="二什么是cryo-electron-tomography">二、什么是Cryo-Electron Tomography？</h4>
+<p>Cryo-ET 是“电子断层扫描”（electron tomography）与“冷冻电镜”（cryo-EM）技术的结合。它的核心原理是将细胞或组织快速冷冻到液氮温度（避免水结晶），然后在电子显微镜中从多个角度对其进行成像，再利用计算算法重建出三维图像。</p>
+<blockquote>
+<p>&ldquo;Cryo-ET provides holistic views of the inner space of cells and therefore has huge discovery potential.&rdquo;
+——Cryo-ET 能够以整体视角描绘细胞内部空间，具有巨大的发现潜力。</p>
+</blockquote>
+<p>与荧光显微镜相比，它不依赖预设标签，因此不受先验假设的限制；与单颗粒冷冻电镜不同，它不要求分子是重复、可平均的粒子，而能解析复杂、多样、非对称的细胞场景。</p>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-4.png" alt=""></p>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-3.png" alt=""></p>
+<hr>
+<h4 id="三cryo-et-的技术发展历程">三、Cryo-ET 的技术发展历程</h4>
+<p>早在30年前，研究人员就证明通过自动化倾斜数据采集，可以将电子束对样本的辐射剂量控制在可接受范围内，使得对冰包埋的生物样本成像成为可能（Dierksen et al., 1993）。</p>
+<p>但最初Cryo-ET只能用于病毒或细菌等小而薄的样本，因为电子束无法穿透较厚的真核细胞。真核细胞只有靠近边缘的部位，如细胞膜、突起等，才能被观察。</p>
+<p>转机出现在FIB（Focused Ion Beam）技术被引入后。研究者可用离子束将厚样本局部研磨至电子透明厚度，形象地说是“在细胞上打开窗口”。这项技术极大拓宽了Cryo-ET的应用范围。</p>
+<p>尽管如此，整个实验流程——包括冷冻、研磨、转移、成像、重建与分析——仍然十分繁琐、效率有限。作者指出：“workflow &hellip; is long and often cumbersome”（整个流程漫长且常常繁重）。因此，Cryo-ET虽前景光明，但其实现仍需多方面技术革新。</p>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-1.png" alt=""></p>
+<hr>
+<h4 id="四cryo-et-的完整工作流程">四、Cryo-ET 的完整工作流程</h4>
+<p>Cryo-ET 包含以下关键步骤：</p>
+<ol>
+<li>
+<p><strong>冷冻固定（Vitrification）</strong>：将样本以极快速度冷却，形成非晶态冰，防止冰晶破坏结构。小样本采用液氮冲淬（plunge freezing），大体积样本如组织则需高压冷冻（high-pressure freezing）。</p>
+</li>
+<li>
+<p><strong>薄层制备（FIB Milling）</strong>：由于细胞厚度不适合电子束透射，需使用离子束切割出100-200纳米厚的lamellae。此步骤耗时且效率低，是瓶颈之一。</p>
+</li>
+<li>
+<p><strong>定位目标区域（Cryo-CLEM）</strong>：结合冷冻荧光显微镜（Cryo-correlative light electron microscopy），通过荧光标记帮助定位特定结构，如线粒体、内质网或病理聚集体。</p>
+</li>
+<li>
+<p><strong>倾斜成像（Tilt series acquisition）</strong>：在电子显微镜中对样本从不同角度拍摄（通常每2度一个角度，共收集约100张投影图）。</p>
+</li>
+<li>
+<p><strong>三维重建（Tomogram reconstruction）</strong>：通过重建算法（如SIRT、WBP等）生成三维体积图像。</p>
+</li>
+<li>
+<p><strong>后续分析</strong>：图像增强、去噪、识别结构、平均处理等，通常依赖AI算法和数据库比对完成。</p>
+</li>
+</ol>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-6.png" alt=""></p>
+<hr>
+<h4 id="五技术瓶颈与潜在改进">五、技术瓶颈与潜在改进</h4>
+<p>作者特别指出FIB研磨是当前Cryo-ET实验中的“瓶颈工序”。尽管自动化有所进展，但制备一张lamella仍需数小时，限制了大规模实验的通量。</p>
+<p>未来改进方向包括：</p>
+<ul>
+<li>
+<p>使用等离子源（如氦、氖）替代传统的镓离子束，提高研磨速度与精准度；</p>
+</li>
+<li>
+<p>开发高速相机与样品台，实现秒级数据采集（目前每套倾斜序列约需20-40分钟）；</p>
+</li>
+<li>
+<p>推动Cryo-CLEM系统一体化设计，减少光学定位与电子切割之间的误差与污染</p>
+</li>
+</ul>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-7.png" alt=""></p>
+<hr>
+<h4 id="六图像质量提升与深度学习应用">六、图像质量提升与深度学习应用</h4>
+<p>由于需保护样本不被电子束破坏，Cryo-ET成像剂量非常低，导致图像信号弱、噪声大。为此，研究者引入“相位板”（phase plate）提升成像对比度。Volta相位板（VPP）目前使用广泛，尤其适合检测小分子、可变结构。</p>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-2.png" alt=""></p>
+<p>原文提到：</p>
+<blockquote>
+<p>Usage of the Volta phase plate has proven useful for the detection of small and variable structures in crowded cellular environments.”</p>
+</blockquote>
+<p>此外，深度学习工具（如Warp、Noise2Noise）可用于图像增强与去噪，显著提升图像质量与可解释性。未来的“激光相位板”或可在提升对比度的同时，避免VPP存在的稳定性与寿命问题。</p>
+<hr>
+<h4 id="七分子识别与结构解析方法">七、分子识别与结构解析方法</h4>
+<p>Cryo-ET 获得的三维数据通常包含大量未知密度，需要进一步识别。作者总结了以下两种主流方法：</p>
+<ol>
+<li>
+<p><strong>模板匹配法（Template matching）</strong>：将已知结构（如AlphaFold预测的蛋白质模型）与图像密度进行匹配，从而识别出特定分子。</p>
+</li>
+<li>
+<p><strong>无模板方法（Template-free, ML-based）</strong>：利用机器学习在图像中寻找“潜在目标”，对未知结构更具探索性。</p>
+</li>
+</ol>
+<p>Subtomogram Averaging 是提高图像分辨率的有效手段。它通过对同种分子进行对齐与平均处理，可提升信噪比并观察其不同构象。当前分辨率可达亚纳米级，尤其是对高丰度粒子如核糖体（ribosome）和表达体（expressome）。</p>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image.png" alt=""></p>
+<hr>
+<h4 id="八应用实例从基因表达到神经疾病">八、应用实例：从基因表达到神经疾病</h4>
+<p>作者引用了两个代表性研究案例：</p>
+<ol>
+<li>
+<p><strong>表达体结构</strong>：研究者观察到细菌中转录与翻译之间的直接耦合结构——DNA、RNA聚合酶、核糖体通过蛋白质NusA构成一个连续操作链（expressome），首次在活细胞中可视化了基因表达的整个流程。</p>
+</li>
+<li>
+<p><strong>神经疾病蛋白聚集</strong>：Cryo-ET 揭示PolyQ与Poly-GA两种神经退行性疾病相关蛋白的结构差异：前者与内质网膜结构发生作用导致破裂，后者聚集阻碍蛋白酶体，提示了不同的毒性机制。</p>
+</li>
+</ol>
+<p><img src="/zh/literature/cryo-electron-tomography-%E8%A7%A3%E9%94%81%E7%BB%86%E8%83%9E%E5%86%85%E5%88%86%E5%AD%90%E4%B8%96%E7%95%8C%E7%9A%84%E9%92%A5%E5%8C%99/images/image-5.png" alt=""></p>
+<p>这些例子表明，Cryo-ET 不仅是结构工具，更是一种揭示生命过程的观察手段。</p>
+<hr>
+<h4 id="九未来展望与挑战">九、未来展望与挑战</h4>
+<p>尽管Cryo-ET已取得重大进展，但作者指出仍存在如下挑战：</p>
+<ul>
+<li>
+<p><strong>低丰度分子的识别困难</strong>；</p>
+</li>
+<li>
+<p><strong>小分子与非蛋白结构难以分辨</strong>；</p>
+</li>
+<li>
+<p><strong>标记方法不足</strong>：目前缺乏可靠的冷冻条件下可识别的分子标签；</p>
+</li>
+<li>
+<p><strong>数据注释不足</strong>：Tomogram 中大部分密度仍未被识别。</p>
+</li>
+</ul>
+<p>为此，作者建议融合其他方法（如光学标记、质谱交联、机器学习）以实现多维度解析。同时，也呼吁制定一套衡量tomogram信息密度和分辨率的新标准。</p>
+<p>作者总结：</p>
+<blockquote>
+<p>“Cryo-ET has unique potential to generate molecular maps of cellular landscapes&hellip; That is where many see the future of structural biology.”</p>
+</blockquote>
+<p>Cryo-ET 不仅让我们看到了细胞结构，更将揭示细胞活动的动态全景图，代表着结构生物学发展的下一个十年方向。</p>
+<hr>
+<p>原文链接：https://doi.org/10.1016/j.cell.2022.06.034</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/cell%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E5%9B%A2%E9%98%9F%E4%BB%8E%E9%9B%B6%E8%AE%BE%E8%AE%A1%E5%87%BA%E5%8F%AF%E6%84%9F%E7%94%B5%E7%9A%84%E4%BA%BA%E5%B7%A5%E7%A6%BB%E5%AD%90%E9%80%9A%E9%81%93/" class="link dim">
+                Cell｜西湖大学卢培龙团队从头设计出可“感电”的人工离子通道
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

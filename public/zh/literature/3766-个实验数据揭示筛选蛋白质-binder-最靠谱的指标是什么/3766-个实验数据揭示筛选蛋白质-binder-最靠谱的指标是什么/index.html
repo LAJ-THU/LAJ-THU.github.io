@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="今天要和大家分享一篇刚刚上线的 bioRxiv 预印本 ——
+《Predicting Experimental Success in De Novo Binder Design: A Meta-Analysis of 3,766 Experimentally Characterised Binders》（2025.08.14 发布）。
+为什么值得聊这篇文章？有三个原因：
+
+
+规模前所未有：它汇总了 3,766 个经过实验验证的 de novo binder 设计，涵盖 15 个多样化的靶点，是目前最大规模的数据集。
+
+
+方法学突破：作者不仅比较了 AF2、AF3、Boltz-1 等预测工具，还提出了一个新的关键指标 —— AF3 ipSAE_min，在 binder 筛选上远胜现有方法。
+
+
+实用价值高：文章最后给出了可直接落地的筛选规则，对所有做 binder 设计的人都有立刻能用的指导意义。
+
+
+
+一、开篇引入
+在过去几年里，de novo 蛋白质 binder 设计（从零开始设计与目标蛋白结合的小分子蛋白）逐渐成为结构生物学和合成生物学的热门方向。随着 RFdiffusion、BindCraft、AlphaProteo 等方法的出现，我们已经能在计算机上快速生成成千上万的候选设计。
+然而，真正能在实验中“成功结合”的比例却依旧很低。原因很简单：实验验证昂贵、耗时，而 in silico 过滤手段还不够精准。大家常用的 AlphaFold2 (AF2) 预测信心指标（比如 ipAE、ipTM）确实能在一定程度上提升命中率，但远远谈不上“稳定可靠”。
+于是，一个关键问题摆在研究者面前：
+👉 我们能否找到更稳健、跨靶点通用的预测指标，用来提前筛掉失败设计？
+这正是本文《Predicting Experimental Success in De Novo Binder Design》试图回答的问题。作者们不仅汇总了一个 3,766 个设计、15 个靶点的前所未有的大数据集，还系统性比较了 AF2、AF3、Boltz-1 等结构预测工具输出的各种特征。最后，他们提出了一套简单、可解释、但十分有效的 binder 过滤策略。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/3766-%E4%B8%AA%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE%E6%8F%AD%E7%A4%BA%E7%AD%9B%E9%80%89%E8%9B%8B%E7%99%BD%E8%B4%A8-binder-%E6%9C%80%E9%9D%A0%E8%B0%B1%E7%9A%84%E6%8C%87%E6%A0%87%E6%98%AF%E4%BB%80%E4%B9%88/3766-%E4%B8%AA%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE%E6%8F%AD%E7%A4%BA%E7%AD%9B%E9%80%89%E8%9B%8B%E7%99%BD%E8%B4%A8-binder-%E6%9C%80%E9%9D%A0%E8%B0%B1%E7%9A%84%E6%8C%87%E6%A0%87%E6%98%AF%E4%BB%80%E4%B9%88/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/3766-%E4%B8%AA%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE%E6%8F%AD%E7%A4%BA%E7%AD%9B%E9%80%89%E8%9B%8B%E7%99%BD%E8%B4%A8-binder-%E6%9C%80%E9%9D%A0%E8%B0%B1%E7%9A%84%E6%8C%87%E6%A0%87%E6%98%AF%E4%BB%80%E4%B9%88/3766-%E4%B8%AA%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE%E6%8F%AD%E7%A4%BA%E7%AD%9B%E9%80%89%E8%9B%8B%E7%99%BD%E8%B4%A8-binder-%E6%9C%80%E9%9D%A0%E8%B0%B1%E7%9A%84%E6%8C%87%E6%A0%87%E6%98%AF%E4%BB%80%E4%B9%88/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="今天要和大家分享一篇刚刚上线的 bioRxiv 预印本 ——
+《Predicting Experimental Success in De Novo Binder Design: A Meta-Analysis of 3,766 Experimentally Characterised Binders》（2025.08.14 发布）。
+为什么值得聊这篇文章？有三个原因：
+规模前所未有：它汇总了 3,766 个经过实验验证的 de novo binder 设计，涵盖 15 个多样化的靶点，是目前最大规模的数据集。
+方法学突破：作者不仅比较了 AF2、AF3、Boltz-1 等预测工具，还提出了一个新的关键指标 —— AF3 ipSAE_min，在 binder 筛选上远胜现有方法。
+实用价值高：文章最后给出了可直接落地的筛选规则，对所有做 binder 设计的人都有立刻能用的指导意义。
+一、开篇引入 在过去几年里，de novo 蛋白质 binder 设计（从零开始设计与目标蛋白结合的小分子蛋白）逐渐成为结构生物学和合成生物学的热门方向。随着 RFdiffusion、BindCraft、AlphaProteo 等方法的出现，我们已经能在计算机上快速生成成千上万的候选设计。
+然而，真正能在实验中“成功结合”的比例却依旧很低。原因很简单：实验验证昂贵、耗时，而 in silico 过滤手段还不够精准。大家常用的 AlphaFold2 (AF2) 预测信心指标（比如 ipAE、ipTM）确实能在一定程度上提升命中率，但远远谈不上“稳定可靠”。
+于是，一个关键问题摆在研究者面前：
+👉 我们能否找到更稳健、跨靶点通用的预测指标，用来提前筛掉失败设计？
+这正是本文《Predicting Experimental Success in De Novo Binder Design》试图回答的问题。作者们不仅汇总了一个 3,766 个设计、15 个靶点的前所未有的大数据集，还系统性比较了 AF2、AF3、Boltz-1 等结构预测工具输出的各种特征。最后，他们提出了一套简单、可解释、但十分有效的 binder 过滤策略。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="今天要和大家分享一篇刚刚上线的 bioRxiv 预印本 ——
+《Predicting Experimental Success in De Novo Binder Design: A Meta-Analysis of 3,766 Experimentally Characterised Binders》（2025.08.14 发布）。
+为什么值得聊这篇文章？有三个原因：
+规模前所未有：它汇总了 3,766 个经过实验验证的 de novo binder 设计，涵盖 15 个多样化的靶点，是目前最大规模的数据集。
+方法学突破：作者不仅比较了 AF2、AF3、Boltz-1 等预测工具，还提出了一个新的关键指标 —— AF3 ipSAE_min，在 binder 筛选上远胜现有方法。
+实用价值高：文章最后给出了可直接落地的筛选规则，对所有做 binder 设计的人都有立刻能用的指导意义。
+一、开篇引入 在过去几年里，de novo 蛋白质 binder 设计（从零开始设计与目标蛋白结合的小分子蛋白）逐渐成为结构生物学和合成生物学的热门方向。随着 RFdiffusion、BindCraft、AlphaProteo 等方法的出现，我们已经能在计算机上快速生成成千上万的候选设计。
+然而，真正能在实验中“成功结合”的比例却依旧很低。原因很简单：实验验证昂贵、耗时，而 in silico 过滤手段还不够精准。大家常用的 AlphaFold2 (AF2) 预测信心指标（比如 ipAE、ipTM）确实能在一定程度上提升命中率，但远远谈不上“稳定可靠”。
+于是，一个关键问题摆在研究者面前：
+👉 我们能否找到更稳健、跨靶点通用的预测指标，用来提前筛掉失败设计？
+这正是本文《Predicting Experimental Success in De Novo Binder Design》试图回答的问题。作者们不仅汇总了一个 3,766 个设计、15 个靶点的前所未有的大数据集，还系统性比较了 AF2、AF3、Boltz-1 等结构预测工具输出的各种特征。最后，他们提出了一套简单、可解释、但十分有效的 binder 过滤策略。">
+  <meta itemprop="wordCount" content="529">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="今天要和大家分享一篇刚刚上线的 bioRxiv 预印本 ——
+《Predicting Experimental Success in De Novo Binder Design: A Meta-Analysis of 3,766 Experimentally Characterised Binders》（2025.08.14 发布）。
+为什么值得聊这篇文章？有三个原因：
+规模前所未有：它汇总了 3,766 个经过实验验证的 de novo binder 设计，涵盖 15 个多样化的靶点，是目前最大规模的数据集。
+方法学突破：作者不仅比较了 AF2、AF3、Boltz-1 等预测工具，还提出了一个新的关键指标 —— AF3 ipSAE_min，在 binder 筛选上远胜现有方法。
+实用价值高：文章最后给出了可直接落地的筛选规则，对所有做 binder 设计的人都有立刻能用的指导意义。
+一、开篇引入 在过去几年里，de novo 蛋白质 binder 设计（从零开始设计与目标蛋白结合的小分子蛋白）逐渐成为结构生物学和合成生物学的热门方向。随着 RFdiffusion、BindCraft、AlphaProteo 等方法的出现，我们已经能在计算机上快速生成成千上万的候选设计。
+然而，真正能在实验中“成功结合”的比例却依旧很低。原因很简单：实验验证昂贵、耗时，而 in silico 过滤手段还不够精准。大家常用的 AlphaFold2 (AF2) 预测信心指标（比如 ipAE、ipTM）确实能在一定程度上提升命中率，但远远谈不上“稳定可靠”。
+于是，一个关键问题摆在研究者面前：
+👉 我们能否找到更稳健、跨靶点通用的预测指标，用来提前筛掉失败设计？
+这正是本文《Predicting Experimental Success in De Novo Binder Design》试图回答的问题。作者们不仅汇总了一个 3,766 个设计、15 个靶点的前所未有的大数据集，还系统性比较了 AF2、AF3、Boltz-1 等结构预测工具输出的各种特征。最后，他们提出了一套简单、可解释、但十分有效的 binder 过滤策略。">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>今天要和大家分享一篇刚刚上线的 <strong>bioRxiv 预印本</strong> ——</p>
+<p><strong>《Predicting Experimental Success in De Novo Binder Design: A Meta-Analysis of 3,766 Experimentally Characterised Binders》</strong>（2025.08.14 发布）。</p>
+<p>为什么值得聊这篇文章？有三个原因：</p>
+<ol>
+<li>
+<p><strong>规模前所未有</strong>：它汇总了 <strong>3,766 个经过实验验证的 de novo binder 设计</strong>，涵盖 15 个多样化的靶点，是目前最大规模的数据集。</p>
+</li>
+<li>
+<p><strong>方法学突破</strong>：作者不仅比较了 AF2、AF3、Boltz-1 等预测工具，还提出了一个新的关键指标 —— <strong>AF3 ipSAE_min</strong>，在 binder 筛选上远胜现有方法。</p>
+</li>
+<li>
+<p><strong>实用价值高</strong>：文章最后给出了<strong>可直接落地的筛选规则</strong>，对所有做 binder 设计的人都有立刻能用的指导意义。</p>
+</li>
+</ol>
+<p><img src="images/image-9.png" alt=""></p>
+<h2 id="一开篇引入"><strong>一、开篇引入</strong></h2>
+<p>在过去几年里，<strong>de novo 蛋白质 binder 设计</strong>（从零开始设计与目标蛋白结合的小分子蛋白）逐渐成为结构生物学和合成生物学的热门方向。随着 <strong>RFdiffusion、BindCraft、AlphaProteo</strong> 等方法的出现，我们已经能在计算机上快速生成成千上万的候选设计。</p>
+<p>然而，真正能在实验中“成功结合”的比例却依旧很低。原因很简单：<strong>实验验证昂贵、耗时，而 in silico 过滤手段还不够精准</strong>。大家常用的 AlphaFold2 (AF2) 预测信心指标（比如 ipAE、ipTM）确实能在一定程度上提升命中率，但远远谈不上“稳定可靠”。</p>
+<p>于是，一个关键问题摆在研究者面前：</p>
+<p>👉 <strong>我们能否找到更稳健、跨靶点通用的预测指标，用来提前筛掉失败设计？</strong></p>
+<p>这正是本文《Predicting Experimental Success in De Novo Binder Design》试图回答的问题。作者们不仅汇总了一个 <strong>3,766 个设计、15 个靶点</strong>的前所未有的大数据集，还系统性比较了 AF2、AF3、Boltz-1 等结构预测工具输出的各种特征。最后，他们提出了一套简单、可解释、但十分有效的 binder 过滤策略。</p>
+<p>这篇文章的最大价值在于：<strong>它让 binder 设计的“成功率预测”第一次有了大规模的系统 benchmark</strong>，并且给出了能直接应用在实际工作中的筛选规则。</p>
+<hr>
+<h2 id="二数据与研究设计"><strong>二、数据与研究设计</strong></h2>
+<p>要想真正回答“哪些 binder 会在实验里成功”这个问题，<strong>必须有足够大、足够多样化的数据</strong>。</p>
+<p>作者们这次汇总了一个前所未有的 dataset：<strong>3,766 个经过实验验证的 binder 设计</strong>，涵盖了 <strong>15 个结构和功能各异的靶点</strong>。其中不仅有经典的受体酪氨酸激酶（EGFR、FGFR2、TrkA 等），也包括免疫相关分子（IL2Ra、PDL1）、病毒抗原（SARS-CoV-2 RBD），甚至还有蛇毒神经毒素和 pMHC 复合物。</p>
+<p>这一大杂烩式的 dataset，有几个值得注意的特点：</p>
+<ul>
+<li>
+<p><strong>Binder 成功率很低</strong>：3766 个设计里，只有 436 个（11.6%）在实验中被验证为有效。</p>
+</li>
+<li>
+<p><strong>数据严重不平衡</strong>：有的靶点几乎全是失败设计，有的则 binder 相对较多。</p>
+</li>
+<li>
+<p><strong>靶点差异极大</strong>：从 60 个氨基酸的小毒素，到 600 多个氨基酸的受体，跨度很大。</p>
+</li>
+</ul>
+<p>这些特征在 <strong>Figure 1</strong> 里被清晰地可视化：</p>
+<p><img src="images/image-11.png" alt=""></p>
+<ul>
+<li>
+<p><strong>Figure 1A</strong> 展示了所有 binder 的结合位点分布，可以看出不同靶点上的真实 binder 都倾向于结合在一些高度保守的界面区域。</p>
+</li>
+<li>
+<p><strong>Figure 1B</strong> 是一个直观的统计：不同靶点的正负样本差异悬殊，比如 FGFR2 有大量设计和验证，而像 LTK 这样的靶点几乎没几个成功案例。</p>
+</li>
+<li>
+<p><strong>Figure 1C</strong> 则画出了靶点长度的分布，说明数据集覆盖了广泛的结构空间。</p>
+</li>
+</ul>
+<p><img src="images/image-13.png" alt=""></p>
+<p>📌 <strong>这一部分的意义在于：</strong></p>
+<ol>
+<li>
+<p>数据规模足够大，保证了结果的统计学可靠性；</p>
+</li>
+<li>
+<p>数据的多样性和不平衡性，也让预测问题更具挑战性，更接近真实科研环境。</p>
+</li>
+</ol>
+<p>换句话说，这个 dataset 本身就已经是一个<strong>领域级的资源</strong>，不仅能用来做本文的分析，还可以成为未来 benchmark 的基础。</p>
+<hr>
+<h2 id="三计算-pipeline-的优化"><strong>三、计算 Pipeline 的优化</strong></h2>
+<p>在拥有了一个覆盖 3,700 多个 binder 的大数据集后，下一个问题是：<strong>如何高效地对这些设计进行结构预测和特征提取？</strong></p>
+<p>要知道，常规的 AlphaFold 或 Boltz-1 预测，一个复合物可能要跑几十分钟甚至更久。对于几千个设计，这几乎是不可完成的任务。</p>
+<p>作者的解决方案是——<strong>开发一个统一的自动化 pipeline</strong>，能够把所有候选 binder–target 复合物，依次送入不同的预测工具（AF2 初始 guess、ColabFold、Boltz-1、AF3），并在输出结构的基础上提取超过 <strong>200 种特征</strong>（包括结构、能量、置信度和序列信息）。</p>
+<h3 id="关键优化点"><strong>关键优化点：</strong></h3>
+<p>他们特别测试了不同运行配置（最大化配置 / 中间配置 / 极简配置）的速度和准确性差别。</p>
+<ul>
+<li>
+<p><strong>速度提升</strong>：</p>
+<ul>
+<li>
+<p>在“极简配置”下，平均预测时间从 <strong>1800 秒降到 230 秒</strong>，提升了 <strong>87% 的效率</strong>。</p>
+</li>
+<li>
+<p>AF3 的加速尤为明显，从 1441 秒缩短到 29 秒！</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>准确性保持</strong>：</p>
+<ul>
+<li>
+<p><strong>Figure 2C/D</strong> 展示了不同配置下的模型信心指标（ipAE）和与真实结构的 DockQ 对比。</p>
+</li>
+<li>
+<p>结果表明，即便是最轻量级的配置，预测质量几乎没有下降。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>📌 <strong>Figure 2 的逻辑</strong>：</p>
+<p><img src="images/image-10.png" alt=""></p>
+<ul>
+<li>
+<p><strong>Figure 2A</strong>：pipeline 的整体架构 → 统一输入、统一输出、全自动化。</p>
+</li>
+<li>
+<p><strong>Figure 2B</strong>：不同配置下的耗时比较 → 极简配置最快。</p>
+</li>
+<li>
+<p><strong>Figure 2C/D</strong>：质量评估 → 即便是极简配置，预测结果依旧可靠。</p>
+</li>
+</ul>
+<p><img src="images/image-12.png" alt=""></p>
+<p><img src="images/image-3.png" alt=""></p>
+<h3 id="意义"><strong>意义</strong></h3>
+<p>这一部分告诉我们：</p>
+<ul>
+<li>
+<p>作者不仅仅是做了个 meta-analysis，而是<strong>真正解决了规模化预测的计算难题</strong>；</p>
+</li>
+<li>
+<p>得益于 pipeline 的优化，他们才能在后续系统性比较不同指标的预测能力；</p>
+</li>
+<li>
+<p>对社区而言，这个 pipeline 也将成为一个可复用的 <strong>标准化工具</strong>。</p>
+</li>
+</ul>
+<hr>
+<h2 id="四哪些特征真正预测结合"><strong>四、哪些特征真正预测结合？</strong></h2>
+<p>在建立了统一 pipeline 后，作者开始回答最关键的问题：<strong>哪些指标能区分成功的 binder 和失败的 binder？</strong></p>
+<ol>
+<li><strong>单一特征的比较</strong></li>
+</ol>
+<ul>
+<li>
+<p>结果非常明确：</p>
+<ul>
+<li>
+<p><strong>AF3 的 ipSAE_min</strong> 是最强的单一指标。</p>
+</li>
+<li>
+<p>它在平均精度（AP）上，比传统常用的 AF2 ipAE 提升了 <strong>1.4 倍</strong>。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>为什么 ipSAE_min 更好？</p>
+<ul>
+<li>
+<p>它只关注 <strong>高置信度的结合界面残基对</strong>，并取两条链预测误差中的“最小值”，更严格地捕捉了“最薄弱的一环”。</p>
+</li>
+<li>
+<p>这种界面导向的评分方法，比全局性指标（如 ipTM 或 ipAE）更能反映真实的结合。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="images/image-4.png" alt=""></p>
+<ul>
+<li><strong>特征组合的优势</strong></li>
+</ul>
+<ul>
+<li>
+<p>作者进一步测试了<strong>交互特征</strong>（把两个指标相乘）。</p>
+</li>
+<li>
+<p>结果发现，最优组合往往是：</p>
+<ul>
+<li>
+<p><strong>ipSAE_min × 界面 ΔG/ΔSASA</strong>（界面能量/界面面积比）</p>
+</li>
+<li>
+<p><strong>ipSAE_min × shape complementarity</strong>（界面互补性）</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>
+<p>这些组合反映了一个直观逻辑：<strong>结构预测的置信度</strong> + <strong>物理化学界面特征</strong> → 更接近实验真相。</p>
+</li>
+<li>
+<p><strong>靶点依赖性</strong></p>
+</li>
+</ul>
+<ul>
+<li>
+<p>不同靶点上的表现差异很大。</p>
+</li>
+<li>
+<p>比如有的靶点上，ipSAE_min 的 precision 接近 1；但在另一些靶点上则只有 0.1。</p>
+</li>
+<li>
+<p>这说明：<strong>binder 的可预测性是靶点相关的</strong>，有些靶点天生更“难搞”。</p>
+</li>
+</ul>
+<p><img src="images/image-2.png" alt=""></p>
+<p><img src="images/image-5.png" alt=""></p>
+<ul>
+<li><strong>阈值与筛选策略</strong></li>
+</ul>
+<ul>
+<li>
+<p>作者测试了几种实际可用的筛选阈值：</p>
+<ul>
+<li>
+<p>固定 recall (0.2 / 0.4)</p>
+</li>
+<li>
+<p>F1 最大化的阈值</p>
+</li>
+</ul>
+</li>
+<li>
+<p>在几乎所有情况下，<strong>AF3 ipSAE_min 及其组合指标</strong>都优于 AF2 ipAE 和 AF3 ipTM。</p>
+</li>
+<li>
+<p>Precision-recall 曲线（Figure 3F）清楚展示了这种优势。</p>
+</li>
+</ul>
+<p><img src="images/image-8.png" alt=""></p>
+<p><img src="images/image-1.png" alt=""></p>
+<p>📌 <strong>Figure 3 的逻辑线</strong>：</p>
+<ul>
+<li>
+<p><strong>Figure 3A</strong>：不同单一指标 &amp; 组合指标的 AP 比较，突出 ipSAE_min 最强。</p>
+</li>
+<li>
+<p><strong>Figure 3B–D</strong>：不同靶点上的表现差异，强调预测难度不均。</p>
+</li>
+<li>
+<p><strong>Figure 3E/F</strong>：实际筛选时不同指标的 precision–recall 表现。</p>
+</li>
+</ul>
+<hr>
+<h3 id="总结这一部分"><strong>总结这一部分</strong></h3>
+<p>作者得出了一个非常实用的结论：</p>
+<ul>
+<li>
+<p><strong>如果你只能用一个指标，那就选 AF3 的 ipSAE_min。</strong></p>
+</li>
+<li>
+<p><strong>如果你可以用两个指标，那就加上界面 ΔG/ΔSASA 或 shape complementarity。</strong></p>
+</li>
+</ul>
+<p>换句话说，他们用数据证明了：<strong>界面导向 + 物理化学特征的组合，是最稳健的预测方案。</strong></p>
+<hr>
+<h2 id="五特征组合与模型选择"><strong>五、特征组合与模型选择</strong></h2>
+<p>前一部分的分析告诉我们，单一指标（尤其是 AF3 ipSAE_min）已经很强，而与物理化学特征结合后还能更进一步。但在实际应用中，很多人会想：是不是应该用更多特征，甚至上复杂模型（比如深度学习、XGBoost），才能更好？</p>
+<p>作者专门做了一个系统比较，答案令人意外却很有价值：</p>
+<p>👉 <strong>少量特征 + 简单线性模型，其实就够了。</strong></p>
+<hr>
+<ol>
+<li><strong>Greedy 特征选择</strong></li>
+</ol>
+<p><img src="images/image-7.png" alt=""></p>
+<p>作者采用了 <strong>greedy feature selection + logistic regression</strong> 的方法：</p>
+<ul>
+<li>
+<p>在 15 个靶点中，逐个留一（Leave-One-Group-Out），保证评估的普适性。</p>
+</li>
+<li>
+<p>在每一轮里，只保留真正能提升平均精度（AP）的特征。</p>
+</li>
+</ul>
+<p>结果：</p>
+<ul>
+<li>
+<p>平均下来，每个模型只会增加 <strong>2–5 个特征</strong>，就达到性能上限。</p>
+</li>
+<li>
+<p>当特征加得更多时，反而因为过拟合而失效。</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><strong>哪些特征最常被选中？</strong></li>
+</ul>
+<p>在 AF3 派生的特征中，有几个指标反复被选中：</p>
+<ol>
+<li>
+<p><strong>AF3 ipSAE_min</strong>（几乎每次都被选中 → “核心指标”）</p>
+</li>
+<li>
+<p><strong>RMSD_binder</strong>（binder 输入结构与 AF3 预测结构的差异）</p>
+</li>
+<li>
+<p><strong>input_interface_shape_complementarity</strong>（界面互补性）</p>
+</li>
+</ol>
+<p><img src="images/image.png" alt=""></p>
+<p>这三者的组合，几乎已经能捕捉到预测的全部信息。</p>
+<hr>
+<ul>
+<li><strong>实际应用：Top-K 筛选</strong></li>
+</ul>
+<p><img src="images/image-6.png" alt=""></p>
+<p>作者还测试了一个贴近现实的场景：</p>
+<ul>
+<li>假设你每个靶点只能测试 10–20 个候选 binder，能不能用这套指标挑中至少一个真正的 binder？</li>
+</ul>
+<p>结果（Figure 4E/F）：</p>
+<ul>
+<li>
+<p><strong>只用 AF3 ipSAE_min 排序，就能在前 10 个候选里，几乎保证每个靶点至少有一个真实 binder。</strong></p>
+</li>
+<li>
+<p>加上界面互补性筛选，precision 在小样本 (K=1–20) 的情况下还能进一步提升。</p>
+</li>
+</ul>
+<hr>
+<p>📌 <strong>Figure 4 的逻辑线</strong>：</p>
+<ul>
+<li>
+<p><strong>Figure 4A</strong>：不同模型的总体表现 → 简单 logistic regression 已经很好。</p>
+</li>
+<li>
+<p><strong>Figure 4C</strong>：哪些特征最常被选中 → ipSAE_min、RMSD_binder、shape complementarity。</p>
+</li>
+<li>
+<p><strong>Figure 4D</strong>：三特征组合的效果最佳。</p>
+</li>
+<li>
+<p><strong>Figure 4E/F</strong>：Top-K 筛选的实际 precision 提升。</p>
+</li>
+</ul>
+<hr>
+<h3 id="总结这一部分-1"><strong>总结这一部分</strong></h3>
+<p>作者给出了一个非常接地气的结论：</p>
+<ul>
+<li>
+<p><strong>binder 成败预测，不需要几十个复杂特征，更不需要黑箱模型。</strong></p>
+</li>
+<li>
+<p><strong>只要结合 2–3 个关键指标（ipSAE_min + RMSD_binder + shape complementarity），用最简单的线性模型，就能稳定筛出成功率最高的候选。</strong></p>
+</li>
+</ul>
+<p>这意味着，今后的 binder 设计者可以直接把这套“组合规则”嵌入自己的筛选 pipeline，而不用依赖黑箱式的 AI 模型。</p>
+<h2 id="六讨论与应用价值"><strong>六、讨论与应用价值</strong></h2>
+<p>通过前面的大规模比较和系统分析，作者提出了几条非常有实践意义的结论。</p>
+<ol>
+<li><strong>AF3 指标的优势</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>AF3 的 ipSAE_min</strong> 是目前最稳健、跨靶点最通用的预测指标。</p>
+</li>
+<li>
+<p>它比 AF2 的 ipAE 提升了 <strong>1.4 倍的平均精度</strong>，在 binder 设计筛选里完全可以作为<strong>新的一代标准指标</strong>。</p>
+</li>
+<li>
+<p><strong>简单比复杂更可靠</strong></p>
+</li>
+<li>
+<p>复杂模型（比如 XGBoost、多特征堆叠）并没有带来更好的效果，反而容易过拟合。</p>
+</li>
+<li>
+<p>只需 <strong>2–3 个关键特征</strong>（ipSAE_min + RMSD_binder + shape complementarity），用线性模型就能实现稳定预测。</p>
+</li>
+<li>
+<p>这意味着未来的筛选 pipeline 可以 <strong>更轻量、更可解释</strong>。</p>
+</li>
+<li>
+<p><strong>应用场景</strong></p>
+</li>
+<li>
+<p>在实际设计中，研究者往往只能测试少量候选（10–20 个）。</p>
+</li>
+<li>
+<p>本文证明：<strong>只要用 ipSAE_min 排序，就几乎能保证命中一个真实 binder</strong>；再加上界面互补性筛选，precision 会进一步提升。</p>
+</li>
+<li>
+<p>这为实验设计者提供了一个“高性价比”的策略：<strong>在有限的实验资源下，提高成功率。</strong></p>
+</li>
+<li>
+<p><strong>对领域的意义</strong></p>
+</li>
+<li>
+<p>这不仅仅是一篇算法论文，而是一次<strong>方法学标准化的推动</strong>。</p>
+</li>
+<li>
+<p>作者开放了完整 dataset 和 pipeline，未来研究者可以在同一个 benchmark 上比较不同方法，减少“各玩各的”的割裂。</p>
+</li>
+<li>
+<p>从长远看，这种标准化会显著加速 <strong>de novo binder 设计</strong>走向成熟应用（如药物研发、诊断工具开发）。</p>
+</li>
+</ul>
+<hr>
+<p>📌 <strong>一句话总结本文价值</strong>：</p>
+<blockquote>
+<p>这篇工作告诉我们，预测 binder 成败的关键并不在于复杂模型，而在于找到少量真正稳健的指标 —— 其中 AF3 ipSAE_min 是核心，结合界面结构特征即可显著提升实验命中率。</p>
+</blockquote>
+<h2 id="七结尾给蛋白质设计者的启发"><strong>七、结尾：给蛋白质设计者的启发</strong></h2>
+<p>这篇文章的意义不仅在于提出了新的预测指标，更在于它传递出一个重要信号：</p>
+<p><strong>在 de novo binder 设计的赛道上，数据规模化与方法学标准化，正在逐渐取代经验主义。</strong></p>
+<p>未来，binder 设计可能会出现几个趋势：</p>
+<ol>
+<li>
+<p><strong>“小而精”的筛选策略</strong> —— 不再依赖海量实验，而是通过 2–3 个关键指标精准命中。</p>
+</li>
+<li>
+<p><strong>开放数据与社区共享</strong> —— 本文的数据集和 pipeline 将成为公共基准，推动不同方法的公平比较。</p>
+</li>
+<li>
+<p><strong>跨学科融合</strong> —— 结构预测（AI）、物理化学特征（计算化学）、实验验证（生物学）将进一步整合，形成闭环。</p>
+</li>
+</ol>
+<p>对于正在做 binder 设计的研究者来说，最直接的 takeaway 是：</p>
+<p>👉 <strong>如果你明天就要筛选新一批 binder，请优先考虑 AF3 ipSAE_min，并结合界面互补性或 RMSD 来过滤。</strong></p>
+<p>这套规则简单、可解释，而且已经在 3,766 个设计的实验数据上得到了验证。</p>
+<p>或许在不久的将来，我们会看到 binder 设计从“碰运气”走向“可预期”，而这篇文章正是一个里程碑。</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/%E4%BA%BA%E7%B1%BB%E4%BA%92%E4%BD%9C%E7%BB%84%E7%9A%84%E5%BC%80%E5%B1%B1%E4%B9%8B%E4%BD%9Cscience%E6%8F%AD%E7%A4%BA%E6%9C%80%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%9B%8B%E7%99%BD%E4%BA%92%E4%BD%9C%E9%A2%84%E6%B5%8B/" class="link dim">
+                “人类互作组”的开山之作：Science揭示最大规模蛋白互作预测
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

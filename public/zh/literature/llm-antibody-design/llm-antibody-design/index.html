@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="论文解读 | 让AI开实验室，设计抗体抗新冠，这不是科幻！
+
+最近刷到一篇 Nature 的论文，名字是：《The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies》。简单说，这是一群大语言模型（LLM）自组团队，开了个“虚拟实验室”，然后真的设计出了抗击新冠变异株的纳米抗体，而且还实验验证了有效性。
+你没看错，不是人类研究者用LLM辅助，而是LLM之间开会讨论怎么做科研，人类只是指导一下方向，最后结果还挺靠谱的。
+今天就来和大家唠唠这篇论文，为什么值得关注，它到底做了啥，又给我们带来了哪些启发👇
+
+1. 背景：AI做科研，到底能走多远？
+过去，大语言模型在科研中常被用来：
+
+
+回答科学问题；
+
+
+总结文献；
+
+
+写代码、做数据分析。
+
+
+这些功能虽然强，但本质上还是“工具”角色。真正的科研，尤其是跨学科、需要推理和决策的任务，AI很少能独立胜任。
+那怎么办？
+
+这篇论文提出了一个新概念：“虚拟实验室（Virtual Lab）”。
+
+
+2. 什么是虚拟实验室？AI版本的PI带队搞科研！
+这个Virtual Lab就是一个高度拟人的科研团队系统，但成员全是AI Agent。
+核心结构👇
+
+
+PI Agent：像课题组长，负责研究方向、团队组织；
+
+
+科学家 Agents：有免疫学家、计算生物学家、ML专家等；
+
+
+科学批评家 Agent：负责提出反对意见、审查逻辑；
+
+
+人类研究者：提供整体研究议题、实验限制，但只写了不到2%的文字！
+
+
+团队以“开会”的形式推进研究，会议有两种：
+
+
+团队会议：确定研究方向、选工具；
+
+
+个体会议：写代码、调工具、实验设计等。
+
+
+像极了真实课题组的运作流程！
+
+这张图展示了虚拟实验室的运作方式：
+
+
+上（图1a）：人类研究者设定课题后，定义一个“PI” Agent，由它去组建团队，生成“科学家”和“批评家”Agent。
+
+
+中（图1b）：团队会议形式，所有AI成员围绕议题进行多轮讨论、互相批评、集体决策。
+
+
+下（图1c）：个体会议形式，某个Agent完成具体任务，比如写代码，另一个Agent进行审阅。
+
+
+
+整体结构高度仿真了人类课题组的组织方式，而现在主角换成了AI。
+
+
+3.  项目实战：从零设计能抗新冠新毒株的抗体
+为了验证这套系统是不是真的能搞科研，作者让Virtual Lab挑战一个现实任务：
+设计能结合新冠变异株（KP.3、JN.1）的纳米抗体，并实验验证其有效性。
+听起来像是生物&#43;计算&#43;机器学习的交叉大项目，对吧？
+虚拟实验室在实际任务中是这样推进项目的：
+
+
+
+a：人类研究者先设定了 PI 和科学批评家 Agent，由 PI 决定要组建哪些科学家角色（比如免疫学家、计算专家）。
+
+
+b：团队开会决定研究目标（是用纳米抗体？还是标准抗体？用已有的还是新设计？）。
+
+
+c：选出执行工具——ESM 语言模型、AlphaFold-Multimer 结构预测器、Rosetta 能量计算器。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/llm-antibody-design/llm-antibody-design/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/llm-antibody-design/llm-antibody-design/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="论文解读 | 让AI开实验室，设计抗体抗新冠，这不是科幻！ 最近刷到一篇 Nature 的论文，名字是：《The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies》。简单说，这是一群大语言模型（LLM）自组团队，开了个“虚拟实验室”，然后真的设计出了抗击新冠变异株的纳米抗体，而且还实验验证了有效性。
+你没看错，不是人类研究者用LLM辅助，而是LLM之间开会讨论怎么做科研，人类只是指导一下方向，最后结果还挺靠谱的。
+今天就来和大家唠唠这篇论文，为什么值得关注，它到底做了啥，又给我们带来了哪些启发👇
+1. 背景：AI做科研，到底能走多远？ 过去，大语言模型在科研中常被用来：
+回答科学问题；
+总结文献；
+写代码、做数据分析。
+这些功能虽然强，但本质上还是“工具”角色。真正的科研，尤其是跨学科、需要推理和决策的任务，AI很少能独立胜任。
+那怎么办？ 这篇论文提出了一个新概念：“虚拟实验室（Virtual Lab）”。
+2. 什么是虚拟实验室？AI版本的PI带队搞科研！ 这个Virtual Lab就是一个高度拟人的科研团队系统，但成员全是AI Agent。
+核心结构👇 PI Agent：像课题组长，负责研究方向、团队组织；
+科学家 Agents：有免疫学家、计算生物学家、ML专家等；
+科学批评家 Agent：负责提出反对意见、审查逻辑；
+人类研究者：提供整体研究议题、实验限制，但只写了不到2%的文字！
+团队以“开会”的形式推进研究，会议有两种：
+团队会议：确定研究方向、选工具；
+个体会议：写代码、调工具、实验设计等。
+像极了真实课题组的运作流程！
+这张图展示了虚拟实验室的运作方式：
+上（图1a）：人类研究者设定课题后，定义一个“PI” Agent，由它去组建团队，生成“科学家”和“批评家”Agent。
+中（图1b）：团队会议形式，所有AI成员围绕议题进行多轮讨论、互相批评、集体决策。
+下（图1c）：个体会议形式，某个Agent完成具体任务，比如写代码，另一个Agent进行审阅。
+整体结构高度仿真了人类课题组的组织方式，而现在主角换成了AI。
+3. 项目实战：从零设计能抗新冠新毒株的抗体 为了验证这套系统是不是真的能搞科研，作者让Virtual Lab挑战一个现实任务：
+设计能结合新冠变异株（KP.3、JN.1）的纳米抗体，并实验验证其有效性。
+听起来像是生物&#43;计算&#43;机器学习的交叉大项目，对吧？
+虚拟实验室在实际任务中是这样推进项目的：
+a：人类研究者先设定了 PI 和科学批评家 Agent，由 PI 决定要组建哪些科学家角色（比如免疫学家、计算专家）。
+b：团队开会决定研究目标（是用纳米抗体？还是标准抗体？用已有的还是新设计？）。
+c：选出执行工具——ESM 语言模型、AlphaFold-Multimer 结构预测器、Rosetta 能量计算器。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="论文解读 | 让AI开实验室，设计抗体抗新冠，这不是科幻！ 最近刷到一篇 Nature 的论文，名字是：《The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies》。简单说，这是一群大语言模型（LLM）自组团队，开了个“虚拟实验室”，然后真的设计出了抗击新冠变异株的纳米抗体，而且还实验验证了有效性。
+你没看错，不是人类研究者用LLM辅助，而是LLM之间开会讨论怎么做科研，人类只是指导一下方向，最后结果还挺靠谱的。
+今天就来和大家唠唠这篇论文，为什么值得关注，它到底做了啥，又给我们带来了哪些启发👇
+1. 背景：AI做科研，到底能走多远？ 过去，大语言模型在科研中常被用来：
+回答科学问题；
+总结文献；
+写代码、做数据分析。
+这些功能虽然强，但本质上还是“工具”角色。真正的科研，尤其是跨学科、需要推理和决策的任务，AI很少能独立胜任。
+那怎么办？ 这篇论文提出了一个新概念：“虚拟实验室（Virtual Lab）”。
+2. 什么是虚拟实验室？AI版本的PI带队搞科研！ 这个Virtual Lab就是一个高度拟人的科研团队系统，但成员全是AI Agent。
+核心结构👇 PI Agent：像课题组长，负责研究方向、团队组织；
+科学家 Agents：有免疫学家、计算生物学家、ML专家等；
+科学批评家 Agent：负责提出反对意见、审查逻辑；
+人类研究者：提供整体研究议题、实验限制，但只写了不到2%的文字！
+团队以“开会”的形式推进研究，会议有两种：
+团队会议：确定研究方向、选工具；
+个体会议：写代码、调工具、实验设计等。
+像极了真实课题组的运作流程！
+这张图展示了虚拟实验室的运作方式：
+上（图1a）：人类研究者设定课题后，定义一个“PI” Agent，由它去组建团队，生成“科学家”和“批评家”Agent。
+中（图1b）：团队会议形式，所有AI成员围绕议题进行多轮讨论、互相批评、集体决策。
+下（图1c）：个体会议形式，某个Agent完成具体任务，比如写代码，另一个Agent进行审阅。
+整体结构高度仿真了人类课题组的组织方式，而现在主角换成了AI。
+3. 项目实战：从零设计能抗新冠新毒株的抗体 为了验证这套系统是不是真的能搞科研，作者让Virtual Lab挑战一个现实任务：
+设计能结合新冠变异株（KP.3、JN.1）的纳米抗体，并实验验证其有效性。
+听起来像是生物&#43;计算&#43;机器学习的交叉大项目，对吧？
+虚拟实验室在实际任务中是这样推进项目的：
+a：人类研究者先设定了 PI 和科学批评家 Agent，由 PI 决定要组建哪些科学家角色（比如免疫学家、计算专家）。
+b：团队开会决定研究目标（是用纳米抗体？还是标准抗体？用已有的还是新设计？）。
+c：选出执行工具——ESM 语言模型、AlphaFold-Multimer 结构预测器、Rosetta 能量计算器。">
+  <meta itemprop="wordCount" content="137">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="论文解读 | 让AI开实验室，设计抗体抗新冠，这不是科幻！ 最近刷到一篇 Nature 的论文，名字是：《The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies》。简单说，这是一群大语言模型（LLM）自组团队，开了个“虚拟实验室”，然后真的设计出了抗击新冠变异株的纳米抗体，而且还实验验证了有效性。
+你没看错，不是人类研究者用LLM辅助，而是LLM之间开会讨论怎么做科研，人类只是指导一下方向，最后结果还挺靠谱的。
+今天就来和大家唠唠这篇论文，为什么值得关注，它到底做了啥，又给我们带来了哪些启发👇
+1. 背景：AI做科研，到底能走多远？ 过去，大语言模型在科研中常被用来：
+回答科学问题；
+总结文献；
+写代码、做数据分析。
+这些功能虽然强，但本质上还是“工具”角色。真正的科研，尤其是跨学科、需要推理和决策的任务，AI很少能独立胜任。
+那怎么办？ 这篇论文提出了一个新概念：“虚拟实验室（Virtual Lab）”。
+2. 什么是虚拟实验室？AI版本的PI带队搞科研！ 这个Virtual Lab就是一个高度拟人的科研团队系统，但成员全是AI Agent。
+核心结构👇 PI Agent：像课题组长，负责研究方向、团队组织；
+科学家 Agents：有免疫学家、计算生物学家、ML专家等；
+科学批评家 Agent：负责提出反对意见、审查逻辑；
+人类研究者：提供整体研究议题、实验限制，但只写了不到2%的文字！
+团队以“开会”的形式推进研究，会议有两种：
+团队会议：确定研究方向、选工具；
+个体会议：写代码、调工具、实验设计等。
+像极了真实课题组的运作流程！
+这张图展示了虚拟实验室的运作方式：
+上（图1a）：人类研究者设定课题后，定义一个“PI” Agent，由它去组建团队，生成“科学家”和“批评家”Agent。
+中（图1b）：团队会议形式，所有AI成员围绕议题进行多轮讨论、互相批评、集体决策。
+下（图1c）：个体会议形式，某个Agent完成具体任务，比如写代码，另一个Agent进行审阅。
+整体结构高度仿真了人类课题组的组织方式，而现在主角换成了AI。
+3. 项目实战：从零设计能抗新冠新毒株的抗体 为了验证这套系统是不是真的能搞科研，作者让Virtual Lab挑战一个现实任务：
+设计能结合新冠变异株（KP.3、JN.1）的纳米抗体，并实验验证其有效性。
+听起来像是生物&#43;计算&#43;机器学习的交叉大项目，对吧？
+虚拟实验室在实际任务中是这样推进项目的：
+a：人类研究者先设定了 PI 和科学批评家 Agent，由 PI 决定要组建哪些科学家角色（比如免疫学家、计算专家）。
+b：团队开会决定研究目标（是用纳米抗体？还是标准抗体？用已有的还是新设计？）。
+c：选出执行工具——ESM 语言模型、AlphaFold-Multimer 结构预测器、Rosetta 能量计算器。">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <h1 id="论文解读--让ai开实验室设计抗体抗新冠这不是科幻"><strong>论文解读 | 让AI开实验室，设计抗体抗新冠，这不是科幻！</strong></h1>
+<p><img src="images/image-2.png" alt=""></p>
+<p>最近刷到一篇 <em>Nature</em> 的论文，名字是：《The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies》。简单说，这是一群大语言模型（LLM）自组团队，开了个“虚拟实验室”，然后真的设计出了抗击新冠变异株的<strong>纳米抗体</strong>，而且还实验验证了有效性。</p>
+<p>你没看错，不是人类研究者用LLM辅助，而是<strong>LLM之间开会讨论怎么做科研，人类只是指导一下方向</strong>，最后结果还挺靠谱的。</p>
+<p>今天就来和大家唠唠这篇论文，为什么值得关注，它到底做了啥，又给我们带来了哪些启发👇</p>
+<hr>
+<h2 id="1-背景ai做科研到底能走多远">1. <strong>背景：AI做科研，到底能走多远？</strong></h2>
+<p>过去，大语言模型在科研中常被用来：</p>
+<ul>
+<li>
+<p>回答科学问题；</p>
+</li>
+<li>
+<p>总结文献；</p>
+</li>
+<li>
+<p>写代码、做数据分析。</p>
+</li>
+</ul>
+<p>这些功能虽然强，但本质上还是“工具”角色。真正的科研，尤其是<strong>跨学科、需要推理和决策的任务</strong>，AI很少能独立胜任。</p>
+<h3 id="那怎么办"><strong>那怎么办？</strong></h3>
+<blockquote>
+<p>这篇论文提出了一个新概念：“<strong>虚拟实验室（Virtual Lab）</strong>”。</p>
+</blockquote>
+<hr>
+<h2 id="2-什么是虚拟实验室ai版本的pi带队搞科研">2. <strong>什么是虚拟实验室？AI版本的PI带队搞科研！</strong></h2>
+<p>这个Virtual Lab就是一个高度拟人的科研团队系统，但成员全是AI Agent。</p>
+<h3 id="核心结构"><strong>核心结构👇</strong></h3>
+<ul>
+<li>
+<p><strong>PI Agent</strong>：像课题组长，负责研究方向、团队组织；</p>
+</li>
+<li>
+<p><strong>科学家 Agents</strong>：有免疫学家、计算生物学家、ML专家等；</p>
+</li>
+<li>
+<p><strong>科学批评家 Agent</strong>：负责提出反对意见、审查逻辑；</p>
+</li>
+<li>
+<p><strong>人类研究者</strong>：提供整体研究议题、实验限制，但只写了不到2%的文字！</p>
+</li>
+</ul>
+<p>团队以“开会”的形式推进研究，会议有两种：</p>
+<ul>
+<li>
+<p><strong>团队会议</strong>：确定研究方向、选工具；</p>
+</li>
+<li>
+<p><strong>个体会议</strong>：写代码、调工具、实验设计等。</p>
+</li>
+</ul>
+<p>像极了真实课题组的运作流程！</p>
+<p><img src="images/image-4.png" alt=""></p>
+<p>这张图展示了虚拟实验室的运作方式：</p>
+<ul>
+<li>
+<p><strong>上（图1a）</strong>：人类研究者设定课题后，定义一个“PI” Agent，由它去组建团队，生成“科学家”和“批评家”Agent。</p>
+</li>
+<li>
+<p><strong>中（图1b）</strong>：团队会议形式，所有AI成员围绕议题进行多轮讨论、互相批评、集体决策。</p>
+</li>
+<li>
+<p><strong>下（图1c）</strong>：个体会议形式，某个Agent完成具体任务，比如写代码，另一个Agent进行审阅。</p>
+</li>
+</ul>
+<blockquote>
+<p>整体结构高度仿真了人类课题组的组织方式，而现在主角换成了AI。</p>
+</blockquote>
+<hr>
+<h2 id="3--项目实战从零设计能抗新冠新毒株的抗体">3.  项目实战：从零设计能抗新冠新毒株的抗体</h2>
+<p>为了验证这套系统是不是真的能搞科研，作者让Virtual Lab挑战一个现实任务：</p>
+<p><strong>设计能结合新冠变异株（KP.3、JN.1）的纳米抗体，并实验验证其有效性。</strong></p>
+<p>听起来像是生物+计算+机器学习的交叉大项目，对吧？</p>
+<p>虚拟实验室在实际任务中是这样推进项目的：</p>
+<p><img src="images/image-5.png" alt=""></p>
+<ul>
+<li>
+<p><strong>a</strong>：人类研究者先设定了 PI 和科学批评家 Agent，由 PI 决定要组建哪些科学家角色（比如免疫学家、计算专家）。</p>
+</li>
+<li>
+<p><strong>b</strong>：团队开会决定研究目标（是用纳米抗体？还是标准抗体？用已有的还是新设计？）。</p>
+</li>
+<li>
+<p><strong>c</strong>：选出执行工具——ESM 语言模型、AlphaFold-Multimer 结构预测器、Rosetta 能量计算器。</p>
+</li>
+</ul>
+<p><img src="images/image-6.png" alt=""></p>
+<ul>
+<li>
+<p><strong>d</strong>：每个工具由 Agent 编程实现，科学批评家Agent负责审查代码逻辑。</p>
+</li>
+<li>
+<p><strong>e</strong>：最终由 PI Agent 组合成完整的设计流程。</p>
+</li>
+</ul>
+<blockquote>
+<p>整个过程就像“科研项目从立项、开组会、写代码，到实现”的全过程——只是这一次，几乎都是 AI 在做。</p>
+</blockquote>
+<hr>
+<h2 id="4--实验结果咋样真有抗体能结合新毒株">4.  实验结果咋样？真有抗体能结合新毒株！</h2>
+<p>作者实打实地做了实验验证👇</p>
+<ul>
+<li>
+<p>92个设计的抗体里，有90%可表达、可溶；</p>
+</li>
+<li>
+<p>2个抗体对变异株（JN.1 或 KP.3）表现出显著结合能力；</p>
+</li>
+<li>
+<p>很多抗体保留了对原始Wuhan株的结合力；</p>
+</li>
+<li>
+<p>整个设计和讨论流程只用了 $20 Token费 + 几天时间；</p>
+</li>
+<li>
+<p>同样pipeline人类写要几周甚至更久</p>
+</li>
+</ul>
+<h3 id="抗体设计流程与逐轮优化效果"><strong>抗体设计流程与逐轮优化效果</strong></h3>
+<p>虚拟实验室设计抗体的核心流程是多轮迭代突变，每一轮都用三个工具协同评估：</p>
+<p><img src="images/image-3.png" alt=""></p>
+<ul>
+<li>
+<p><strong>ESM</strong>：语言模型预测每个突变位点的“自然合理性”；</p>
+</li>
+<li>
+<p><strong>AlphaFold-Multimer</strong>：预测突变体和Spike蛋白结合的结构质量；</p>
+</li>
+<li>
+<p><strong>Rosetta</strong>：计算结合能（打分越低越好）。</p>
+</li>
+</ul>
+<p>每轮突变都挑选Top序列进入下一轮，总共进行四轮，最终选出92个抗体候选。</p>
+<p><img src="images/image.png" alt=""></p>
+<ul>
+<li>
+<p>图3b–d 展示了分数的逐步提升；</p>
+</li>
+<li>
+<p>图3e–g 显示最终版本比原始抗体在三项指标上都表现更优；</p>
+</li>
+<li>
+<p>图3g 是模型预测的突变抗体与病毒蛋白结合结构图。</p>
+</li>
+</ul>
+<h3 id="实验验证ai设计抗体能有效结合新冠变异株"><strong>实验验证——AI设计抗体能有效结合新冠变异株</strong></h3>
+<p><img src="images/image-1.png" alt=""></p>
+<p>这张图展示了论文对虚拟实验室产出的抗体进行的<strong>生物实验验证</strong>，一共展示了四大类数据：</p>
+<ul>
+<li>
+<p><strong>图4A</strong>：展示92个设计抗体中绝大多数的表达量都很高（&gt;25 mg/L），说明这些抗体是结构稳定且可制造的。</p>
+</li>
+<li>
+<p><strong>图4B</strong>：ELISA检测四种原始抗体与其突变体（比如Nb21和Ty1）对不同变异株的结合力，结果显示突变体对KP.3等有了新增结合能力。</p>
+</li>
+<li>
+<p><strong>图4C</strong>：剂量-反应曲线进一步量化突变抗体与不同RBD（Wuhan, JN.1, MERS等）的亲和力，蓝色为原始病毒，红色为新变体，两个突变体在新变体上表现出了显著的结合能力。</p>
+</li>
+<li>
+<p><strong>图4D</strong>：突变位点在三维结构中的空间分布（粉色圈圈），可见它们集中在抗体-抗原界面附近，解释了功能增强的可能机制。</p>
+</li>
+</ul>
+<blockquote>
+<p>这些实验结果说明：虚拟实验室不仅能“合理设计”，而且真的能产出对现实病毒有功能作用的抗体！</p>
+</blockquote>
+<hr>
+<h2 id="5x20x20亮点与反思这不只是科研工具而是科研模式的创新">5. <strong> 亮点与反思：这不只是科研工具，而是科研模式的创新</strong></h2>
+<h3 id="-亮点"><strong>🌟 亮点</strong></h3>
+<ul>
+<li>
+<p><strong>Agent完全独立决策、协作、写代码</strong>；</p>
+</li>
+<li>
+<p><strong>科学批评家角色很重要，提升讨论质量</strong>；</p>
+</li>
+<li>
+<p><strong>结构仿真人类科研团队，易于扩展</strong>；</p>
+</li>
+<li>
+<p><strong>成本低、效率高，非常适合资源有限的实验室</strong>。</p>
+</li>
+</ul>
+<p><img src="images/image-7.png" alt=""></p>
+<hr>
+<h3 id="虚拟实验室内部讨论的行为分析"><strong>虚拟实验室内部讨论的行为分析</strong></h3>
+<p>这张图对“虚拟实验室”的组织行为进行了量化分析，可以理解为一份 <strong>AI课题组的组会记录统计</strong>：</p>
+<ul>
+<li>
+<p><strong>发言风格多样</strong>：不同Agent之间的语言风格、用词长度、发言频率均不相同，体现出“虚拟团队”内部的个体性（图5a）。</p>
+</li>
+<li>
+<p><strong>角色分工明确</strong>：PI负责发起任务、批评家负责挑战、专家Agent提供具体方案，每类角色有明显的职责倾向（图5b）。</p>
+</li>
+<li>
+<p><strong>讨论有深度</strong>：随着批评家的加入，组会中问题解决的连贯性和准确率都显著提升（图5c–e），说明讨论不是“表面轮流说话”，而是有真实推进的科学归因。</p>
+</li>
+</ul>
+<blockquote>
+<p>总结一句话：这些Agent不只是模型，它们组成的“AI科研小组”，真的有那么点像回事！</p>
+</blockquote>
+<hr>
+<h2 id="点评">点评：</h2>
+<ol>
+<li>
+<p>AI agent这个概念在计算机领域已经非常火爆，之前大家总觉着生物科研领域需要精准，需要明确的知识，才能适配这个专业性很强的领域。但这篇文章说，我就说AI agent就算在科研中也有用吧！这个概念本身要比这篇文章的方法和设计的抗体重要的多（还是要会讲故事）</p>
+</li>
+<li>
+<p>整个筛选流程当中，起主要作用的还是AF的结构预测指标，ESM更像是特征提取，而Rosetta更像是结构验证，所以结构预测工具还是蛋白质设计领域的神。</p>
+</li>
+<li>
+<p>和之前ESM- IF的设计类似，在没有抗原的情况下，改进了抗体序列。</p>
+</li>
+</ol>
+<p>🔗原文链接：https://www.nature.com/articles/s41586-025-09442-9#article-info</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式 | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="深度解读 ICML 2025 Spotlight 工作 Pallatom：通过 atom14 表示、Dual-track 架构与 SeqHead 模块，实现从全原子坐标到序列与结构的端到端生成，标志着蛋白设计从 backbone 级迈入真正的原子级建模时代。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式">
+  <meta property="og:description" content="深度解读 ICML 2025 Spotlight 工作 Pallatom：通过 atom14 表示、Dual-track 架构与 SeqHead 模块，实现从全原子坐标到序列与结构的端到端生成，标志着蛋白设计从 backbone 级迈入真正的原子级建模时代。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2025-09-05T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-05T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="Protein Design">
+    <meta property="article:tag" content="De Novo Design">
+    <meta property="article:tag" content="All-Atom">
+    <meta property="article:tag" content="Diffusion Model">
+    <meta property="article:tag" content="Generative Model">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/cover.png">
+
+  <meta itemprop="name" content="ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式">
+  <meta itemprop="description" content="深度解读 ICML 2025 Spotlight 工作 Pallatom：通过 atom14 表示、Dual-track 架构与 SeqHead 模块，实现从全原子坐标到序列与结构的端到端生成，标志着蛋白设计从 backbone 级迈入真正的原子级建模时代。">
+  <meta itemprop="datePublished" content="2025-09-05T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-05T00:00:00+00:00">
+  <meta itemprop="wordCount" content="289">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/cover.png">
+  <meta itemprop="keywords" content="Pallatom,all-atom protein generation,atom14 representation,dual-track architecture,protein generative model,diffusion protein design,ICML Spotlight,AI4S">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/cover.png">
+  <meta name="twitter:title" content="ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式">
+  <meta name="twitter:description" content="深度解读 ICML 2025 Spotlight 工作 Pallatom：通过 atom14 表示、Dual-track 架构与 SeqHead 模块，实现从全原子坐标到序列与结构的端到端生成，标志着蛋白设计从 backbone 级迈入真正的原子级建模时代。">
+
+	
+<meta name="keywords" content="Pallatom, all-atom protein generation, atom14 representation, dual-track architecture, protein generative model, diffusion protein design, ICML Spotlight, AI4S">
+
+
+
+<meta name="description" content="深度解读 ICML 2025 Spotlight 工作 Pallatom：通过 atom14 表示、Dual-track 架构与 SeqHead 模块，实现从全原子坐标到序列与结构的端到端生成，标志着蛋白设计从 backbone 级迈入真正的原子级建模时代。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/cover.png');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              深度解读 ICML 2025 Spotlight 工作 Pallatom：通过 atom14 表示、Dual-track 架构与 SeqHead 模块，实现从全原子坐标到序列与结构的端到端生成，标志着蛋白设计从 backbone 级迈入真正的原子级建模时代。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2025-09-05T00:00:00Z">
+        九月 5, 2025
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>在前不久结束的 <strong>ICML 2025</strong>（国际机器学习大会）上，有一篇来自中国初创企业 <strong>力文所（Levinthal）</strong> 和复旦大学的合作论文引起了广泛关注。在这个以传统机器学习为主的顶会上，这篇做蛋白质设计的论文不仅入选，还被评为 <strong>Spotlight 论文。</strong>今天就和大家分享一下这个值得关注的工作：**《**<em><strong>P(all-atom) Is Unlocking New Path For Protein Design》</strong>。</em></p>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-11.png" alt=""></p>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-10.png" alt=""></p>
+<p>为什么这篇文章值得我们细读？</p>
+<ul>
+<li>
+<p>因为它提出的 <strong>Pallatom 模型</strong>，开辟了一条全新的路径：<strong>直接在全原子层面（all-atom）进行蛋白质生成</strong>。</p>
+</li>
+<li>
+<p>这意味着我们不再停留在“预测骨架”或“序列-结构分离”的阶段，而是真正走向 <strong>原子级精度的蛋白设计</strong>。</p>
+</li>
+</ul>
+<p>对于蛋白质设计这个快速发展的前沿领域而言，这是一件非常漂亮、也非常有意义的工作。在英伟达最新的技术博客中，在蛋白质基础模型中，<strong>Pallatom 被放在了与这些巨头模型并列的位置</strong>，也一方面证明了Pallatom的价值。</p>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-9.png" alt=""></p>
+<p>🔗Palatom原文链接：https://doi.org/10.1101/2024.08.16.608235</p>
+<hr>
+<h2 id="第一部分背景介绍">第一部分：背景介绍</h2>
+<p>在蛋白质设计领域，有一个核心问题：</p>
+<blockquote>
+<p><strong>怎样同时得到“序列”和“结构”？</strong></p>
+</blockquote>
+<p>传统上，科学家们常走两条路：</p>
+<ul>
+<li>
+<p><strong>从序列出发</strong>：预测出三维结构（P(structure | seq)），代表成果是 AlphaFold 系列。</p>
+</li>
+<li>
+<p><strong>从骨架出发</strong>：在给定 backbone 上寻找能折叠成该结构的序列（P(seq | backbone)），代表工具是 ProteinMPNN 等。</p>
+</li>
+</ul>
+<p>这两种思路极大推动了蛋白设计的发展，但它们都有一个共同的缺陷：<strong>都没有真正把“全原子（all-atom）层面的信息”建模进来。</strong></p>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-8.png" alt=""></p>
+<p>在蛋白质里，侧链的朝向、氢键的网络、疏水/亲水分布，这些都决定了最终的稳定性和功能。如果只停留在 backbone 层面，或者单纯关注序列与骨架匹配，很多精细的物理化学特征会被忽略。</p>
+<hr>
+<h2 id="第二部分pallatom-的核心理念"><strong>第二部分：Pallatom 的核心理念</strong></h2>
+<p>Pallatom 的核心创新在于：<strong>直接学习 P(all-atom)</strong> ——也就是说，模型直接在全原子坐标空间中建模，把结构与序列的关系一次性捕捉。</p>
+<p>这和以往方法的区别在哪里？</p>
+<ul>
+<li>
+<p>过去的方法往往是“拆开建模”：先生成 backbone，再去补序列；或者先从序列出发，再通过语言模型或能量函数去优化。</p>
+</li>
+<li>
+<p>Pallatom 的观点是：蛋白质的<strong>全原子坐标本身</strong>，已经同时包含了序列和结构信息。只要我们能在原子层面正确建模，就不需要再额外拼接其他模块。</p>
+</li>
+</ul>
+<p>📌 <strong>配图对应（Figure 1A）</strong>：这里展示了 Pallatom 的整体架构。它采用了一个 <strong>dual-track 框架</strong>：</p>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-7.png" alt=""></p>
+<ul>
+<li>
+<p><strong>Residue-level track</strong>：在残基层面建模，关注全局信息。</p>
+</li>
+<li>
+<p><strong>Atom-level track</strong>：在原子层面建模，关注局部几何与化学细节。</p>
+</li>
+</ul>
+<p>这两条轨道并不是平行工作的，而是通过 <strong>AtomDecoder 单元</strong>不断交互：</p>
+<ul>
+<li>
+<p>残基级别的表示会“广播”到原子层面；</p>
+</li>
+<li>
+<p>原子级别的特征再被“回收”，反馈到残基层面；</p>
+</li>
+<li>
+<p>经过多层迭代，结构和序列的特征逐步融合。</p>
+</li>
+</ul>
+<p>这种<strong>“往返式”</strong>更新的思路，保证了 backbone 和 sidechain 都能被精细建模，避免了传统方法里“结构与序列脱节”的问题。</p>
+<blockquote>
+<p>Pallatom 不再把蛋白质拆分成骨架和序列两个独立问题，而是<strong>通过全原子建模，把两者真正地绑在了一起。</strong></p>
+</blockquote>
+<hr>
+<h2 id="第三部分关键技术亮点"><strong>第三部分：关键技术亮点</strong></h2>
+<p>在 Pallatom 的框架下，有三个关键技术点值得特别强调。</p>
+<h3 id="1-atom14-表示法统一全原子表示"><strong>1.</strong> <strong>atom14 表示法：统一全原子表示</strong></h3>
+<p>在蛋白质生成任务中，一个最大难题是：<strong>在序列未知之前，你根本不知道系统到底有多少原子。</strong></p>
+<p>不同的氨基酸侧链差别很大，比如丙氨酸 (Ala) 只有一个甲基侧链，而色氨酸 (Trp) 的侧链则庞大复杂。</p>
+<p>Pallatom 提出了一个巧妙的解决方案：<strong>atom14 表示法</strong>。</p>
+<ul>
+<li>
+<p>它为每个残基固定分配 14 个“虚拟原子位置”，无论真实氨基酸是什么。</p>
+</li>
+<li>
+<p>当序列确定后，才会丢弃多余的虚拟原子，只保留真实的化学结构。</p>
+</li>
+<li>
+<p>这样一来，模型在一开始就能用统一的点云来学习，避免了“原子数随序列变化”的麻烦。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-6.png" alt="展示了 atom14 的点云示意，读者可以直观理解“虚拟原子填充”的概念。"></p>
+<hr>
+<h3 id="2-dual-track-框架与-atomdecoder往返交互的秘密武器"><strong>2.</strong> <strong>Dual-track 框架与 AtomDecoder：往返交互的秘密武器</strong></h3>
+<p>Pallatom 的 backbone 在 <strong>残基层面</strong>和<strong>原子层面</strong>同时建模，但真正的关键是 <strong>AtomDecoder 单元</strong>。</p>
+<ul>
+<li>
+<p>在解码过程中，<strong>残基层面</strong>的特征会<strong>“广播”（broadcast)</strong>到<strong>原子层面</strong>；</p>
+</li>
+<li>
+<p>原子层面的几何特征再被<strong>“回收”(recycle)</strong>，反馈给残基层面；</p>
+</li>
+<li>
+<p>通过多次迭代，这种往返交互不断细化了坐标预测。</p>
+</li>
+</ul>
+<p>这种机制保证了 backbone 和 sidechain 的耦合建模，避免了传统方法里“<strong>骨架正确但侧链乱</strong>”的问题。</p>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-4.png" alt="可以看到 AtomDecoder 内部的注意力机制和 recycling 流程。"></p>
+<hr>
+<h3 id="3-seqhead-模块从几何到序列的桥梁"><strong>3.</strong> <strong>SeqHead 模块：从几何到序列的桥梁</strong></h3>
+<p>即使有了 atom14 表示法，模型生成的还是一团“坐标云”，要把它转化为生物学意义上的氨基酸序列，还需要一个关键步骤。</p>
+<p>这就是 <strong>SeqHead 模块</strong>：</p>
+<ul>
+<li>
+<p>它从每个残基的原子嵌入中提取信息；</p>
+</li>
+<li>
+<p>通过一个分类层预测 20 种氨基酸的分布；</p>
+</li>
+<li>
+<p>最终实现“几何 → 序列”的映射，让模型既能生成结构，也能生成对应的序列。</p>
+</li>
+</ul>
+<blockquote>
+<p>一句话总结：</p>
+<p><strong>atom14</strong> 解决了<strong>输入表示的问题</strong>，<strong>AtomDecoder</strong> 解决了<strong>结构建模</strong>的问题，<strong>SeqHead</strong> 解决了<strong>序列输出</strong>的问题。三者结合，让 Pallatom 真正做到了<strong>全原子、端到端</strong>的蛋白质生成。</p>
+</blockquote>
+<hr>
+<h2 id="第四部分实验结果与性能对比"><strong>第四部分：实验结果与性能对比</strong></h2>
+<p>一个模型再有创意，最终还是要看能不能“打得过”现有方法。研究团队对 Pallatom 做了系统评估，结果相当亮眼。</p>
+<h3 id="1-设计性designability显著提升"><strong>1.</strong> <strong>设计性（Designability）显著提升</strong></h3>
+<ul>
+<li>
+<p>Pallatom 在 <strong>CO-DESIGN 模式</strong>下的设计成功率（DES-aa）高达 <strong>85%+</strong>，远超 Protpardelle（30%）、ProteinGenerator（43%）、Multiflow（62%）。</p>
+</li>
+<li>
+<p>这说明 Pallatom 生成的序列与全原子结构是高度一致的，不需要额外的“修修补补”。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-1.png" alt="Pallatom 在 aaRMSD（原子级 RMSD）上的表现，整体分布更紧凑，说明生成结构和预测结构高度吻合。"></p>
+<hr>
+<h3 id="2-多样性diversity全面领先"><strong>2.</strong> <strong>多样性（Diversity）全面领先</strong></h3>
+<ul>
+<li>
+<p>Pallatom 在结构和序列的多样性上，都远远超过其他方法。</p>
+</li>
+<li>
+<p>具体来说，生成的结构数量更多、分布更均匀，序列也展现了更广的组合空间。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-5.png" alt="Figure 2B, 2C：展示了不同长度下的二级结构比例。可以看到，Pallatom 没有偏向 α-螺旋或 β-折叠，而是能平衡生成多种二级结构。"></p>
+<hr>
+<h3 id="3-新颖性novelty更高"><strong>3.</strong> <strong>新颖性（Novelty）更高</strong></h3>
+<ul>
+<li>
+<p>Pallatom 生成的结构与天然蛋白（PDB 中的已知结构）的相似度更低（NOV-str 较小）。</p>
+</li>
+<li>
+<p>这意味着它不仅能“复刻”自然界的蛋白，还能探索新的 fold 空间。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-3.png" alt="Figure 2D：几张高质量的案例展示，生成的蛋白具有合理的疏水核心和亲水表面分布，符合生物物理学规律。"></p>
+<hr>
+<h3 id="4-对比结果一览"><strong>4.</strong> <strong>对比结果一览</strong></h3>
+<p>在 Table 1 的对比中，Pallatom 在三大维度（<strong>设计性、多样性、新颖性</strong>）几乎全面领先，甚至超越了专门为 backbone 设计优化的 RFdiffusion。</p>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image.png" alt=""></p>
+<blockquote>
+<p>一句话总结：</p>
+<p>Pallatom 不是“只在某一维度强”，而是做到了全方位平衡——既能设计成功率高，又能保证多样性，还能探索真正新颖的结构空间。</p>
+</blockquote>
+<hr>
+<h2 id="第五部分消融实验为什么-pallatom-有效"><strong>第五部分：消融实验——为什么 Pallatom 有效？</strong></h2>
+<p>研究团队专门做了消融实验，逐一去掉 Pallatom 的核心组件，来看看性能会发生什么变化。结果很有意思。</p>
+<h3 id="1-atom14-表示法的必要性"><strong>1.</strong> <strong>atom14 表示法的必要性</strong></h3>
+<ul>
+<li>
+<p>如果把 atom14 替换成传统的 <strong>hybrid14</strong>（即对 20 种可能的侧链坐标做叠加），设计性（DES-aa）从 <strong>87% 降到 5%</strong>！</p>
+</li>
+<li>
+<p>说明 hybrid14 的“序列驱动”思路在扩散建模中并不适用，反而导致序列和结构严重脱节。</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>结论</strong>：<strong>atom14 是 Pallatom 的根基</strong>，它保证了生成过程中序列与结构能自然耦合。</p>
+</blockquote>
+<hr>
+<h3 id="2-回收机制recycling的重要性"><strong>2.</strong> <strong>回收机制（Recycling）的重要性</strong></h3>
+<ul>
+<li>如果去掉 <strong>recycling 机制</strong>（woRC），backbone 的指标变化不大，但全原子设计性（DES-aa）从 <strong>87% 掉到 21%</strong>。</li>
+</ul>
+<blockquote>
+<p>说明 recycling 对 backbone 影响有限，但对 <strong>序列生成</strong>至关重要。它让残基层面和原子层面的信息能够往返流动，保证生成的序列和几何结构相互匹配。</p>
+</blockquote>
+<hr>
+<h3 id="3-结论架构设计的必要性"><strong>3.</strong> <strong>结论：架构设计的必要性</strong></h3>
+<p>这些消融结果表明，Pallatom 的成功不是靠“大模型堆料”获得的，而是 <strong>核心设计点（atom14 + recycling）共同作用的结果</strong>。</p>
+<ul>
+<li>
+<p>atom14 解决了“如何统一表示”的难题；</p>
+</li>
+<li>
+<p>recycling 确保了“序列与结构的耦合”。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/images/image-2.png" alt="可以直观看到不同消融配置下，性能指标的断崖式下降。"></p>
+<blockquote>
+<p>Pallatom 的架构设计具有高度的针对性和必要性，这也是它能全面超越现有方法的根本原因。</p>
+</blockquote>
+<hr>
+<h2 id="第六部分影响与展望"><strong>第六部分：影响与展望</strong></h2>
+<p>Pallatom 并不仅仅是一个“模型性能更好”的工作，它更重要的是：<strong>开启了全原子层面蛋白质生成的新范式</strong>。</p>
+<h3 id="1-对科学研究的意义"><strong>1.</strong> <strong>对科学研究的意义</strong></h3>
+<ul>
+<li>
+<p>过去的 backbone 级方法虽然能设计出稳定骨架，但对侧链的处理往往粗糙。</p>
+</li>
+<li>
+<p>Pallatom 直接在全原子层面工作，这意味着它能捕捉到 <strong>氢键网络、疏水/亲水分布、电荷相互作用</strong> 等精细物理化学特征。</p>
+</li>
+<li>
+<p>这让生成的蛋白不仅在几何上合理，更在能量学和功能上具备真实性。</p>
+</li>
+</ul>
+<hr>
+<h3 id="2-对应用的价值"><strong>2.</strong> <strong>对应用的价值</strong></h3>
+<ul>
+<li>
+<p><strong>酶设计</strong>：催化位点的活性依赖于原子级别的精确定位，Pallatom 的 all-atom 能力正好契合。</p>
+</li>
+<li>
+<p><strong>药物结合口袋设计</strong>：小分子结合需要原子尺度的空间匹配和电荷补偿，全原子生成模型可以直接生成带有功能性 pocket 的蛋白。</p>
+</li>
+<li>
+<p><strong>复杂体系设计</strong>：例如蛋白-蛋白相互作用界面、纳米材料构建，Pallatom 的思路都能拓展。</p>
+</li>
+</ul>
+<hr>
+<h3 id="3-未来方向"><strong>3.</strong> <strong>未来方向</strong></h3>
+<p>论文最后也提到，未来 Pallatom 的潜力在于：</p>
+<ul>
+<li>
+<p><strong>扩展到更大规模、更复杂的体系</strong>，比如多聚体或膜蛋白；</p>
+</li>
+<li>
+<p><strong>改进架构</strong>，让模型更加通用和高效；</p>
+</li>
+<li>
+<p><strong>结合实验验证</strong>，推动生成结果走向真正的 wet-lab 应用。</p>
+</li>
+</ul>
+<blockquote>
+<p>Pallatom 不只是一个模型，而是<strong>一种全新的蛋白设计范式</strong>，它让我们离“原子级别的精准蛋白工程”更近了一步。</p>
+</blockquote>
+<h3 id="蓝极点评"><strong>蓝极点评：</strong></h3>
+<p>在蛋白质设计这条路上，我们已经走过了从 <strong>序列到结构</strong>、从 <strong>骨架到序列</strong> 的阶段。</p>
+<p>但只有当我们进入 <strong>全原子层面（all-atom）</strong>，蛋白质的真实物理和功能才真正浮现。</p>
+<p>Pallatom 的意义，就在于它首次证明：</p>
+<blockquote>
+<p><strong>通过直接建模 P(all-atom)，可以一步到位生成既有结构又有序列的高质量蛋白。</strong></p>
+</blockquote>
+<p>它不仅在指标上全面超越现有方法，更重要的是开辟了新的研究方向——让蛋白设计从“近似”走向“原子级精度”。</p>
+<p>无论是酶工程、药物设计，还是全新的蛋白折叠空间探索，Pallatom 都展示了巨大的潜力。</p>
+<p>或许不久的将来，我们会看到更多这样的 all-atom 模型，真正把“设计蛋白质”变成一门精细可控的工程学科。</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/3nPUqzUZqJdRcrpzul95Hw"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/de-novo-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">De Novo Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/all-atom/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">All-Atom</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/diffusion-model/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Diffusion Model</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/generative-model/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Generative Model</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/icml/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">ICML</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/computational-biology/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Computational Biology</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

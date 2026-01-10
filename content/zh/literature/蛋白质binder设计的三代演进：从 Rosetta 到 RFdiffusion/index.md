@@ -1,9 +1,37 @@
 ---
-title: "蛋白质binder设计的三代演进：从 Rosetta 到 RFdiffusion"
+title: "蛋白质 Binder 设计的三代演进：从 Rosetta 到 RFdiffusion"
 date: 2025-09-01
+
+categories: ["文献解读"]
+
+tags:
+  - AI4S
+  - 蛋白设计
+  - Binder
+  - RFdiffusion
+  - ProteinMPNN
+  - AlphaFold
+  - Rosetta
+  - 结构生物学
+  - 方法论
+
+keywords:
+  - protein binder design
+  - RFdiffusion
+  - Rosetta
+  - ProteinMPNN
+  - AlphaFold2
+  - AI4S
+  - protein engineering
+  - de novo design
+
 featured_image: "cover.png"
-externalLink: https://mp.weixin.qq.com/s/iF6qFNKIiIBoZ0uNlTwDWQ
-summary: "一文梳理蛋白质binder设计的三代演进"
+
+externalLink: "https://mp.weixin.qq.com/s/iF6qFNKIiIBoZ0uNlTwDWQ"
+
+summary: "系统梳理蛋白质 binder 设计从 Rosetta 到 ProteinMPNN / AlphaFold，再到 RFdiffusion 的三代方法学演进。"
+
+description: "深入解析蛋白质 binder 设计方法论的三次关键跃迁：第一代基于 Rosetta 的物理建模，第二代 AI 辅助混合 pipeline，第三代 RFdiffusion 生成式设计，展示蛋白质设计从搜索走向生成的范式转变。"
 ---
 
 在生物学的世界里，蛋白质是最重要的“分子机器”。它们像乐高积木一样由氨基酸拼装而成，却能完成几乎所有生命活动：从催化反应，到信号传导，再到结构支撑。没有蛋白质，就没有生命。

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="
+关键词：Peptides, Alphafold, BindCraft, De novo peptide design
+🔗原文链接：https://www.biorxiv.org/content/10.1101/2025.07.23.666285v1
+
+研究总结
+这篇论文《Generative Design of High-Affinity Peptides Using BindCraft》主要研究了使用一个叫 BindCraft 的计算工具来“从蛋白质结构出发，生成高亲和力的肽类配体（peptide binders）”。
+研究目标
+作者希望评估 BindCraft 是否能：
+
+
+从目标蛋白的三维结构出发，自动生成能特异性结合的短肽序列（10–20个氨基酸）；
+
+
+为药物开发提供一个无需复杂筛选实验的替代手段。
+
+
+
+研究方法与主要实验
+
+工具简介
+
+BindCraft 是一个基于 AlphaFold 的结构引导生成模型，原本设计用于生成“迷你蛋白（miniprotein）”结合物。这篇论文尝试将其用于生成更短的、潜在更具药用价值的“肽类”。
+
+
+两个目标蛋白：MDM2 和 WDR5
+
+
+MDM2：一种癌症相关蛋白，天然与 p53 蛋白结合。
+
+
+WDR5：与染色质修饰和癌基因如 MYC 有关，具有两个已知的结合位点：WIN 和 WBM。
+
+
+
+
+生成与实验验证
+
+
+BindCraft 生成了针对 MDM2 的 70 条候选肽链，其中合成了 15 条，有 7 条显示出纳摩尔级别的结合亲和力（KD = 65–165 nM）。
+
+
+对 WDR5 的两个结合位点分别生成了肽，其中 WIN 位点无有效结合肽，但在 WBM 位点发现了 6 条 KD 在 219–650 nM 的结合肽。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/bindcraft%E4%B9%9F%E8%83%BD%E8%AE%BE%E8%AE%A1%E8%82%BD%E7%B1%BB%E9%85%8D%E4%BD%93%E4%BA%86/bindcraft%E4%B9%9F%E8%83%BD%E8%AE%BE%E8%AE%A1%E8%82%BD%E7%B1%BB%E9%85%8D%E4%BD%93%E4%BA%86/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/bindcraft%E4%B9%9F%E8%83%BD%E8%AE%BE%E8%AE%A1%E8%82%BD%E7%B1%BB%E9%85%8D%E4%BD%93%E4%BA%86/bindcraft%E4%B9%9F%E8%83%BD%E8%AE%BE%E8%AE%A1%E8%82%BD%E7%B1%BB%E9%85%8D%E4%BD%93%E4%BA%86/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="关键词：Peptides, Alphafold, BindCraft, De novo peptide design
+🔗原文链接：https://www.biorxiv.org/content/10.1101/2025.07.23.666285v1
+研究总结 这篇论文《Generative Design of High-Affinity Peptides Using BindCraft》主要研究了使用一个叫 BindCraft 的计算工具来“从蛋白质结构出发，生成高亲和力的肽类配体（peptide binders）”。
+研究目标 作者希望评估 BindCraft 是否能：
+从目标蛋白的三维结构出发，自动生成能特异性结合的短肽序列（10–20个氨基酸）；
+为药物开发提供一个无需复杂筛选实验的替代手段。
+研究方法与主要实验 工具简介 BindCraft 是一个基于 AlphaFold 的结构引导生成模型，原本设计用于生成“迷你蛋白（miniprotein）”结合物。这篇论文尝试将其用于生成更短的、潜在更具药用价值的“肽类”。
+两个目标蛋白：MDM2 和 WDR5
+MDM2：一种癌症相关蛋白，天然与 p53 蛋白结合。
+WDR5：与染色质修饰和癌基因如 MYC 有关，具有两个已知的结合位点：WIN 和 WBM。
+生成与实验验证
+BindCraft 生成了针对 MDM2 的 70 条候选肽链，其中合成了 15 条，有 7 条显示出纳摩尔级别的结合亲和力（KD = 65–165 nM）。
+对 WDR5 的两个结合位点分别生成了肽，其中 WIN 位点无有效结合肽，但在 WBM 位点发现了 6 条 KD 在 219–650 nM 的结合肽。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="关键词：Peptides, Alphafold, BindCraft, De novo peptide design
+🔗原文链接：https://www.biorxiv.org/content/10.1101/2025.07.23.666285v1
+研究总结 这篇论文《Generative Design of High-Affinity Peptides Using BindCraft》主要研究了使用一个叫 BindCraft 的计算工具来“从蛋白质结构出发，生成高亲和力的肽类配体（peptide binders）”。
+研究目标 作者希望评估 BindCraft 是否能：
+从目标蛋白的三维结构出发，自动生成能特异性结合的短肽序列（10–20个氨基酸）；
+为药物开发提供一个无需复杂筛选实验的替代手段。
+研究方法与主要实验 工具简介 BindCraft 是一个基于 AlphaFold 的结构引导生成模型，原本设计用于生成“迷你蛋白（miniprotein）”结合物。这篇论文尝试将其用于生成更短的、潜在更具药用价值的“肽类”。
+两个目标蛋白：MDM2 和 WDR5
+MDM2：一种癌症相关蛋白，天然与 p53 蛋白结合。
+WDR5：与染色质修饰和癌基因如 MYC 有关，具有两个已知的结合位点：WIN 和 WBM。
+生成与实验验证
+BindCraft 生成了针对 MDM2 的 70 条候选肽链，其中合成了 15 条，有 7 条显示出纳摩尔级别的结合亲和力（KD = 65–165 nM）。
+对 WDR5 的两个结合位点分别生成了肽，其中 WIN 位点无有效结合肽，但在 WBM 位点发现了 6 条 KD 在 219–650 nM 的结合肽。">
+  <meta itemprop="wordCount" content="336">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="关键词：Peptides, Alphafold, BindCraft, De novo peptide design
+🔗原文链接：https://www.biorxiv.org/content/10.1101/2025.07.23.666285v1
+研究总结 这篇论文《Generative Design of High-Affinity Peptides Using BindCraft》主要研究了使用一个叫 BindCraft 的计算工具来“从蛋白质结构出发，生成高亲和力的肽类配体（peptide binders）”。
+研究目标 作者希望评估 BindCraft 是否能：
+从目标蛋白的三维结构出发，自动生成能特异性结合的短肽序列（10–20个氨基酸）；
+为药物开发提供一个无需复杂筛选实验的替代手段。
+研究方法与主要实验 工具简介 BindCraft 是一个基于 AlphaFold 的结构引导生成模型，原本设计用于生成“迷你蛋白（miniprotein）”结合物。这篇论文尝试将其用于生成更短的、潜在更具药用价值的“肽类”。
+两个目标蛋白：MDM2 和 WDR5
+MDM2：一种癌症相关蛋白，天然与 p53 蛋白结合。
+WDR5：与染色质修饰和癌基因如 MYC 有关，具有两个已知的结合位点：WIN 和 WBM。
+生成与实验验证
+BindCraft 生成了针对 MDM2 的 70 条候选肽链，其中合成了 15 条，有 7 条显示出纳摩尔级别的结合亲和力（KD = 65–165 nM）。
+对 WDR5 的两个结合位点分别生成了肽，其中 WIN 位点无有效结合肽，但在 WBM 位点发现了 6 条 KD 在 219–650 nM 的结合肽。">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p><img src="images/image-9.png" alt=""></p>
+<p><strong>关键词</strong>：Peptides, Alphafold, BindCraft, De novo peptide design</p>
+<p>🔗原文链接：https://www.biorxiv.org/content/10.1101/2025.07.23.666285v1</p>
+<hr>
+<h2 id="研究总结">研究总结</h2>
+<p>这篇论文《Generative Design of High-Affinity Peptides Using BindCraft》主要研究了使用一个叫 <strong>BindCraft</strong> 的计算工具来“<strong>从蛋白质结构出发，生成高亲和力的肽类配体（peptide binders）</strong>”。</p>
+<h3 id="研究目标"><strong>研究目标</strong></h3>
+<p>作者希望评估 BindCraft 是否能：</p>
+<ul>
+<li>
+<p>从目标蛋白的三维结构出发，<strong>自动生成能特异性结合的短肽序列（10–20个氨基酸）</strong>；</p>
+</li>
+<li>
+<p>为药物开发提供一个<strong>无需复杂筛选实验</strong>的替代手段。</p>
+</li>
+<li></li>
+</ul>
+<h3 id="研究方法与主要实验"><strong>研究方法与主要实验</strong></h3>
+<ol>
+<li><strong>工具简介</strong></li>
+</ol>
+<p>BindCraft 是一个基于 AlphaFold 的结构引导生成模型，原本设计用于生成“迷你蛋白（miniprotein）”结合物。这篇论文尝试将其用于生成更短的、潜在更具药用价值的“肽类”。</p>
+<ul>
+<li>
+<p><strong>两个目标蛋白：MDM2 和 WDR5</strong></p>
+<ul>
+<li>
+<p><strong>MDM2</strong>：一种癌症相关蛋白，天然与 p53 蛋白结合。</p>
+</li>
+<li>
+<p><strong>WDR5</strong>：与染色质修饰和癌基因如 MYC 有关，具有两个已知的结合位点：WIN 和 WBM。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>生成与实验验证</strong></p>
+<ul>
+<li>
+<p>BindCraft 生成了针对 MDM2 的 70 条候选肽链，其中合成了 15 条，有 7 条显示出纳摩尔级别的结合亲和力（KD = 65–165 nM）。</p>
+</li>
+<li>
+<p>对 WDR5 的两个结合位点分别生成了肽，其中 WIN 位点无有效结合肽，但在 WBM 位点发现了 6 条 KD 在 219–650 nM 的结合肽。</p>
+</li>
+<li>
+<p>进一步对最佳肽做了“<strong>Stapling（主链钉固化）</strong>”结构修饰，使其稳定 α-螺旋结构，结合力提升到 KD = 39 nM。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="研究结论"><strong>研究结论</strong></h3>
+<ul>
+<li>
+<p><strong>BindCraft 可以用于从蛋白结构中自动生成功能性肽类结合剂，具备一定的命中率。</strong></p>
+</li>
+<li>
+<p>成功生成 MDM2 和 WDR5（WBM位点）的高亲和力肽，失败于 PD-1/PD-L1 和 WDR5 WIN 位点。</p>
+</li>
+<li>
+<p>相较于 phage display 等实验筛选方法，BindCraft 提供了结构信息，可直接用于优化，如肽钉固。</p>
+</li>
+<li>
+<p>对于不具备深度计算背景的实验室，BindCraft 是一个“可直接上手”的工具。</p>
+</li>
+</ul>
+<hr>
+<h2 id="一研究背景为什么要从结构出发设计肽药"><strong>一、研究背景：为什么要“从结构出发设计肽药”？</strong></h2>
+<p>现代药物开发越来越重视蛋白–蛋白相互作用（PPI）的干扰，而肽类分子是阻断这类接口的理想形式。相比小分子，肽能更好地覆盖大而平坦的蛋白结合面；相比迷你蛋白（miniprotein），肽具有更好的合成性、药代属性和潜在的细胞穿透性。</p>
+<p>然而，<strong>如何快速找到能结合目标蛋白的高亲和力肽</strong>，一直是药物设计中的难题。传统的筛选手段如 phage display 或 mRNA display 成本高、周期长，且不能主动控制靶点结构或结合位点。</p>
+<p>于是一个关键问题被提出：</p>
+<blockquote>
+<p>“我们能否直接从蛋白质三维结构出发，通过计算工具自动生成具有结合能力的短肽序列？”</p>
+</blockquote>
+<p>这正是 BindCraft 平台所尝试解决的问题。</p>
+<hr>
+<h2 id="二技术工具什么是-bindcraft"><strong>二、技术工具：什么是 BindCraft？</strong></h2>
+<p><img src="images/image-6.png" alt=""></p>
+<p>BindCraft 是一个基于 AlphaFold 架构开发的结构引导生成模型，原本用于生成小型蛋白（miniproteins）结合配体。它的主要特点包括：</p>
+<ul>
+<li>
+<p>输入：目标蛋白结构（PDB）+ 目标结合位点残基；</p>
+</li>
+<li>
+<p>输出：一批结构上拟合结合界面的肽或小蛋白序列；</p>
+</li>
+<li>
+<p>附加输出：预测的肽-蛋白复合物结构，可用于后续优化；</p>
+</li>
+<li>
+<p>目标用户：没有计算背景的药物/化学/结构实验室也可使用。</p>
+</li>
+</ul>
+<p>研究者希望通过这项研究来评估：</p>
+<blockquote>
+<p>“BindCraft 能否也用于<strong>短肽（10–20 个氨基酸）</strong>的结构引导生成？”</p>
+</blockquote>
+<hr>
+<h2 id="三第一步以-mdm2-为模板的概念验证"><strong>三、第一步：以 MDM2 为模板的“概念验证”</strong></h2>
+<h3 id="为什么选择-mdm2"><strong>为什么选择 MDM2？</strong></h3>
+<p>MDM2 是一个非常经典的肽结合靶点：</p>
+<ul>
+<li>
+<p>它与 p53 蛋白结合界面小且明确；</p>
+</li>
+<li>
+<p>结构清晰（PDB: 1YCR）；</p>
+</li>
+<li>
+<p>天然结合肽是短 α-螺旋结构，含关键疏水三元组 F/W/L；</p>
+</li>
+<li>
+<p>已有大量肽类优化数据作对比。</p>
+</li>
+</ul>
+<h3 id="bindcraft-如何操作"><strong>BindCraft 如何操作？</strong></h3>
+<p><img src="images/image-2.png" alt=""></p>
+<p>研究者将 MDM2 的结构输入 BindCraft，并指定 p53 结合界面关键残基作为目标区域，生成了 70 条候选肽（10–20 个氨基酸）。</p>
+<h3 id="结构分析结果"><strong>结构分析结果：</strong></h3>
+<ul>
+<li>
+<p>所有候选肽预测结构均为 α-螺旋；</p>
+</li>
+<li>
+<p>其中约 36% 含有完整的 F/W/L 热点三元组；</p>
+</li>
+<li>
+<p>另有 28% 包含部分热点（如 F/W/V、F/M/L 等）。</p>
+</li>
+</ul>
+<p><img src="images/image-5.png" alt=""></p>
+<h3 id="实验验证"><strong>实验验证：</strong></h3>
+<ul>
+<li>
+<p>合成了其中的 15 条；</p>
+</li>
+<li>
+<p>使用 BLI 测定与 MDM2 的亲和力，有 7 条表现出清晰的结合动力学（KD = 65–165 nM）；</p>
+</li>
+<li>
+<p>大多数有效肽中确实包含 F/W/L；</p>
+</li>
+<li>
+<p>通过竞争实验验证这些肽能阻断 p53 的结合，说明靶点位点是正确的。</p>
+</li>
+</ul>
+<p><img src="images/image-7.png" alt=""></p>
+<p>✅ <strong>阶段性结论：</strong></p>
+<p>BindCraft 可以从结构出发生成高命中率的短肽候选，其中包含已知关键结合元素，并且实验上可验证其功能活性。</p>
+<hr>
+<h2 id="四第二步从简单靶点转向结构复杂的-wdr5"><strong>四、第二步：从“简单靶点”转向“结构复杂”的 WDR5</strong></h2>
+<h3 id="为什么选择-wdr5"><strong>为什么选择 WDR5？</strong></h3>
+<p>WDR5 是另一个重要的致癌蛋白，具有两个已知的结合界面：</p>
+<ul>
+<li>
+<p>WIN 位点（与 MLL 蛋白结合）；</p>
+</li>
+<li>
+<p>WBM 位点（与 MYC 蛋白结合）。</p>
+</li>
+</ul>
+<p><img src="images/image-3.png" alt=""></p>
+<p>与 MDM2 不同的是：</p>
+<ul>
+<li>
+<p>两个位点都不是天然 α-螺旋结合；</p>
+</li>
+<li>
+<p>天然肽为 loop 或柔性结构；</p>
+</li>
+<li>
+<p>是对 BindCraft 的一次挑战。</p>
+</li>
+</ul>
+<h3 id="实验设计"><strong>实验设计：</strong></h3>
+<p>对两个位点分别进行 BindCraft 设计：</p>
+<ul>
+<li>
+<p>WIN site：以 PDB 6DY7 中的 F133 为锚点；</p>
+</li>
+<li>
+<p>WBM site：以 L240 为锚点；</p>
+</li>
+<li>
+<p>各生成 100 条肽，选前 10 条合成验证。</p>
+</li>
+</ul>
+<h3 id="实验结果"><strong>实验结果：</strong></h3>
+<p><img src="images/image-8.png" alt=""></p>
+<ul>
+<li>
+<p>WIN site 所有肽均无结合活性；</p>
+</li>
+<li>
+<p>WBM site 中有 6 条肽显示出中等亲和力（KD = 219–650 nM）；</p>
+</li>
+<li>
+<p>有效肽中普遍富含带负电残基，与 WDR5 的正电结合面匹配。</p>
+</li>
+</ul>
+<p>❌ <strong>WIN失败，WBM成功。</strong></p>
+<p>✅ <strong>阶段性结论：</strong></p>
+<p>BindCraft 可能偏向于设计 α-螺旋结构的结合肽，这对于 WIN site 等“柔性结合界面”是挑战；但在 WBM site 上仍能生成功能性肽，展示其适应不同结构位点的潜力。</p>
+<h2 id="五第三步结构驱动的优化--stapling-案例"><strong>五、第三步：结构驱动的优化 —— Stapling 案例</strong></h2>
+<p>在 WBM 成功肽中，研究者选取 Myc_B1 做结构优化，验证 BindCraft 输出结构的实际应用价值。</p>
+<h3 id="设计思路"><strong>设计思路：</strong></h3>
+<ul>
+<li>利用预测结构识别两个不参与结合、背面暴露的残基 Glu6 和 Lys10；</li>
+</ul>
+<p><img src="images/image-4.png" alt=""></p>
+<ul>
+<li>将其换成半胱氨酸，用 meta-xylene 做 i,i+4 的 Stapling；</li>
+</ul>
+<p><img src="images/image-1.png" alt=""></p>
+<ul>
+<li>测定其亲和力与功能抑制效果。</li>
+</ul>
+<p><img src="images/image.png" alt=""></p>
+<h3 id="实验结果-1"><strong>实验结果：</strong></h3>
+<ul>
+<li>
+<p>Stapled 版 KD = 39 nM，比原始版本高 6 倍；</p>
+</li>
+<li>
+<p>在竞争实验中，stapled 肽能更强地抑制 WDR5 与 MYC 的结合（最大抑制 57% vs 25%）。</p>
+</li>
+</ul>
+<p>✅ <strong>阶段性结论：</strong></p>
+<p>结构预测不仅指导 hit 设计，还能直接用于药化优化。传统 display 技术不具备这种“结构优化”的路径，显示了 BindCraft 更强的后期扩展性。</p>
+<h2 id="六总体评价与研究贡献"><strong>六、总体评价与研究贡献</strong></h2>
+<h3 id="-主要发现"><strong>✅ 主要发现：</strong></h3>
+<ol>
+<li>
+<p>BindCraft 可生成功能性短肽 binders，尤其适用于 α-螺旋结合靶点；</p>
+</li>
+<li>
+<p>成功应用于两个癌症相关蛋白（MDM2 和 WDR5）；</p>
+</li>
+<li>
+<p>生成肽具备高度结构合理性，可直接进行优化设计（如 stapling）；</p>
+</li>
+<li>
+<p>使用门槛低，无需修改代码，适合普通实验室操作。</p>
+</li>
+</ol>
+<h3 id="-局限性"><strong>⚠️ 局限性：</strong></h3>
+<ul>
+<li>
+<p>对于非 α-螺旋结合界面（如 PD-1/PD-L1, WDR5-WIN），设计命中率较低；</p>
+</li>
+<li>
+<p>可能内在偏好螺旋类结构，限制某些接口设计能力。</p>
+</li>
+</ul>
+<hr>
+<h2 id="-结语从肽的结构生成到功能验证bindcraft-展示了结构驱动型药物设计的新范式"><strong>🧩 结语：从肽的结构生成到功能验证，BindCraft 展示了“结构驱动型药物设计”的新范式</strong></h2>
+<p>这项研究不是简单地展示了一个 AI 工具的性能，而是围绕“结构–设计–验证–优化”构建了一整条药物早期开发路径的雏形。对于希望探索“计算辅助肽药设计”的研究者来说，它提供了技术路径、成功模板和挑战边界，是一篇具有代表性的里程碑式研究。</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/%E4%BA%BA%E7%B1%BB%E4%BA%92%E4%BD%9C%E7%BB%84%E7%9A%84%E5%BC%80%E5%B1%B1%E4%B9%8B%E4%BD%9Cscience%E6%8F%AD%E7%A4%BA%E6%9C%80%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%9B%8B%E7%99%BD%E4%BA%92%E4%BD%9C%E9%A2%84%E6%B5%8B/" class="link dim">
+                “人类互作组”的开山之作：Science揭示最大规模蛋白互作预测
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

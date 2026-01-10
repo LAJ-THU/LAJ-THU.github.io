@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hallucination on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/hallucination/</link>
+    <description>Recent content in Hallucination on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 26 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/hallucination/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>通用 Binder 设计新工具：BoltzDesign1 的野心与突破</title>
+      <link>http://localhost:1313/zh/literature/boltzdesign1/</link>
+      <pubDate>Tue, 26 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/boltzdesign1/</guid>
+      <description>BoltzDesign1 利用 Boltz 全原子模型进行反向优化，在无需扩散模型的情况下实现高成功率与高多样性的结合物设计，并首次系统性展示其在小分子、金属、核酸及翻译后修饰靶标上的通用潜力。</description>
+    </item>
+  </channel>
+</rss>

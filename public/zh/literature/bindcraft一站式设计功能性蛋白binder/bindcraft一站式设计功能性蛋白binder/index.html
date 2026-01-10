@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="
+今天要介绍的这篇论文《BindCraft: one-shot design of functional protein binders》提出了一个自动化蛋白质结合剂设计平台——BindCraft，它通过反向优化 AlphaFold2 模型，无需高通量筛选即可快速设计出高亲和力的功能性结合蛋白。
+在蛋白结合剂开发中，传统方法往往依赖昂贵的实验筛选和结构信息，效率低、门槛高。BindCraft 的出现，为缺乏结构基础和筛选平台的实验室提供了一种“开箱即用”的解决方案，极大降低了蛋白设计的技术门槛，在免疫调节、变应原阻断、CRISPR干预等多个领域展现出广泛应用潜力。
+
+
+🧠 研究背景与目标
+背景：
+
+
+蛋白-蛋白相互作用（PPIs）在几乎所有生命过程（如免疫、信号转导）中都至关重要。
+
+
+传统设计蛋白结合剂的方法（如抗体筛选、定向进化等）成本高、效率低。
+
+
+深度学习模型（尤其是 AlphaFold2）的发展为结构预测与结合设计提供了强大工具。
+
+
+目标：
+
+
+开发一种高效、自动化的蛋白质设计平台 BindCraft；
+
+
+利用 AlphaFold2 模型进行结构预测与反向优化，无需已知结合位点；
+
+
+实现“设计一次即成功”（one-shot design），降低实验依赖；
+
+
+推动蛋白质工程向广泛可及、按需定制的发展。
+
+
+
+🧪 BindCraft 的核心原理与创新点
+
+BindCraft 的设计流程如图所示，围绕 AlphaFold2（AF2）展开，形成一个从目标结构输入到功能结合剂输出的全自动闭环系统：
+🔁 整体流程概览：
+
+
+目标蛋白结构输入（Target protein）
+
+
+用户提供蛋白三维结构（可从AlphaFold、PDB获取）；
+
+
+可选定结合热点（Hotspot）或自动识别结合区域。
+
+
+
+
+
+
+结合剂设计初始生成（AF2 multimer trajectory）
+
+
+采用 AlphaFold2 Multimer 模型进行“幻觉式”设计（hallucination）；
+
+
+结合剂的骨架结构与序列协同优化，同时预测其与目标蛋白的结合界面；
+
+
+每一步预测都动态调整两者界面结构，提高适配性。
+
+
+
+
+序列微调（solMPNN）
+
+
+利用 solMPNN 优化非界面区域（即远离结合界面的位置），以提升蛋白的表达性、稳定性和可溶性；
+
+
+保留关键结合区域不变，从而保持亲和力。
+
+
+
+
+结构验证与筛选（AF2 monomer）">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="今天要介绍的这篇论文《BindCraft: one-shot design of functional protein binders》提出了一个自动化蛋白质结合剂设计平台——BindCraft，它通过反向优化 AlphaFold2 模型，无需高通量筛选即可快速设计出高亲和力的功能性结合蛋白。
+在蛋白结合剂开发中，传统方法往往依赖昂贵的实验筛选和结构信息，效率低、门槛高。BindCraft 的出现，为缺乏结构基础和筛选平台的实验室提供了一种“开箱即用”的解决方案，极大降低了蛋白设计的技术门槛，在免疫调节、变应原阻断、CRISPR干预等多个领域展现出广泛应用潜力。
+🧠 研究背景与目标 背景：
+蛋白-蛋白相互作用（PPIs）在几乎所有生命过程（如免疫、信号转导）中都至关重要。
+传统设计蛋白结合剂的方法（如抗体筛选、定向进化等）成本高、效率低。
+深度学习模型（尤其是 AlphaFold2）的发展为结构预测与结合设计提供了强大工具。
+目标：
+开发一种高效、自动化的蛋白质设计平台 BindCraft；
+利用 AlphaFold2 模型进行结构预测与反向优化，无需已知结合位点；
+实现“设计一次即成功”（one-shot design），降低实验依赖；
+推动蛋白质工程向广泛可及、按需定制的发展。
+🧪 BindCraft 的核心原理与创新点 BindCraft 的设计流程如图所示，围绕 AlphaFold2（AF2）展开，形成一个从目标结构输入到功能结合剂输出的全自动闭环系统：
+🔁 整体流程概览： 目标蛋白结构输入（Target protein）
+用户提供蛋白三维结构（可从AlphaFold、PDB获取）；
+可选定结合热点（Hotspot）或自动识别结合区域。
+结合剂设计初始生成（AF2 multimer trajectory）
+采用 AlphaFold2 Multimer 模型进行“幻觉式”设计（hallucination）；
+结合剂的骨架结构与序列协同优化，同时预测其与目标蛋白的结合界面；
+每一步预测都动态调整两者界面结构，提高适配性。
+序列微调（solMPNN）
+利用 solMPNN 优化非界面区域（即远离结合界面的位置），以提升蛋白的表达性、稳定性和可溶性；
+保留关键结合区域不变，从而保持亲和力。
+结构验证与筛选（AF2 monomer）">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="今天要介绍的这篇论文《BindCraft: one-shot design of functional protein binders》提出了一个自动化蛋白质结合剂设计平台——BindCraft，它通过反向优化 AlphaFold2 模型，无需高通量筛选即可快速设计出高亲和力的功能性结合蛋白。
+在蛋白结合剂开发中，传统方法往往依赖昂贵的实验筛选和结构信息，效率低、门槛高。BindCraft 的出现，为缺乏结构基础和筛选平台的实验室提供了一种“开箱即用”的解决方案，极大降低了蛋白设计的技术门槛，在免疫调节、变应原阻断、CRISPR干预等多个领域展现出广泛应用潜力。
+🧠 研究背景与目标 背景：
+蛋白-蛋白相互作用（PPIs）在几乎所有生命过程（如免疫、信号转导）中都至关重要。
+传统设计蛋白结合剂的方法（如抗体筛选、定向进化等）成本高、效率低。
+深度学习模型（尤其是 AlphaFold2）的发展为结构预测与结合设计提供了强大工具。
+目标：
+开发一种高效、自动化的蛋白质设计平台 BindCraft；
+利用 AlphaFold2 模型进行结构预测与反向优化，无需已知结合位点；
+实现“设计一次即成功”（one-shot design），降低实验依赖；
+推动蛋白质工程向广泛可及、按需定制的发展。
+🧪 BindCraft 的核心原理与创新点 BindCraft 的设计流程如图所示，围绕 AlphaFold2（AF2）展开，形成一个从目标结构输入到功能结合剂输出的全自动闭环系统：
+🔁 整体流程概览： 目标蛋白结构输入（Target protein）
+用户提供蛋白三维结构（可从AlphaFold、PDB获取）；
+可选定结合热点（Hotspot）或自动识别结合区域。
+结合剂设计初始生成（AF2 multimer trajectory）
+采用 AlphaFold2 Multimer 模型进行“幻觉式”设计（hallucination）；
+结合剂的骨架结构与序列协同优化，同时预测其与目标蛋白的结合界面；
+每一步预测都动态调整两者界面结构，提高适配性。
+序列微调（solMPNN）
+利用 solMPNN 优化非界面区域（即远离结合界面的位置），以提升蛋白的表达性、稳定性和可溶性；
+保留关键结合区域不变，从而保持亲和力。
+结构验证与筛选（AF2 monomer）">
+  <meta itemprop="wordCount" content="455">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="今天要介绍的这篇论文《BindCraft: one-shot design of functional protein binders》提出了一个自动化蛋白质结合剂设计平台——BindCraft，它通过反向优化 AlphaFold2 模型，无需高通量筛选即可快速设计出高亲和力的功能性结合蛋白。
+在蛋白结合剂开发中，传统方法往往依赖昂贵的实验筛选和结构信息，效率低、门槛高。BindCraft 的出现，为缺乏结构基础和筛选平台的实验室提供了一种“开箱即用”的解决方案，极大降低了蛋白设计的技术门槛，在免疫调节、变应原阻断、CRISPR干预等多个领域展现出广泛应用潜力。
+🧠 研究背景与目标 背景：
+蛋白-蛋白相互作用（PPIs）在几乎所有生命过程（如免疫、信号转导）中都至关重要。
+传统设计蛋白结合剂的方法（如抗体筛选、定向进化等）成本高、效率低。
+深度学习模型（尤其是 AlphaFold2）的发展为结构预测与结合设计提供了强大工具。
+目标：
+开发一种高效、自动化的蛋白质设计平台 BindCraft；
+利用 AlphaFold2 模型进行结构预测与反向优化，无需已知结合位点；
+实现“设计一次即成功”（one-shot design），降低实验依赖；
+推动蛋白质工程向广泛可及、按需定制的发展。
+🧪 BindCraft 的核心原理与创新点 BindCraft 的设计流程如图所示，围绕 AlphaFold2（AF2）展开，形成一个从目标结构输入到功能结合剂输出的全自动闭环系统：
+🔁 整体流程概览： 目标蛋白结构输入（Target protein）
+用户提供蛋白三维结构（可从AlphaFold、PDB获取）；
+可选定结合热点（Hotspot）或自动识别结合区域。
+结合剂设计初始生成（AF2 multimer trajectory）
+采用 AlphaFold2 Multimer 模型进行“幻觉式”设计（hallucination）；
+结合剂的骨架结构与序列协同优化，同时预测其与目标蛋白的结合界面；
+每一步预测都动态调整两者界面结构，提高适配性。
+序列微调（solMPNN）
+利用 solMPNN 优化非界面区域（即远离结合界面的位置），以提升蛋白的表达性、稳定性和可溶性；
+保留关键结合区域不变，从而保持亲和力。
+结构验证与筛选（AF2 monomer）">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p><img src="images/image-10.png" alt=""></p>
+<p>今天要介绍的这篇论文《BindCraft: one-shot design of functional protein binders》提出了一个自动化蛋白质结合剂设计平台——<strong>BindCraft</strong>，它通过反向优化 AlphaFold2 模型，无需高通量筛选即可快速设计出高亲和力的功能性结合蛋白。</p>
+<p>在蛋白结合剂开发中，传统方法往往依赖昂贵的实验筛选和结构信息，效率低、门槛高。<strong>BindCraft 的出现，为缺乏结构基础和筛选平台的实验室提供了一种“开箱即用”的解决方案，极大降低了蛋白设计的技术门槛</strong>，在免疫调节、变应原阻断、CRISPR干预等多个领域展现出广泛应用潜力。</p>
+<p><img src="images/image-11.png" alt=""></p>
+<hr>
+<h3 id="-研究背景与目标"><strong>🧠</strong> <strong>研究背景与目标</strong></h3>
+<p><strong>背景：</strong></p>
+<ul>
+<li>
+<p>蛋白-蛋白相互作用（PPIs）在几乎所有生命过程（如免疫、信号转导）中都至关重要。</p>
+</li>
+<li>
+<p>传统设计蛋白结合剂的方法（如抗体筛选、定向进化等）成本高、效率低。</p>
+</li>
+<li>
+<p>深度学习模型（尤其是 AlphaFold2）的发展为结构预测与结合设计提供了强大工具。</p>
+</li>
+</ul>
+<p><strong>目标</strong>：</p>
+<ul>
+<li>
+<p>开发一种高效、自动化的蛋白质设计平台 <strong>BindCraft</strong>；</p>
+</li>
+<li>
+<p>利用 AlphaFold2 模型进行结构预测与反向优化，无需已知结合位点；</p>
+</li>
+<li>
+<p>实现“<strong>设计一次即成功</strong>”（<strong>one-shot design</strong>），降低实验依赖；</p>
+</li>
+<li>
+<p>推动蛋白质工程向广泛可及、按需定制的发展。</p>
+</li>
+</ul>
+<hr>
+<h3 id="-bindcraft-的核心原理与创新点"><strong>🧪</strong> <strong>BindCraft 的核心原理与创新点</strong></h3>
+<p><img src="images/image-9.png" alt="
+BindCraft 结合剂设计流程的示意图"></p>
+<p>BindCraft 的设计流程如图所示，围绕 AlphaFold2（AF2）展开，形成一个从目标结构输入到功能结合剂输出的全自动闭环系统：</p>
+<h4 id="-整体流程概览"><strong>🔁</strong> <strong>整体流程概览：</strong></h4>
+<ol>
+<li>
+<p><strong><span style="color: inherit; background-color: rgb(251,191,188)">目标蛋白结构输入（Target protein）</span></strong></p>
+<ul>
+<li>
+<p>用户提供蛋白三维结构（可从AlphaFold、PDB获取）；</p>
+</li>
+<li>
+<p>可选定结合热点（Hotspot）或自动识别结合区域。</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>
+<p><strong><span style="color: inherit; background-color: rgba(186,206,253,0.7)">结合剂设计初始生成（AF2 multimer trajectory）</span></strong></p>
+<ul>
+<li>
+<p>采用 <strong>AlphaFold2 Multimer</strong> 模型进行“幻觉式”设计（hallucination）；</p>
+</li>
+<li>
+<p>结合剂的骨架结构与序列协同优化，同时预测其与目标蛋白的结合界面；</p>
+</li>
+<li>
+<p>每一步预测都动态调整两者界面结构，提高适配性。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><span style="color: inherit; background-color: rgba(183,237,177,0.8)">序列微调（solMPNN）</span></strong></p>
+<ul>
+<li>
+<p>利用 <strong>solMPNN</strong> 优化非界面区域（即远离结合界面的位置），以提升蛋白的表达性、稳定性和可溶性；</p>
+</li>
+<li>
+<p>保留关键结合区域不变，从而保持亲和力。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><span style="color: inherit; background-color: rgba(255,246,122,0.8)">结构验证与筛选（AF2 monomer）</span></strong></p>
+<ul>
+<li>
+<p>使用 <strong>AF2 单体模型</strong>重新预测优化后的设计结构；</p>
+</li>
+<li>
+<p>筛选步骤结合 AlphaFold confidence score 与 Rosetta 打分机制，确保结构稳定且合理；</p>
+</li>
+<li>
+<p>最终输出具有高亲和力和良好结构质量的结合剂候选。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="-关键创新点"><strong>🌟</strong> <strong>关键创新点</strong></h4>
+<ul>
+<li>
+<p><strong>反向传播式结构设计</strong>：通过 AlphaFold2 模型权重实现反向优化，<strong>无需大规模结构采样</strong>或数据库模板；</p>
+</li>
+<li>
+<p><strong>多步神经网络协同优化</strong>：将 AF2、MPNN、Rosetta 等模型有机<strong>集成</strong>，每步优化不同目标（结合位点、稳定性、全局折叠）；</p>
+</li>
+<li>
+<p><strong>非依赖已知位点</strong>：<strong>无需已知结合区域</strong>也能生成高亲和力结合剂，扩大适用范围；</p>
+</li>
+<li>
+<p><strong>一步到位式（One-shot）策略</strong>：不同于传统方法需筛选数千个设计，BindCraft 常仅需<strong>十几个设计</strong>即有成功结合结果；</p>
+</li>
+<li>
+<p><strong>普适且自动化</strong>：支持多种蛋白类型（如受体、变应原、核酸酶等），流程自动，适合<strong>非结构生物学背景</strong>的用户。</p>
+</li>
+</ul>
+<hr>
+<h3 id="-实验验证"><strong>🔬</strong> <strong>实验验证</strong></h3>
+<p><img src="images/image.png" alt="
+针对不同靶点蛋白设计的binder概览"></p>
+<p>作者通过设计并测试共<strong>九个蛋白靶点（共四类蛋白）目标</strong>，验证了 BindCraft 在多样场景下的有效性（见上图）：</p>
+<ul>
+<li><strong>细胞受体类（Cellular receptors）</strong>：如 PD-1、PD-L1、IFNAR2 和 CD45，设计结合剂展示出<strong>纳摩尔级亲和力</strong>，其中 PD-1 的最佳结合剂亲和力甚至低于 1 nM。</li>
+</ul>
+<p><img src="images/image-1.png" alt="针对细胞表面受体的binder设计"></p>
+<ul>
+<li><strong>常见过敏原（Common allergens）</strong>：针对 DerF7、DerF21 和 BetV1 的设计表明，BindCraft 可用于阻断 IgE 结合位点，具有潜在治疗价值。</li>
+</ul>
+<p><img src="images/image-2.png" alt="设计的binder蛋白挡住了过敏原表位"></p>
+<ul>
+<li><strong>多结构域核酸酶（SpCas9）</strong>：6 个设计中全部验证成功，证明该方法可用于调控基因编辑工具。</li>
+</ul>
+<p><img src="images/image-3.png" alt="针对CRISPR-Cas9设计能够靶向核酸与靶蛋白相互作用的binder"></p>
+<ul>
+<li><strong>新设计蛋白与复杂结构蛋白（De novo &amp; Structural）</strong>：如 BBF-14 和 Sas6，也获得良好结合效果，显示该方法对未知或难靶蛋白也适用。</li>
+</ul>
+<p><img src="images/image-4.png" alt="针对全新设计蛋白和复杂结构蛋白一样也展现出了高亲和力binder的设计能力"></p>
+<hr>
+<h3 id="-bindcraft设计流程简介design-protocol"><strong>🧪 BindCraft设计流程简介（Design Protocol）</strong></h3>
+<p>该流程是一个自动化的设计管线，分为如下关键步骤 ：</p>
+<p><img src="images/image-5.png" alt=""></p>
+<h4 id="1-输入配置"><strong>1.</strong> <strong>输入配置</strong></h4>
+<ul>
+<li>
+<p>用户以 JSON 格式提供目标蛋白（PDB格式）、binder长度范围、目标设计数量等；</p>
+</li>
+<li>
+<p>可指定结合热点（residue/chains）或不指定，由系统自动选点。</p>
+</li>
+</ul>
+<p><img src="images/image-6.png" alt=""></p>
+<h4 id="2-af2幻觉设计hallucination"><strong>2.</strong> <strong>AF2幻觉设计（Hallucination）</strong></h4>
+<ul>
+<li>
+<p>利用 ColabDesign 实现的 <strong>AlphaFold2 Multimer</strong> 进行 binder 序列与结构生成；</p>
+</li>
+<li>
+<p>初始化为随机序列，通过反向传播和误差梯度（L×20）优化每个残基；</p>
+</li>
+<li>
+<p>使用五种 AF2 模型轮换，提高鲁棒性、避免过拟合。</p>
+</li>
+</ul>
+<h4 id="3-设计损失函数design-loss"><strong>3.</strong> <strong>设计损失函数（Design Loss）</strong></h4>
+<p>综合多个结构与界面质量指标，常用的权重包括：</p>
+<ul>
+<li>
+<p>结构可信度（Binder confidence pLDDT, weight 0.1）</p>
+</li>
+<li>
+<p>相互作用界面可信度（interface confidence i_pTM, weight 0.05）</p>
+</li>
+<li>
+<p>对齐误差 (Normalized prediceted alignment error pAE）等（binder 内部误差: weight 0.4，binder-target间误差, weight 0.1）</p>
+</li>
+<li>
+<p>接触损失（Reisude contact loss , weight 1.0）</p>
+</li>
+<li>
+<p>螺旋化倾向（helicity loss, weight -0.3）鼓励非螺旋结构</p>
+</li>
+<li>
+<p>结合点收缩（终端靠近, weight 0.1）</p>
+</li>
+</ul>
+<h4 id="4-序列优化阶段4个阶段"><strong>4.</strong> <strong>序列优化阶段（4个阶段）</strong></h4>
+<p>序列优化阶段是 BindCraft 设计流程的<strong>关键环节之一</strong>，目标是在已初步拟合目标蛋白的结合剂结构基础上，进一步优化其序列，以提高亲和力、结构稳定性以及生物可表达性。主要通过以下四个阶段来实现：</p>
+<p><img src="images/diagram.png" alt=""></p>
+<h5 id="阶段一连续序列空间优化"><strong>阶段一：连续序列空间优化</strong></h5>
+<ul>
+<li>
+<p><strong>目标</strong>：探索多样性的序列-结构空间，尤其是在结合界面。</p>
+</li>
+<li>
+<p><strong>方法</strong>：</p>
+<ul>
+<li>
+<p>序列以 <strong>logits</strong>（连续值）表示，每个位置允许多个氨基酸选择；</p>
+</li>
+<li>
+<p>每一步的序列计算为：</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>$$</p>
+<p>\text{Sequence} = (1 - \lambda) \cdot \text{logits} + \lambda \cdot \text{softmax}(\text{logits} / T)$$</p>
+<p>其中：</p>
+<ul>
+<li>
+<p>$$</p>
+<p>\lambda = \frac{\text{step} + 1}{\text{iterations}}$$</p>
+</li>
+<li>
+<p>$$</p>
+<p>T = 1.0$$，为恒定温度</p>
+</li>
+<li>
+<p>通过迭代，动态地将优化从logits逐步引导至概率分布。</p>
+</li>
+<li>
+<p><strong>特殊处理：</strong></p>
+<ul>
+<li>
+<p>若 AlphaFold2 confidence 分数（pLDDT）低，提前终止该设计轨迹；</p>
+</li>
+<li>
+<p>若检测到 β-sheet 构象，增加 <strong>AF2循环次数从1到3</strong>，提高结构预测精度</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>迭代轮次</strong>：</p>
+<ul>
+<li>
+<p>初始50步用于粗略收敛；</p>
+</li>
+<li>
+<p>若表现良好，再进行25步延伸优化。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="阶段二softmax-收敛收束"><strong>阶段二：softmax 收敛收束</strong></h5>
+<ul>
+<li>
+<p><strong>目标</strong>：从概率表示过渡到更可信、收敛的氨基酸选择。</p>
+</li>
+<li>
+<p><strong>方法</strong>：</p>
+<ul>
+<li>
+<p>logits → softmax，得到明确的概率分布；</p>
+</li>
+<li>
+<p>温度 T 随迭代逐步降低，引导从探索向收敛过渡</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>$$</p>
+<p>T = 10^{-2} + (1 - 10^{-2}) \cdot \left(1 - \frac{\text{step} + 1}{\text{iterations}}\right)^2$$ </p>
+<ul>
+<li>学习率也随温度同步衰减，确保收敛稳定。</li>
+</ul>
+<h5 id="阶段三straight-through-estimator"><strong>阶段三：Straight-through Estimator</strong></h5>
+<ul>
+<li>
+<p><strong>目标</strong>：从概率向离散表示过渡，同时保持可反向传播。</p>
+</li>
+<li>
+<p><strong>方法</strong>：</p>
+<ul>
+<li>
+<p>序列以 <strong>one-hot 形式呈现给模型</strong>（即每个位点为单个氨基酸）；</p>
+</li>
+<li>
+<p>但反向传播依然通过 softmax 进行（称为“Straight-through”）；</p>
+</li>
+<li>
+<p>实现“看起来是离散的、训练时是连续的”效果。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="阶段四离散微调"><strong>阶段四：离散微调</strong></h5>
+<ul>
+<li>
+<p><strong>目标</strong>：最终固定具体氨基酸序列，确保最佳的结构质量和接口表现。</p>
+</li>
+<li>
+<p><strong>方法</strong>：</p>
+<ul>
+<li>
+<p>使用 softmax 概率分布对每个位点进行 <strong>随机采样突变</strong>；</p>
+</li>
+<li>
+<p>每次采样$$  X = 0.05 \times \text{binder length}  $$个残基，保留最优损失组合；</p>
+</li>
+<li>
+<p>类似于 <strong>局部搜索 + 贪婪优化</strong>。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="-最终筛选标准"><strong>✅</strong> <strong>最终筛选标准</strong></h5>
+<ul>
+<li>
+<p><strong>pLDDT &lt; 0.7</strong> → 排除；</p>
+</li>
+<li>
+<p><strong>界面接触点 &lt; 7</strong> → 排除；</p>
+</li>
+<li>
+<p><strong>骨架严重冲突或异常扭曲结构</strong> → 排除。</p>
+</li>
+</ul>
+<h4 id="5-后处理优化-solmpnn--af2--rosetta">5. <strong>后处理优化 （solMPNN + AF2 + Rosetta)</strong></h4>
+<p>这一阶段的目的是对初步设计的结合剂进行<strong>结构精炼和功能验证</strong>，最终确保它们不仅“结合得上”，还具备<strong>良好的稳定性、表达性和能量学合理性</strong>。这是 BindCraft 区别于许多简单AI生成方法的重要一环。</p>
+<p><img src="images/image-7.png" alt=""></p>
+<h5 id="-1-mpnnsol-优化提高结合剂稳定性与溶解性"><strong>🌟 1.</strong> <strong>MPNNsol 优化：提高结合剂稳定性与溶解性</strong></h5>
+<p><img src="images/image-8.png" alt=""></p>
+<ul>
+<li>
+<p>适用于：<strong>已通过结构筛选的“成功设计轨迹”</strong>；</p>
+</li>
+<li>
+<p>工具：使用 <strong>ProteinMPNN 的溶剂权重版本（MPNNsol）</strong>；</p>
+</li>
+<li>
+<p>优化策略：</p>
+<ul>
+<li>
+<p><strong>保留结合界面附近4 Å以内的残基</strong>，避免破坏亲和力；</p>
+</li>
+<li>
+<p>对其余 <strong>核心和表面残基重新设计</strong>，每个轨迹生成 <strong>20 个新序列</strong>；</p>
+</li>
+<li>
+<p>温度设为 <strong>0.1</strong>（控制采样多样性），不引入骨架噪声（backbone noise = 0.0）</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="-2-结构验证af2单体模式再预测"><strong>🔁 2.</strong> <strong>结构验证：AF2单体模式再预测</strong></h5>
+<ul>
+<li>
+<p>使用 <strong>AlphaFold2 monomer 模型</strong>对新序列进行重构预测；</p>
+</li>
+<li>
+<p>参数设置：</p>
+<ul>
+<li>
+<p><strong>循环（recycle）次数为3次</strong>，提高预测精度；</p>
+</li>
+<li>
+<p>使用 <strong>2个基于模板的模型</strong>，但以“单序列模式”运行，防止多序列比对偏差；</p>
+</li>
+</ul>
+</li>
+<li>
+<p>目的：验证MPNNsol优化后的序列是否保持结构可靠性。</p>
+</li>
+</ul>
+<h5 id="-3-能量最小化与界面评估rosetta分析"><strong>⚙️ 3.</strong> <strong>能量最小化与界面评估：Rosetta分析</strong></h5>
+<ul>
+<li>
+<p>使用 <strong>Rosetta 的 FastRelax 模块</strong>对 AF2 预测结构进行<strong>全原子能量最小化</strong>（200次迭代）；</p>
+</li>
+<li>
+<p>再通过 <strong>InterfaceAnalyzer 模块</strong>分析蛋白-蛋白界面质量，计算包括：</p>
+<ul>
+<li>
+<p>界面能量（binding energy）；</p>
+</li>
+<li>
+<p>接触面积；</p>
+</li>
+<li>
+<p>副链/主链结构调整对结合效果的贡献；</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-筛选标准总结确保设计质量的过滤条件"><strong>6. 筛选标准总结：确保设计质量的过滤条件</strong></h4>
+<p>在 BindCraft 流程的最后阶段，所有设计将通过一系列<strong>预设过滤条件</strong>进行筛选，以确保仅保留结构可信、功能合理、具实验潜力的高质量binder。</p>
+<p>这些标准基于既往文献经验并在本研究中进一步优化，具体包括：</p>
+<ol>
+<li>
+<p><strong>AF2整体结构可信度（pLDDT）</strong>：&gt; 0.8</p>
+</li>
+<li>
+<p><strong>AF2结合界面可信度（i_pTM）</strong>：&gt; 0.5</p>
+</li>
+<li>
+<p><strong>AF2界面对齐误差（i_pAE）</strong>：&gt; 0.35（值越高表示对齐误差越小）</p>
+</li>
+<li>
+<p><strong>Rosetta界面形状互补性（Shape Complementarity）</strong>：&gt; 0.55</p>
+</li>
+<li>
+<p><strong>未饱和氢键数（unsatisfied H-bonds）</strong>：&lt; 3</p>
+</li>
+<li>
+<p><strong>结合剂表面疏水性</strong>：&lt; 35%</p>
+</li>
+<li>
+<p><strong>结合态与游离态的RMSD差异</strong>：&lt; 3.5 Å</p>
+</li>
+</ol>
+<p>这些标准共同确保输出binder<strong>结构稳定、界面紧密、可溶性良好、预测结果可信</strong>，适合进入实验验证阶段。</p>
+<hr>
+<h3 id="-总结与讨论"><strong>🧾 总结与讨论</strong></h3>
+<h4 id="-1-背景与意义"><strong>🔬 1. 背景与意义</strong></h4>
+<ul>
+<li>
+<p>蛋白-蛋白相互作用（PPIs）的计算设计长期是蛋白质工程的核心挑战；</p>
+</li>
+<li>
+<p>难点在于：我们对分子识别机制（特别是结合位点的物理化学特征）仍了解有限；</p>
+</li>
+<li>
+<p>借助 AlphaFold2 等深度学习结构预测工具，现已能对新设计的结合剂进行更准确评估。</p>
+</li>
+</ul>
+<h4 id="-2-bindcraft-的独特优势"><strong>⚙️ 2. BindCraft 的独特优势</strong></h4>
+<ul>
+<li>
+<p>基于 <strong>AF2 网络的反向传播优化</strong>，首次实现结合剂“幻觉式”设计；</p>
+</li>
+<li>
+<p>相比于多数固定靶点的方法，BindCraft 允许目标蛋白本身存在柔性，有助于捕捉结合诱导的构象变化；</p>
+</li>
+<li>
+<p>系统可自动识别高结合倾向位点，无需事先定义目标区域。</p>
+</li>
+</ul>
+<h4 id="-3-实验表现与成功率"><strong>📈 3. 实验表现与成功率</strong></h4>
+<ul>
+<li>
+<p>在12种复杂目标蛋白上设计结合剂，<strong>亲和力大多达到纳摩尔水平</strong>，极少数为微摩尔；</p>
+</li>
+<li>
+<p>平均成功率为 <strong>46.3%</strong>，显著高于传统方法（如 RFdiffusion、AlphaProteo）；</p>
+</li>
+<li>
+<p>在社区挑战中设计的结合剂还获得<strong>第一名</strong>，成功靶向 EGFR 高难度靶点。</p>
+</li>
+</ul>
+<h4 id="-4-面对的挑战与扩展前景"><strong>🔍 4. 面对的挑战与扩展前景</strong></h4>
+<ul>
+<li>
+<p>PPI设计的主要挑战在于选择合适的结合表位，尤其是疏水且结构平坦的区域；</p>
+</li>
+<li>
+<p>BindCraft 能处理既有已知结合位点的蛋白，也能在 de novo、变应原或核酸酶等复杂系统中自动定位结合区域；</p>
+</li>
+<li>
+<p>在设计结合 <strong>蛋白-核酸界面</strong>结合剂方面也展现出潜力，为未来开发转录因子抑制剂等功能工具提供新方向。</p>
+</li>
+</ul>
+<h4 id="-5-局限性与潜在问题"><strong>🧪 5. 局限性与潜在问题</strong></h4>
+<ol>
+<li>
+<p><strong>参数需个性化调整</strong></p>
+<ul>
+<li>
+<p>默认设置（迭代次数、损失权重、筛选阈值）<strong>可能不适用于所有目标蛋白</strong>；</p>
+</li>
+<li>
+<p>对于不同靶标，可能需要根据经验调整这些参数以获得理想结果。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>结合位点选择仍关键</strong></p>
+<ul>
+<li>
+<p>尽管 AlphaFold2 在自动识别结合位点方面表现优秀，<strong>指定热点位点仍能提升设计成功率</strong>；</p>
+</li>
+<li>
+<p>自动识别虽然有效，但在特定生物功能需求下，人工选择更具可控性。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>亲水界面预测较弱</strong></p>
+<ul>
+<li>相比疏水界面，AF2 在<strong>亲水性结合界面</strong>的预测与设计效果更差，需谨慎解读结果。</li>
+</ul>
+</li>
+<li>
+<p><strong>结构变形常见但可控</strong></p>
+<ul>
+<li>
+<p>在设计过程中，某些结合剂轨迹可能出现结构变形或“被压扁”（squashed）；</p>
+</li>
+<li>
+<p>这是 <strong>AF2 Multimer 对输入序列高度敏感</strong>所致，属正常现象；</p>
+</li>
+<li>
+<p>此类无效轨迹会被系统自动识别并快速剔除，不影响整体流程稳定性。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>因此，使用 BindCraft 时要注意：<strong>虽然系统自动化程度高，但仍需人为判断与适配，特别是在新靶点上使用时</strong>。</p>
+<hr>
+<h3></h3>
+<hr>
+<h3 id="-原文与资源信息"><strong>📚 原文与资源信息</strong></h3>
+<ul>
+<li>
+<p><strong>论文标题</strong>：<em>BindCraft: one-shot design of functional protein binders</em></p>
+</li>
+<li>
+<p><strong>发表平台</strong>：bioRxiv（预印本）</p>
+</li>
+<li>
+<p><strong>原文链接</strong>：https://www.biorxiv.org/content/10.1101/2024.09.30.615802v3</p>
+</li>
+<li>
+<p><strong>代码仓库（GitHub）</strong>：</p>
+</li>
+<li>
+<p>BindCraft 官方开源代码与使用说明已公开，支持用户在本地运行完整设计流程：</p>
+</li>
+<li>
+<p>🔗 <a href="https://github.com/martinpacesa/BindCraft">https://github.com/martinpacesa/BindCraft</a></p>
+</li>
+</ul>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/%E4%BA%BA%E7%B1%BB%E4%BA%92%E4%BD%9C%E7%BB%84%E7%9A%84%E5%BC%80%E5%B1%B1%E4%B9%8B%E4%BD%9Cscience%E6%8F%AD%E7%A4%BA%E6%9C%80%E5%A4%A7%E8%A7%84%E6%A8%A1%E8%9B%8B%E7%99%BD%E4%BA%92%E4%BD%9C%E9%A2%84%E6%B5%8B/" class="link dim">
+                “人类互作组”的开山之作：Science揭示最大规模蛋白互作预测
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

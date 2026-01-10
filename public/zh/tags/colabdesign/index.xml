@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ColabDesign on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/colabdesign/</link>
+    <description>Recent content in ColabDesign on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/colabdesign/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BindCraft：一站式设计功能性蛋白 Binder 的自动化平台</title>
+      <link>http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/</link>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/</guid>
+      <description>BindCraft 提出一个全自动蛋白 binder 设计平台，通过反向优化 AlphaFold2 并结合 MPNN 与 Rosetta，在无需高通量筛选的情况下实现接近 50% 成功率的功能性结合剂设计。</description>
+    </item>
+  </channel>
+</rss>

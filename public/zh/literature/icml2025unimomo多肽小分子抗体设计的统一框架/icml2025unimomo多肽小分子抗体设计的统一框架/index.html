@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="
+蓝极说：
+今天要分享的是一篇今年ICML 2025的关于多肽、小分子、抗体设计的工作，来自清华大学与字节跳动合作团队：
+《UniMoMo: Unified Generative Modeling of 3D Molecules for De Novo Binder Design》，第一作者为 Xiangzhe Kong（清华大学）。
+
+这篇论文提出了一个可以同时设计 小分子、肽和抗体结合体 的统一生成框架——UniMoMo，在多个任务上超越现有专用模型，被认为是跨分子类型生成的一次重要突破。
+
+
+一、一个模型，设计所有分子？——UniMoMo的野心
+在分子设计领域，不同类型的药物通常意味着完全不同的模型体系。
+设计小分子药物，需要关注官能团的组合与几何约束；
+设计肽药物，要考虑链式序列的折叠；
+而抗体设计，又是一整套全新的结构逻辑与能量规则。
+于是我们习惯性地认为——小分子、肽、抗体是三条平行的“AI 赛道”。每个赛道都有自己的生成模型、数据集和评估体系。
+但如果我们能打破这三道墙呢？
+这正是UniMoMo这篇文章中提出的设想：
+
+能否用一个统一的生成框架，设计出不同类型的结合分子？
+
+它能在给定同一个蛋白靶点时，同时生成肽、抗体、小分子三种类型的结合体。
+在图 1 中，作者清晰地展示了 UniMoMo 的核心能力：
+同一个靶蛋白的结合口袋（Target Protein），可以分别对接小分子、肽和抗体。
+传统上，这三种分子的生成模型是彼此独立的；而在 UniMoMo 中，它们由同一个生成模型统一完成。
+
+这种“多模态绑定生成”（multi-domain binder generation）不仅意味着技术整合，更暗示着药物发现范式的转变：
+
+从“为每类分子造模型”，到“一个模型探索所有分子空间”。
+
+
+二、为什么“统一”如此困难？
+乍一看，“一个模型生成所有类型的分子”听起来只是把任务并到一起。但对分子设计来说，这几乎是一个跨物种级别的挑战。
+三类分子，三种世界
+每种分子类型都有自己的语言和逻辑：
+
+
+小分子：由多种官能团拼接而成，形态千变万化；
+
+
+肽分子：由氨基酸顺序线性排列而成，更强调二级结构与折叠规律；
+
+
+抗体：不仅包含氨基酸主链，还分布着功能分区（如 CDR 区域），结构规模庞大。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="蓝极说：
+今天要分享的是一篇今年ICML 2025的关于多肽、小分子、抗体设计的工作，来自清华大学与字节跳动合作团队：
+《UniMoMo: Unified Generative Modeling of 3D Molecules for De Novo Binder Design》，第一作者为 Xiangzhe Kong（清华大学）。
+这篇论文提出了一个可以同时设计 小分子、肽和抗体结合体 的统一生成框架——UniMoMo，在多个任务上超越现有专用模型，被认为是跨分子类型生成的一次重要突破。
+一、一个模型，设计所有分子？——UniMoMo的野心 在分子设计领域，不同类型的药物通常意味着完全不同的模型体系。
+设计小分子药物，需要关注官能团的组合与几何约束；
+设计肽药物，要考虑链式序列的折叠；
+而抗体设计，又是一整套全新的结构逻辑与能量规则。
+于是我们习惯性地认为——小分子、肽、抗体是三条平行的“AI 赛道”。每个赛道都有自己的生成模型、数据集和评估体系。
+但如果我们能打破这三道墙呢？ 这正是UniMoMo这篇文章中提出的设想：
+能否用一个统一的生成框架，设计出不同类型的结合分子？
+它能在给定同一个蛋白靶点时，同时生成肽、抗体、小分子三种类型的结合体。
+在图 1 中，作者清晰地展示了 UniMoMo 的核心能力：
+同一个靶蛋白的结合口袋（Target Protein），可以分别对接小分子、肽和抗体。
+传统上，这三种分子的生成模型是彼此独立的；而在 UniMoMo 中，它们由同一个生成模型统一完成。
+这种“多模态绑定生成”（multi-domain binder generation）不仅意味着技术整合，更暗示着药物发现范式的转变：
+从“为每类分子造模型”，到“一个模型探索所有分子空间”。
+二、为什么“统一”如此困难？ 乍一看，“一个模型生成所有类型的分子”听起来只是把任务并到一起。但对分子设计来说，这几乎是一个跨物种级别的挑战。
+三类分子，三种世界 每种分子类型都有自己的语言和逻辑：
+小分子：由多种官能团拼接而成，形态千变万化；
+肽分子：由氨基酸顺序线性排列而成，更强调二级结构与折叠规律；
+抗体：不仅包含氨基酸主链，还分布着功能分区（如 CDR 区域），结构规模庞大。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="蓝极说：
+今天要分享的是一篇今年ICML 2025的关于多肽、小分子、抗体设计的工作，来自清华大学与字节跳动合作团队：
+《UniMoMo: Unified Generative Modeling of 3D Molecules for De Novo Binder Design》，第一作者为 Xiangzhe Kong（清华大学）。
+这篇论文提出了一个可以同时设计 小分子、肽和抗体结合体 的统一生成框架——UniMoMo，在多个任务上超越现有专用模型，被认为是跨分子类型生成的一次重要突破。
+一、一个模型，设计所有分子？——UniMoMo的野心 在分子设计领域，不同类型的药物通常意味着完全不同的模型体系。
+设计小分子药物，需要关注官能团的组合与几何约束；
+设计肽药物，要考虑链式序列的折叠；
+而抗体设计，又是一整套全新的结构逻辑与能量规则。
+于是我们习惯性地认为——小分子、肽、抗体是三条平行的“AI 赛道”。每个赛道都有自己的生成模型、数据集和评估体系。
+但如果我们能打破这三道墙呢？ 这正是UniMoMo这篇文章中提出的设想：
+能否用一个统一的生成框架，设计出不同类型的结合分子？
+它能在给定同一个蛋白靶点时，同时生成肽、抗体、小分子三种类型的结合体。
+在图 1 中，作者清晰地展示了 UniMoMo 的核心能力：
+同一个靶蛋白的结合口袋（Target Protein），可以分别对接小分子、肽和抗体。
+传统上，这三种分子的生成模型是彼此独立的；而在 UniMoMo 中，它们由同一个生成模型统一完成。
+这种“多模态绑定生成”（multi-domain binder generation）不仅意味着技术整合，更暗示着药物发现范式的转变：
+从“为每类分子造模型”，到“一个模型探索所有分子空间”。
+二、为什么“统一”如此困难？ 乍一看，“一个模型生成所有类型的分子”听起来只是把任务并到一起。但对分子设计来说，这几乎是一个跨物种级别的挑战。
+三类分子，三种世界 每种分子类型都有自己的语言和逻辑：
+小分子：由多种官能团拼接而成，形态千变万化；
+肽分子：由氨基酸顺序线性排列而成，更强调二级结构与折叠规律；
+抗体：不仅包含氨基酸主链，还分布着功能分区（如 CDR 区域），结构规模庞大。">
+  <meta itemprop="wordCount" content="428">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="蓝极说：
+今天要分享的是一篇今年ICML 2025的关于多肽、小分子、抗体设计的工作，来自清华大学与字节跳动合作团队：
+《UniMoMo: Unified Generative Modeling of 3D Molecules for De Novo Binder Design》，第一作者为 Xiangzhe Kong（清华大学）。
+这篇论文提出了一个可以同时设计 小分子、肽和抗体结合体 的统一生成框架——UniMoMo，在多个任务上超越现有专用模型，被认为是跨分子类型生成的一次重要突破。
+一、一个模型，设计所有分子？——UniMoMo的野心 在分子设计领域，不同类型的药物通常意味着完全不同的模型体系。
+设计小分子药物，需要关注官能团的组合与几何约束；
+设计肽药物，要考虑链式序列的折叠；
+而抗体设计，又是一整套全新的结构逻辑与能量规则。
+于是我们习惯性地认为——小分子、肽、抗体是三条平行的“AI 赛道”。每个赛道都有自己的生成模型、数据集和评估体系。
+但如果我们能打破这三道墙呢？ 这正是UniMoMo这篇文章中提出的设想：
+能否用一个统一的生成框架，设计出不同类型的结合分子？
+它能在给定同一个蛋白靶点时，同时生成肽、抗体、小分子三种类型的结合体。
+在图 1 中，作者清晰地展示了 UniMoMo 的核心能力：
+同一个靶蛋白的结合口袋（Target Protein），可以分别对接小分子、肽和抗体。
+传统上，这三种分子的生成模型是彼此独立的；而在 UniMoMo 中，它们由同一个生成模型统一完成。
+这种“多模态绑定生成”（multi-domain binder generation）不仅意味着技术整合，更暗示着药物发现范式的转变：
+从“为每类分子造模型”，到“一个模型探索所有分子空间”。
+二、为什么“统一”如此困难？ 乍一看，“一个模型生成所有类型的分子”听起来只是把任务并到一起。但对分子设计来说，这几乎是一个跨物种级别的挑战。
+三类分子，三种世界 每种分子类型都有自己的语言和逻辑：
+小分子：由多种官能团拼接而成，形态千变万化；
+肽分子：由氨基酸顺序线性排列而成，更强调二级结构与折叠规律；
+抗体：不仅包含氨基酸主链，还分布着功能分区（如 CDR 区域），结构规模庞大。">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <blockquote>
+<p><strong>蓝极说：</strong></p>
+<p>今天要分享的是一篇今年ICML 2025的关于多肽、小分子、抗体设计的工作，来自清华大学与字节跳动合作团队：</p>
+<p><strong>《UniMoMo: Unified Generative Modeling of 3D Molecules for De Novo Binder Design》，第一作者为 Xiangzhe Kong（清华大学）。</strong></p>
+<p><img src="images/image-13.png" alt=""></p>
+<p>这篇论文提出了一个可以同时设计 <strong>小分子、肽和抗体结合体</strong> 的统一生成框架——<strong>UniMoMo</strong>，在多个任务上超越现有专用模型，被认为是跨分子类型生成的一次重要突破。</p>
+</blockquote>
+<hr>
+<h2 id="一一个模型设计所有分子unimomo的野心">一、一个模型，设计所有分子？——UniMoMo的野心</h2>
+<p>在分子设计领域，不同类型的药物通常意味着<strong>完全不同的模型体系</strong>。</p>
+<p>设计<span style="color: inherit; background-color: rgba(254,212,164,0.8)">小分子药物</span>，需要关注官能团的组合与几何约束；</p>
+<p>设计<span style="color: inherit; background-color: rgba(183,237,177,0.8)">肽药物</span>，要考虑链式序列的折叠；</p>
+<p>而<span style="color: inherit; background-color: rgba(186,206,253,0.7)">抗体设计</span>，又是一整套全新的结构逻辑与能量规则。</p>
+<p>于是我们习惯性地认为——<strong>小分子、肽、抗体是三条平行的“AI 赛道”。</strong>每个赛道都有自己的生成模型、数据集和评估体系。</p>
+<h3 id="但如果我们能打破这三道墙呢"><strong>但如果我们能打破这三道墙呢？</strong></h3>
+<p>这正是UniMoMo这篇文章中提出的设想：</p>
+<blockquote>
+<p><strong>能否用一个统一的生成框架，设计出不同类型的结合分子？</strong></p>
+</blockquote>
+<p>它能在给定同一个蛋白靶点时，<strong>同时生成肽、抗体、小分子</strong>三种类型的结合体。</p>
+<p>在图 1 中，作者清晰地展示了 UniMoMo 的核心能力：</p>
+<p>同一个靶蛋白的结合口袋（Target Protein），可以分别对接<strong>小分子、肽和抗体</strong>。</p>
+<p>传统上，这三种分子的生成模型是彼此独立的；而在 UniMoMo 中，它们由同一个生成模型统一完成。</p>
+<p><img src="images/image-14.png" alt=""></p>
+<p>这种“多模态绑定生成”（multi-domain binder generation）不仅意味着技术整合，更暗示着<strong>药物发现范式的转变</strong>：</p>
+<blockquote>
+<p>从“为每类分子造模型”，到“一个模型探索所有分子空间”。</p>
+</blockquote>
+<hr>
+<h2 id="二为什么统一如此困难"><strong>二、为什么“统一”如此困难？</strong></h2>
+<p>乍一看，“一个模型生成所有类型的分子”听起来只是把任务并到一起。但对分子设计来说，这几乎是一个<strong>跨物种级别的挑战</strong>。</p>
+<h3 id="三类分子三种世界"><strong>三类分子，三种世界</strong></h3>
+<p>每种分子类型都有自己的语言和逻辑：</p>
+<ul>
+<li>
+<p><strong><span style="color: inherit; background-color: rgba(254,212,164,0.8)">小分子</span></strong>：由多种官能团拼接而成，形态千变万化；</p>
+</li>
+<li>
+<p><strong><span style="color: inherit; background-color: rgba(183,237,177,0.8)">肽分子</span></strong>：由氨基酸顺序线性排列而成，更强调二级结构与折叠规律；</p>
+</li>
+<li>
+<p><strong><span style="color: inherit; background-color: rgba(186,206,253,0.7)">抗体</span></strong>：不仅包含氨基酸主链，还分布着功能分区（如 CDR 区域），结构规模庞大。</p>
+</li>
+</ul>
+<p>如果用同一种表示方法（例如“原子图”）去建模它们，就会出现两个极端问题：</p>
+<blockquote>
+<p>要么过于细碎、计算复杂；要么失去原子层级的几何精度。</p>
+</blockquote>
+<p><img src="images/image.png" alt=""></p>
+<p><em>图片生成于Nano Banana</em></p>
+<p>简单来说，小分子和抗体的“构造方式”完全不在一个维度上。</p>
+<p>想用一套生成模型同时处理这两种结构，<strong>几乎就像让语言模型同时写英语诗和化学方程式</strong>。</p>
+<hr>
+<h3 id="-挑战背后层级结构与几何约束的冲突"><strong>⚙️ 挑战背后：层级结构与几何约束的冲突</strong></h3>
+<p>分子结构遵循一套通用的物理化学规则——键长、键角、空间排斥、氢键方向性……这些规律跨越分子类型而存在。</p>
+<p>但它们在不同的结构层级上表现得截然不同。</p>
+<blockquote>
+<p>小分子里，规则约束在局部官能团上；</p>
+<p>抗体中，这些约束分布在成百上千个原子组成的模块内。</p>
+</blockquote>
+<p>所以，真正的挑战是：<strong>如何在同一个框架下既保留原子级细节，又捕捉分子间的层次结构。</strong></p>
+<hr>
+<h3 id="从原子到块unimomo-的核心思想"><strong>从“原子”到“块”：UniMoMo 的核心思想</strong></h3>
+<p>作者的关键洞察是：</p>
+<blockquote>
+<p>“不同类型的分子，其实都可以拆解为若干个可复用的结构单元（blocks）。”</p>
+</blockquote>
+<p>于是，UniMoMo 引入了一个全新的分子表示方式——<strong>Graph of Blocks</strong>。</p>
+<ul>
+<li>
+<p>每个分子被拆分为多个“块”：</p>
+<ul>
+<li>
+<p>如果是肽或抗体，每个“块”就是一个标准氨基酸；</p>
+</li>
+<li>
+<p>如果是小分子，则用算法自动提取常见的官能团或环状结构，如苯环、吲哚等。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>然后将这些“块”拼接成一个<strong>统一的图结构</strong>。</p>
+</li>
+</ul>
+<p>这样的设计同时满足了两种需求：</p>
+<ol>
+<li>
+<p>在宏观层面保留了结构的层级性；</p>
+</li>
+<li>
+<p>在微观层面保留了每个块的原子细节。</p>
+</li>
+</ol>
+<p>这正是 UniMoMo 统一建模的基础，也为后文的<strong>几何扩散生成（Geometric Latent Diffusion）</strong>提供了表示支撑。</p>
+<hr>
+<h2 id="三从原子云到积木图unimomo-的统一语言"><strong>三、从“原子云”到“积木图”：UniMoMo 的统一语言</strong></h2>
+<p>在前一节，我们讲到不同分子类型有着各自的“结构语言”。小分子用官能团在说话，肽和抗体则用氨基酸在表达。</p>
+<p>如果 AI 想同时理解这三种语言，第一步就得找到<strong>一种通用的表达方式</strong>。</p>
+<p>这正是 UniMoMo 的第一项关键创新——</p>
+<blockquote>
+<p><strong>用“Graph of Blocks”重新定义分子表示。</strong></p>
+</blockquote>
+<hr>
+<h3 id="一种跨分子通用的表示法"><strong>一种跨分子通用的表示法</strong></h3>
+<p>论文中的 <strong>Figure 2A</strong> 给出了这个思想的视觉化解释：小分子、肽、抗体——都被拆分成一个个“Block”。</p>
+<p>每一个 Block 代表一个<strong>局部结构单元</strong>，可以是：</p>
+<ul>
+<li>
+<p>一个标准氨基酸（对肽或抗体）；</p>
+</li>
+<li>
+<p>一个常见分子片段，如苯环、吲哚环、酰胺基（对小分子）。</p>
+</li>
+</ul>
+<p><img src="images/image-1.png" alt=""></p>
+<p>这些 Block 再通过化学键（bond）相互连接，</p>
+<p>于是无论是复杂的抗体，还是微小的小分子，都能被统一地表示为一个<strong>由 Block 组成的图（Graph）</strong>。</p>
+<blockquote>
+<p>简而言之：<strong>肽是由氨基酸 Block 拼起来的“小分子”，小分子是由官能团 Block 拼起来的“肽”。</strong></p>
+</blockquote>
+<hr>
+<h3 id="关键算法principal-subgraph-分解"><strong>关键算法：Principal Subgraph 分解</strong></h3>
+<p>那问题来了——AI 怎么知道哪些部分可以当作“Block”？</p>
+<p>作者在2022年的NeurIPS提出了一个自动化的结构分解算法：</p>
+<p><strong>Principal Subgraph Mining（主子图提取）</strong>。</p>
+<p>它会在海量分子结构中寻找出现频率最高的局部结构（例如苯环、咪唑环、酰胺键），并将它们定义为标准化 Block 词汇。</p>
+<p><img src="images/image-2.png" alt=""></p>
+<p>最终，模型拥有一个“分子词典（Vocabulary）”，里面既包括 20 种氨基酸，也包含常见的化学基团。</p>
+<p>每个分子被分解后，AI 就能用统一的“Block 词汇表”来描述所有类型的分子。</p>
+<blockquote>
+<p>这一步的意义，就像自然语言处理中的“分词”：</p>
+<p>它把连续的原子结构，切分成有化学意义的片段单元。</p>
+</blockquote>
+<p><img src="images/image-3.png" alt=""></p>
+<hr>
+<h3 id="表示优势兼顾层次与精度"><strong>表示优势：兼顾层次与精度</strong></h3>
+<p>这种 <strong>Block Graph 表示</strong> 带来了两个决定性的优势：</p>
+<ol>
+<li><strong>保留原子精度</strong>：</li>
+</ol>
+<p>每个 Block 内部仍然存有完整的原子坐标、键长、键角等信息，因此模型可以在后续阶段恢复出全原子级几何结构。</p>
+<ul>
+<li><strong>降低复杂度，提升泛化</strong>：</li>
+</ul>
+<p>对抗体这样的庞大体系，直接处理原子图几乎不可能；而用 Block 级表示后，模型只需学习模块间的组合规律，就能在不同分子类型之间迁移学习。</p>
+<hr>
+<h2 id="四从潜空间粒子到立体分子unimomo-的生成之心"><strong>四、从“潜空间粒子”到“立体分子”：UniMoMo 的生成之心</strong></h2>
+<p>当我们用 Block Graph 统一了分子语言后，下一步的问题是——AI 如何“说”出新的分子？</p>
+<p>在 UniMoMo 中，这个“说话”的过程被分为两步完成：</p>
+<ol>
+<li>
+<p>先把所有 Block 压缩成<strong>潜空间粒子（latent points）</strong>；</p>
+</li>
+<li>
+<p>再通过一个<strong>几何扩散过程（geometric diffusion）</strong>，在三维空间中生成并还原出完整分子。</p>
+</li>
+</ol>
+<p>这一整套机制在论文的 <strong>Figure 2B</strong> 中有非常直观的图示——</p>
+<p>左边是编码压缩（Encoder），中间是扩散生成（Diffusion），右边是逐步还原结构（Decoder）。</p>
+<p><img src="images/image-4.png" alt=""></p>
+<hr>
+<h3 id="第一步autoencoder-压缩让分子隐入潜空间"><strong>第一步：AutoEncoder 压缩——让分子“隐入潜空间”</strong></h3>
+<p>在传统分子生成模型中，AI 直接操作原子坐标，这不仅计算量庞大，还难以处理复杂体系（尤其是抗体）。</p>
+<p>UniMoMo 采用了一个名为 <strong>Iterative Full-Atom Variational AutoEncoder</strong> 的机制。</p>
+<p>这个模块的任务是：</p>
+<blockquote>
+<p>把每个 Block 压缩成一个带空间坐标的小点（latent point）。</p>
+</blockquote>
+<p>具体来说：</p>
+<ul>
+<li>
+<p><strong>Encoder</strong> 将 Block 的原子信息（类型 + 坐标）映射到一个隐向量 $$z_{i}$$和一个三维位置 $$\vec{z}_i$$；</p>
+</li>
+<li>
+<p>这些隐点构成了一个“潜空间点云（latent point cloud）”，</p>
+</li>
+<li>
+<p>它的几何分布依然反映了原始分子的空间结构。</p>
+</li>
+</ul>
+<p><img src="images/image-5.png" alt=""></p>
+<p>图片来源：Nano Banana</p>
+<p>可以把这一步想象成：</p>
+<blockquote>
+<p>“每个分子被压缩成一团粒子云，每个粒子代表一个局部结构单元。”</p>
+</blockquote>
+<p><img src="images/image-6.png" alt=""></p>
+<hr>
+<h3 id="第二步扩散生成在潜空间中呼吸出新分子"><strong>第二步：扩散生成——在潜空间中“呼吸”出新分子</strong></h3>
+<p>一旦模型把真实分子压缩到了潜空间，就能在这个空间里学会生成新的点云分布。</p>
+<p>这一步使用的是一种 <strong>几何潜空间扩散模型（Geometric Latent Diffusion Model, GLDM）</strong>。</p>
+<p>它的工作原理类似于“呼吸”：</p>
+<ul>
+<li>
+<p>正向扩散（Forward Diffusion）：往潜空间点云中逐步加入噪声，直到一切变成随机云团；</p>
+</li>
+<li>
+<p>反向扩散（Reverse Diffusion）：AI 学会一步步去噪，还原出符合化学约束的点云结构。</p>
+</li>
+</ul>
+<p>与传统的扩散模型不同，UniMoMo 的扩散过程具有 <strong>E(3)-等变性（E(3)-Equivariance）</strong>：</p>
+<blockquote>
+<p>也就是说，无论整个分子在三维空间中如何旋转或平移，</p>
+<p>模型生成结果的几何关系都不会被破坏。</p>
+</blockquote>
+<p>这点非常关键——它保证了生成的分子在几何上是“物理真实”的，而不是数学伪像。</p>
+<p><img src="images/image-7.png" alt=""></p>
+<hr>
+<h3 id="第三步decoder-还原从点云到全原子结构"><strong>第三步：Decoder 还原——从点云到全原子结构</strong></h3>
+<p>当潜空间中的点云被扩散模型生成完毕，模型就需要重新“展开”成原子的层级。</p>
+<p>UniMoMo 的 Decoder 是一个<strong>迭代重建器（Iterative Decoder）</strong>：</p>
+<ol>
+<li>
+<p>先根据潜点的隐向量预测每个 Block 的类型（如苯环、亮氨酸等）；</p>
+</li>
+<li>
+<p>再一步步预测每个原子的坐标与化学键。</p>
+</li>
+</ol>
+<p>这个过程并非一次性完成，而是多轮递进式的“细化”：</p>
+<p>每一轮都修正坐标、预测化学键、优化几何关系，直到生成一个稳定的三维分子。</p>
+<p>这让模型能够在<strong>保留全局构型的同时，兼顾原子级局部精度</strong>。</p>
+<blockquote>
+<p>就像艺术家先画出骨架，再逐层上色，最后雕刻出化学细节。</p>
+</blockquote>
+<p><img src="images/image-8.png" alt=""></p>
+<p>图片来源：Nano banana</p>
+<hr>
+<h3 id="为什么这套机制高效又强大"><strong>为什么这套机制高效又强大？</strong></h3>
+<p>这套“AutoEncoder + Diffusion”的设计有两个显著优点：</p>
+<ol>
+<li><strong>降维带来高效</strong></li>
+</ol>
+<p>Diffusion 不再在原子层级运行，而是在压缩后的潜空间进行，大大降低了计算量，让抗体级别的分子生成成为可能。</p>
+<ul>
+<li><strong>局部精细，整体合理</strong></li>
+</ul>
+<p>Decoder 负责细化每个 Block 的原子结构，而 Diffusion 专注于全局布局，二者分工明确，互相补强。</p>
+<hr>
+<h2 id="五一个模型打三场仗unimomo-的全领域表现"><strong>五、一个模型打三场仗：UniMoMo 的全领域表现</strong></h2>
+<p>UniMoMo 不止是“能同时生成三类分子”，更关键的是——<strong>它在每一类任务上都更强。</strong></p>
+<p>作者在三条典型任务上进行了系统评测：</p>
+<p>肽设计、抗体设计、小分子设计。</p>
+<p>结果显示，这个统一模型不仅性能全面超越专用模型，还展现出跨领域迁移带来的几何与能量优势。</p>
+<hr>
+<h3 id="实验一肽设计peptide-design"><strong>实验一：肽设计（Peptide Design）</strong></h3>
+<p>  </p>
+<p>在肽任务上，UniMoMo 被测试于多个 benchmark（PepBench、ProtFrag、LNR 等）。</p>
+<p>研究者关注几个关键指标：</p>
+<ul>
+<li>
+<p><strong>C-RMSD / L-RMSD</strong>：生成肽结构与真实肽的偏差；</p>
+</li>
+<li>
+<p><strong>ΔG（自由能）与 IMP（能量优越率）</strong>：生成肽与蛋白结合的能量；</p>
+</li>
+<li>
+<p><strong>Clash rate 与 JSD</strong>：几何冲突率与二面角分布一致性。</p>
+</li>
+</ul>
+<p>在表格 <strong>Table 1</strong> 中可以看到：</p>
+<p><img src="images/image-9.png" alt=""></p>
+<ul>
+<li>
+<p>UniMoMo 的 <strong>binding energy（-34.35 kcal/mol）</strong> 远低于所有对照模型（如 PepFlow、PepGLAD）；</p>
+</li>
+<li>
+<p>同时结构 RMSD 下降到 <strong>仅 2.19 Å</strong>，意味着它能生成更贴近天然肽构象的结合体；</p>
+</li>
+<li>
+<p>更有趣的是，模型的 <strong>Clashout</strong>（肽与蛋白原子冲突率）低至 0.45%，比以往模型减少了数倍。</p>
+</li>
+</ul>
+<blockquote>
+<p>换句话说，UniMoMo 生成的不只是“像样”的肽，而是真正<strong>能稳稳贴合靶点表面</strong>的肽。</p>
+</blockquote>
+<hr>
+<h3 id="实验二抗体设计antibody-design"><strong>实验二：抗体设计（Antibody Design）</strong></h3>
+<p>抗体的挑战在于 CDR（互补决定区）结构的复杂性。</p>
+<p>传统模型往往只能生成 backbone 框架，而无法稳定预测侧链几何。</p>
+<p>在 <strong>Table 2–3</strong> 中，UniMoMo 的表现非常突出：</p>
+<p><img src="images/image-10.png" alt=""></p>
+<p><img src="images/image-11.png" alt=""></p>
+<ul>
+<li>
+<p>当生成 100 个候选抗体时，<strong>AAR（氨基酸恢复率）达到 52.3%</strong>，远超 DiffAb（49.7%）和 GeoAB（45.9%）；</p>
+</li>
+<li>
+<p>其 <strong>RMSD（结构偏差）仅 1.04 Å</strong>，已接近实验结构精度；</p>
+</li>
+<li>
+<p>更关键的是，<strong>65% 的生成抗体在结合能上优于原始天然抗体</strong>。</p>
+</li>
+</ul>
+<p>几何质量同样令人印象深刻：</p>
+<p>UniMoMo 的 <strong>Clashin / Clashout</strong> 比例极低（0.18% / 0.03%），说明生成的结构在原子层面几乎没有无效碰撞。</p>
+<blockquote>
+<p>这意味着模型不仅能“生成抗体”，还真的在学习“免疫几何”。</p>
+</blockquote>
+<hr>
+<h3 id="-实验三小分子设计small-molecule-design"><strong>⚗️ 实验三：小分子设计（Small Molecule Design）</strong></h3>
+<p>小分子设计的评测最全面。</p>
+<p>作者采用了 CBGBench 框架，从四个维度评估模型：</p>
+<ol>
+<li>
+<p><strong>Substructure</strong>（结构单元一致性）</p>
+</li>
+<li>
+<p><strong>Chemical property</strong>（药物理化性质）</p>
+</li>
+<li>
+<p><strong>Geometry</strong>（几何合理性）</p>
+</li>
+<li>
+<p><strong>Interaction</strong>（蛋白结合模式）</p>
+</li>
+</ol>
+<p>在 <strong>Table 4</strong> 中，UniMoMo 拿下了总分第一名。</p>
+<p><img src="images/image-12.png" alt=""></p>
+<p>具体亮点包括：</p>
+<ul>
+<li>在“结构子单元一致性”上（Table 5），UniMoMo 的 JSD 仅 0.028，说明它生成的原子与环结构分布几乎完美匹配真实分子；</li>
+</ul>
+<p><img src="images/image-15.png" alt=""></p>
+<ul>
+<li>在“药物可合成性”指标（SA 值）上，它也超越所有模型；</li>
+</ul>
+<p><img src="images/image-16.png" alt=""></p>
+<ul>
+<li>在“几何合理性”部分（Table 7），生成分子几乎<strong>无原子重叠</strong>（Clash ratio 仅 0.004）。</li>
+</ul>
+<p><img src="images/image-17.png" alt=""></p>
+<blockquote>
+<p>在这一领域，UniMoMo 不只是一个“通才”，而是一个能打的“全能冠军”。</p>
+</blockquote>
+<hr>
+<h3 id="figure-3同一个靶点三种分子三种策略"><strong>Figure 3：同一个靶点，三种分子，三种策略</strong></h3>
+<p><img src="images/image-18.png" alt=""></p>
+<p>为了展示模型的“跨域迁移”能力，作者选取了一个<strong>GPCR（G 蛋白偶联受体）</strong>，PDB ID: 8U4R。</p>
+<p>UniMoMo 在同一个结合口袋上分别生成了三类分子：</p>
+<ul>
+<li>
+<p><strong>肽</strong>：自由能 ΔG = -27.49 kcal/mol；</p>
+</li>
+<li>
+<p><strong>抗体</strong>：ΔG = -65.75 kcal/mol；</p>
+</li>
+<li>
+<p><strong>小分子</strong>：Vina 打分 = -6.04 kcal/mol。</p>
+</li>
+</ul>
+<p>更有意思的是，论文指出两个令人惊喜的观察：</p>
+<ol>
+<li>
+<p>小分子中出现了<strong>模仿氨基酸侧链（如精氨酸）的结构</strong>；</p>
+</li>
+<li>
+<p>生成的骨架还出现了类似抗体肽链的<strong>酰胺连接片段</strong>。</p>
+</li>
+</ol>
+<blockquote>
+<p>换句话说，模型在“不同分子类型之间学会了借鉴”。</p>
+<p>它能从抗体中学到空间布局，再把这种“几何知识”迁移到小分子设计中。</p>
+</blockquote>
+<p>这正是 UniMoMo 真正“统一生成”的核心意义。</p>
+<hr>
+<h3 id="小结"><strong>小结</strong></h3>
+<p>通过三类任务的系统对比，UniMoMo 展示出一个清晰的趋势：</p>
+<blockquote>
+<p>“统一建模”并不是在三种任务之间妥协，而是在三种任务之间形成协同。</p>
+</blockquote>
+<p>多域数据训练让模型<strong>学到更通用的分子几何规律</strong>，进而反哺到每一个子任务的生成质量。</p>
+<h2 id="六从多域生成到通用分子智能"><strong>六、从多域生成到通用分子智能</strong></h2>
+<p>当我们重新回看这篇论文，会发现它的意义远不止“性能更强”。</p>
+<p>UniMoMo 的真正突破在于，它第一次证明了：</p>
+<blockquote>
+<p>分子设计的通用生成模型是可行的。</p>
+</blockquote>
+<p>过去我们习惯让模型在各自的“生态位”内训练——</p>
+<p>小分子学有机化学，肽模型学蛋白折叠，抗体模型学免疫几何。</p>
+<p>而 UniMoMo 则在同一个潜空间中，让这三种分子<strong>共享几何知识</strong>、<strong>互相迁移结构经验</strong>。</p>
+<p>这种“跨域共学”的设计，不仅让模型在多种任务上表现更好，也暗示着一个更深的科学图景：</p>
+<p><span style="color: inherit; background-color: rgba(205,178,250,0.7)">AI 可能正在学习分子世界的</span><strong><span style="color: inherit; background-color: rgba(205,178,250,0.7)">共同语法</span></strong><span style="color: inherit; background-color: rgba(205,178,250,0.7)">。</span></p>
+<p>UniMoMo 给我们提供的不仅是一个算法框架，更是一种新的思维方式：</p>
+<blockquote>
+<p><strong>让模型自己去发现分子世界的共性。</strong></p>
+</blockquote>
+<p>当 AI 具备这样的能力，它将不只是加速药物研发，而是改变我们理解生物体系的方式。</p>
+<p>原文链接：https://openreview.net/pdf?id=KUN7A7Okb6</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/cell%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E5%9B%A2%E9%98%9F%E4%BB%8E%E9%9B%B6%E8%AE%BE%E8%AE%A1%E5%87%BA%E5%8F%AF%E6%84%9F%E7%94%B5%E7%9A%84%E4%BA%BA%E5%B7%A5%E7%A6%BB%E5%AD%90%E9%80%9A%E9%81%93/" class="link dim">
+                Cell｜西湖大学卢培龙团队从头设计出可“感电”的人工离子通道
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Cell｜de novo 设计多肽，实现对病态钠通道的特异性调控 | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="深度解读 Cell 工作：利用结构驱动的 de novo 设计方法构建功能性多肽 ELIXIR，实现对多种病理钠通道突变的精准修复，并在神经与心脏系统完成跨层级验证。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="Cell｜de novo 设计多肽，实现对病态钠通道的特异性调控">
+  <meta property="og:description" content="深度解读 Cell 工作：利用结构驱动的 de novo 设计方法构建功能性多肽 ELIXIR，实现对多种病理钠通道突变的精准修复，并在神经与心脏系统完成跨层级验证。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2025-08-21T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-21T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="Peptide">
+    <meta property="article:tag" content="Peptide Drug">
+    <meta property="article:tag" content="De Novo Design">
+    <meta property="article:tag" content="Ion Channel">
+    <meta property="article:tag" content="Sodium Channel">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/cover.png">
+
+  <meta itemprop="name" content="Cell｜de novo 设计多肽，实现对病态钠通道的特异性调控">
+  <meta itemprop="description" content="深度解读 Cell 工作：利用结构驱动的 de novo 设计方法构建功能性多肽 ELIXIR，实现对多种病理钠通道突变的精准修复，并在神经与心脏系统完成跨层级验证。">
+  <meta itemprop="datePublished" content="2025-08-21T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-21T00:00:00+00:00">
+  <meta itemprop="wordCount" content="463">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/cover.png">
+  <meta itemprop="keywords" content="de novo peptide design,sodium channel modulator,late sodium current,ELIXIR peptide,ion channelopathy,precision medicine,peptide therapeutic,AI4S">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/cover.png">
+  <meta name="twitter:title" content="Cell｜de novo 设计多肽，实现对病态钠通道的特异性调控">
+  <meta name="twitter:description" content="深度解读 Cell 工作：利用结构驱动的 de novo 设计方法构建功能性多肽 ELIXIR，实现对多种病理钠通道突变的精准修复，并在神经与心脏系统完成跨层级验证。">
+
+	
+<meta name="keywords" content="de novo peptide design, sodium channel modulator, late sodium current, ELIXIR peptide, ion channelopathy, precision medicine, peptide therapeutic, AI4S">
+
+
+
+<meta name="description" content="深度解读 Cell 工作：利用结构驱动的 de novo 设计方法构建功能性多肽 ELIXIR，实现对多种病理钠通道突变的精准修复，并在神经与心脏系统完成跨层级验证。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/cover.png');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">Cell｜de novo 设计多肽，实现对病态钠通道的特异性调控</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              深度解读 Cell 工作：利用结构驱动的 de novo 设计方法构建功能性多肽 ELIXIR，实现对多种病理钠通道突变的精准修复，并在神经与心脏系统完成跨层级验证。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        Cell｜de novo 设计多肽，实现对病态钠通道的特异性调控
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2025-08-21T00:00:00Z">
+        八月 21, 2025
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <blockquote>
+<p>蓝极说：</p>
+<p>今天要分享的是 <em>Cell</em> 昨天（2025.08.19）刚刚online的一篇工作 —— <strong>《De novo design of a peptide modulator to reverse sodium channel dysfunction linked to cardiac arrhythmias and epilepsy》</strong>。这篇文章报道了一个从零设计的多肽 <strong>ELIXIR</strong>，它能精准修复病态钠通道的功能异常，从而逆转心律失常和癫痫模型中的病理表型。</p>
+<p>之所以选择讲这篇文章，有两个原因：</p>
+<p>一方面，<strong>蛋白质设计在膜蛋白上的应用一直极少</strong>。相比可溶性蛋白，膜蛋白结构更复杂、动态性更强，给计算设计带来了巨大挑战。</p>
+<p>另一方面，<strong>钠通道是膜蛋白里最“庞然大物”之一</strong>，不仅由四个重复结构域组成，还参与复杂的电生理调控。长期以来，即使是结构预测也常常不够准确，更别提基于结构的精准设计。</p>
+<p>正是在这样的背景下，这篇工作首次展示了：我们可以用 <strong>de novo 蛋白质设计的方法，写出一条短肽，精准调节钠通道的病态功能</strong>。这不仅是一项技术突破，也为“通道病”治疗打开了新思路。</p>
+</blockquote>
+<hr>
+<p>心脏跳动异常，或者神经元“放电过度”，往往会让我们想到 <strong>心律失常</strong> 和 <strong>癫痫</strong> 这两类严重疾病。它们看似不同，一个是心脏病，一个是神经系统疾病，但在分子层面却有着惊人的共性——<strong>电压门控钠通道的“失控”</strong>。</p>
+<p>正常情况下，钠通道打开后很快关闭，动作电位能被严格调控；但一旦失活环节出了问题，就会出现一个不该存在的“尾巴电流”，也就是所谓的 <strong>晚钠电流（late sodium current, INaL）</strong>。这个持续的钠离子渗入，会拉长心脏动作电位，增加心律失常风险；在神经元中，它则导致过度兴奋，触发癫痫发作。</p>
+<p>传统的小分子药物，比如 <strong>Ranolazine</strong>，虽然能一定程度上抑制晚电流，但往往“刀子太钝”，既切掉了病态信号，也容易误伤正常通道，甚至带来副作用。</p>
+<p>就在这样的背景下，这篇 <em>Cell</em> 的新工作登场了：研究团队用 <strong>蛋白质设计</strong>，从零开始创造了一条全新的小肽——<strong>ELIXIR</strong>。它的使命不是“无差别打击”，而是精准修复：只锁定那些病态的钠通道，把它们拉回正常轨道。</p>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-12.png" alt=""></p>
+<hr>
+<h3 id="1-机制与设计思路如何用蛋白质设计修复钠通道">1. <strong>机制与设计思路：如何用蛋白质设计修复钠通道？</strong></h3>
+<h4 id="11-病变的起点晚钠电流">1.1 <strong>病变的起点：晚钠电流</strong></h4>
+<p>要理解 ELIXIR 的设计逻辑，我们先要看看病变通道的问题出在哪。</p>
+<p>在正常情况下，钠通道会快速激活和失活，让动作电位“一闪即逝”。但在一些心律失常和癫痫相关突变中，<strong>失活环节出现障碍</strong>，导致通道持续漏钠，产生 <strong>晚电流（INaL）</strong>。这种不该存在的电流让心肌动作电位延长（心律失常风险↑），或让神经元过度兴奋（癫痫风险↑）。</p>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-13.png" alt=""></p>
+<h4 id="12-关键弱点失活门与-ctd-的卡位">1.2 <strong>关键弱点：失活门与 CTD 的“卡位”</strong></h4>
+<p>钠通道的失活依赖一个“失活门”（inactivation gate, IG），它像插销一样能迅速把通道堵上。</p>
+<ul>
+<li>
+<p><strong>正常情况下</strong>：IG 会从 CTD 的 EF-hand-like 区域（EFL）释放，再去孔口完成“关门”。</p>
+</li>
+<li>
+<p><strong>病理情况下</strong>：IG 被卡在 EFL 上，没法去执行任务 → 通道持续漏钠。</p>
+</li>
+</ul>
+<blockquote>
+<p>这意味着，<strong>EFL 是一个理想靶点</strong>：如果有东西能和 IG 竞争性结合，就能把 IG“解救”出来，让它回到孔口，恢复正常失活。</p>
+</blockquote>
+<h4 id="13-设计策略写一条解锁肽">1.3 <strong>设计策略：写一条“解锁肽”</strong></h4>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-14.png" alt=""></p>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-9.png" alt=""></p>
+<p>研究团队用 <strong>ColabDesign</strong> 进行了 de novo 设计，结果得出了一条 <strong>21个氨基酸的短肽</strong>，命名为 <strong>ELIXIR</strong>。它的设计考虑了几个关键点：</p>
+<ol>
+<li>
+<p><strong>模仿失活门的关键特征</strong></p>
+<ul>
+<li>
+<p>疏水性核心（L8、F12、Y16），刚好能嵌进 EFL 的疏水口袋。</p>
+</li>
+<li>
+<p>两侧配上带正电残基，提高结合稳定性。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>避免“抄作业”</strong></p>
+<ul>
+<li>
+<p>与原生失活门的序列相似度只有 ~24%，说明这是一次“重新编写”，而不是简单复制。</p>
+</li>
+<li>
+<p>在数据库里，它和已知蛋白都没有明显同源关系，是真正的 <strong>de novo 设计</strong>。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>实验友好化改造</strong></p>
+<ul>
+<li>在第15位做了一个保守替换（C → S），避免体外实验中出现二硫键干扰。</li>
+</ul>
+</li>
+</ol>
+<h4 id="14-功能关键残基验证">1.4 <strong>功能关键残基验证</strong></h4>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-11.png" alt=""></p>
+<p>研究团队进一步用突变实验来证明设计的合理性：</p>
+<ul>
+<li>
+<p>把 <strong>L8/Y16 改成 Ala，F12 改成 Glu</strong> → 结合力和功能抑制效果显著下降。</p>
+</li>
+<li>
+<p>说明这三个残基就是设计的“卡位核心”。</p>
+</li>
+<li>
+<p>结合实验（荧光标记、FRET）也证实了 ELIXIR 与 NaV1.5 CTD 的结合亲和力在 <strong>亚微摩尔级别（KD≈0.9 μM）</strong>。</p>
+</li>
+</ul>
+<blockquote>
+<p>这说明，ELIXIR 并不是一条随意拼出来的肽，而是一个 <strong>基于结构逻辑、关键残基驱动的精准设计</strong>。</p>
+</blockquote>
+<p><strong>小结亮点</strong>：</p>
+<p>ELIXIR 的设计逻辑是：</p>
+<ol>
+<li>
+<p>找准 <strong>EFL 这个卡位点</strong>，</p>
+</li>
+<li>
+<p>写一条能塞进去的小肽，<strong>模仿但不复制失活门</strong>，</p>
+</li>
+<li>
+<p>用关键残基保证结合和功能，</p>
+</li>
+<li>
+<p>再通过实验逐步验证。</p>
+</li>
+</ol>
+<p>它就像一把特制的钥匙，精准插入钠通道调控区，把失活机制重新“解锁”。</p>
+<hr>
+<h3 id="2-功能验证精准抑制病态通道而不伤正常功能">2. <strong>功能验证：精准抑制病态通道，而不伤正常功能</strong></h3>
+<p>设计出 ELIXIR 之后，研究团队的第一个问题就是：<strong>它真的能在细胞里修复病态通道吗？</strong></p>
+<h4 id="21-正常通道几乎不受影响">2.1 <strong>正常通道：几乎不受影响</strong></h4>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-10.png" alt=""></p>
+<p>研究者在 HEK293 细胞中表达了 <strong>野生型 NaV1.5</strong> 通道，观察其晚电流 INaL。</p>
+<ul>
+<li>
+<p>正常情况下，INaL 本来就很低。</p>
+</li>
+<li>
+<p>加入 ELIXIR 后，通道的激活、失活动力学几乎没有变化。</p>
+</li>
+</ul>
+<blockquote>
+<p>这说明 <strong>ELIXIR 不会乱动正常通道</strong>，选择性非常好。</p>
+</blockquote>
+<hr>
+<h4 id="22-病态突变体显著修复">2.2 <strong>病态突变体：显著修复</strong></h4>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-6.png" alt=""></p>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-7.png" alt=""></p>
+<p>接下来，他们测试了一个与心律失常相关的 <strong>NaV1.5 Δ1864 突变体</strong>，这个突变会导致通道 CTD 缺失，晚电流暴涨（高达野生型的 ~40 倍）。</p>
+<ul>
+<li>
+<p>在这个病态背景下，ELIXIR 能让 INaL <strong>下降超过 12 倍</strong>，几乎恢复到接近正常水平。</p>
+</li>
+<li>
+<p>作为对照，临床常用的 <strong>Ranolazine（10 μM）</strong> 只能降低约 4 倍。</p>
+</li>
+</ul>
+<blockquote>
+<p>对比之下，ELIXIR 的选择性和效力远超传统药物。</p>
+</blockquote>
+<hr>
+<h4 id="23-功能-结构验证关键残基决定效果">2.3 <strong>功能-结构验证：关键残基决定效果</strong></h4>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-2.png" alt=""></p>
+<p>为了确认 ELIXIR 的作用真的依赖于它和 CTD 的结合，研究者做了几个关键实验：</p>
+<ul>
+<li>
+<p>把 ELIXIR 的 L8/Y16 改成 Ala，或者 F12 改成 Glu → 抑制效果明显下降。</p>
+</li>
+<li>
+<p>把通道本身的 EFL 片段删掉（Δ1810 突变体） → ELIXIR 完全失效。</p>
+</li>
+</ul>
+<p>而且，结合实验的亲和力（KD）和功能抑制程度（INaL下降幅度）呈线性相关。</p>
+<blockquote>
+<p>这直接证明了：ELIXIR 的抑制效果 <strong>依赖于它精准结合在 NaV1.5 的 CTD-EFL 位点</strong>。</p>
+</blockquote>
+<hr>
+<p><strong>这一部分的亮点总结</strong>：</p>
+<ol>
+<li>
+<p><strong>精准性</strong>：对野生型几乎无影响，但能强效抑制病态突变体。</p>
+</li>
+<li>
+<p><strong>优效性</strong>：效果优于传统小分子药物 Ranolazine。</p>
+</li>
+<li>
+<p><strong>机制验证</strong>：作用完全依赖设计的结合位点，实验数据和设计逻辑高度吻合。</p>
+</li>
+</ol>
+<blockquote>
+<p>换句话说，ELIXIR 并不是“一刀切”的钠通道抑制剂，而是一种 <strong>“病理选择性修复因子”</strong>。</p>
+</blockquote>
+<hr>
+<h3 id="3-广谱效应跨突变跨机制跨亚型的修复能力">3. <strong>广谱效应：跨突变、跨机制、跨亚型的修复能力</strong></h3>
+<h4 id="31-多突变多机制下的通用性">3.1 <strong>多突变、多机制下的通用性</strong></h4>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-3.png" alt=""></p>
+<p>钠通道病变并不仅仅是一个突变，而是可以通过不同机制导致晚电流升高：</p>
+<ul>
+<li>
+<p><strong>经典 LQT3 ΔKPQ 突变</strong> → ELIXIR 抑制晚电流约 13 倍。</p>
+</li>
+<li>
+<p><strong>药物耐受性突变 F1759A</strong>（对传统抗心律失常药无效） → ELIXIR 依然能抑制 ~12 倍。</p>
+</li>
+<li>
+<p><strong>IQ/AA 突变</strong>（阻断 CaM 结合） → ELIXIR 也能显著降低晚电流。</p>
+</li>
+<li>
+<p><strong>激酶修饰导致的病理状态</strong>：</p>
+<ul>
+<li>
+<p>PKA 过度活化 → 晚电流 ↑5 倍，ELIXIR 可逆转。</p>
+</li>
+<li>
+<p>CaMKII 突变活化 → 晚电流 ↑2 倍，ELIXIR 也能修复。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-5.png" alt=""></p>
+<blockquote>
+<p>无论是基因突变还是后天修饰，只要机制导致失活受阻，ELIXIR 都能“接管修复”。</p>
+</blockquote>
+<h4 id="32-剂量依赖性">3.2 <strong>剂量依赖性</strong></h4>
+<p>为了让 ELIXIR 能进入细胞，研究团队给它加了一个细胞穿透肽（cpp），命名为 <strong>ELIXIR-cpp</strong>。</p>
+<ul>
+<li>
+<p>结果显示 ELIXIR-cpp 在细胞内呈剂量依赖性抑制晚电流，IC50 ~ 330 nM。</p>
+</li>
+<li>
+<p>这一数值与它在体外测得的结合亲和力（~0.9 μM）高度一致。</p>
+</li>
+</ul>
+<blockquote>
+<p>说明它的作用并非偶然，而是一个可控的剂量效应。</p>
+</blockquote>
+<hr>
+<h4 id="33-跨亚型的病理选择性">3.3 <strong>跨亚型的病理选择性</strong></h4>
+<p>人体有 9 种不同的 NaV 通道亚型（1.1–1.9），分布在心脏、神经、肌肉等不同组织。一个潜在风险是：ELIXIR 会不会误伤其他亚型？</p>
+<ul>
+<li>
+<p><strong>野生型 Nav1.1、Nav1.4、Nav1.6、Nav1.7</strong>：ELIXIR 几乎没有影响。</p>
+</li>
+<li>
+<p><strong>病理突变型</strong>：</p>
+<ul>
+<li>
+<p>Nav1.4 F1698I（肌强直相关突变） → 晚电流升高 ~4 倍，ELIXIR 可完全拉回到正常水平。</p>
+</li>
+<li>
+<p>Nav1.6 N1768D（癫痫突变） → 晚电流升高 ~10 倍，ELIXIR 也能逆转接近正常。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-8.png" alt=""></p>
+<blockquote>
+<p>也就是说，<strong>ELIXIR 只在通道“病态失活”的情况下发挥作用，野生型则几乎不受影响</strong>。</p>
+</blockquote>
+<hr>
+<p><strong>这一部分的亮点总结</strong>：</p>
+<ol>
+<li>
+<p><strong>广谱有效</strong>：无论是不同突变（ΔKPQ、F1759A、IQ/AA）还是不同机制（PKA、CaMKII），ELIXIR 都能抑制晚电流。</p>
+</li>
+<li>
+<p><strong>剂量可控</strong>：表现出经典的剂量依赖性。</p>
+</li>
+<li>
+<p><strong>病理选择性</strong>：对正常通道无影响，但能精准修复病态亚型（心脏、神经、骨骼肌均验证）。</p>
+</li>
+</ol>
+<blockquote>
+<p>这使 ELIXIR 不只是“单一病的工具”，而是潜在的 <strong>“跨疾病通道修复平台”</strong>。</p>
+</blockquote>
+<hr>
+<h3 id="4-从动物到患者跨层级的功能验证">4. <strong>从动物到患者：跨层级的功能验证</strong></h3>
+<h4 id="41-癫痫小鼠的神经元修复">4.1 <strong>癫痫小鼠的神经元修复</strong></h4>
+<p>研究团队在一个 <strong>SCN8A N1768D 突变小鼠模型</strong> 中测试了 ELIXIR。这类小鼠表现为：</p>
+<ul>
+<li>
+<p>神经元动作电位（AP）延长，</p>
+</li>
+<li>
+<p>频繁出现 <strong>去极化阻滞（depolarization block）</strong>，导致神经元无法正常发放，</p>
+</li>
+<li>
+<p>临床上对应严重癫痫和 SUDEP（癫痫猝死）。</p>
+</li>
+</ul>
+<p>他们用 AAV9 病毒把 <strong>ELIXIR 基因</strong>送入小鼠脑内：</p>
+<ul>
+<li>
+<p><strong>结果</strong>：突变神经元的动作电位时程（APD）缩短，接近正常水平。</p>
+</li>
+<li>
+<p><strong>去极化阻滞明显减少</strong>，神经元放电恢复规律。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image.png" alt=""></p>
+<blockquote>
+<p>ELIXIR 在神经系统中 <strong>不仅抑制晚电流，还能实实在在修复神经元的电生理功能</strong>。</p>
+</blockquote>
+<hr>
+<h4 id="42-心衰小鼠的心肌细胞修复">4.2 <strong>心衰小鼠的心肌细胞修复</strong></h4>
+<p>在心脏病模型中，研究者选择了 <strong>CaMKIIδ 过表达小鼠</strong>，这种小鼠会发展为心力衰竭，心肌细胞的晚电流显著升高。</p>
+<ul>
+<li>
+<p>用<strong> ELIXIR-cpp（带细胞穿透肽）</strong>处理心肌细胞后：</p>
+<ul>
+<li>
+<p>晚电流下降到接近正常水平，</p>
+</li>
+<li>
+<p>动作电位时程（APD）缩短，</p>
+</li>
+<li>
+<p><strong>动作电位的短期变异性（STV）降低</strong>，电活动更稳定。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-4.png" alt=""></p>
+<blockquote>
+<p>在心脏模型中，ELIXIR 展现出和神经模型类似的“病理修复”特性。</p>
+</blockquote>
+<hr>
+<h4 id="43-患者来源细胞--转基因小鼠验证">4.3 <strong>患者来源细胞 &amp; 转基因小鼠验证</strong></h4>
+<p><img src="/zh/literature/cellde-novo-%E8%AE%BE%E8%AE%A1%E5%A4%9A%E8%82%BD%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%97%85%E6%80%81%E9%92%A0%E9%80%9A%E9%81%93%E7%9A%84%E7%89%B9%E5%BC%82%E6%80%A7%E8%B0%83%E6%8E%A7/images/image-1.png" alt=""></p>
+<p>为了更接近临床，团队进一步测试了：</p>
+<ol>
+<li>
+<p><strong>LQT3 患者来源的 iPSC 心肌细胞（ΔKPQ 突变）</strong>：</p>
+<ul>
+<li>
+<p>突变细胞晚电流升高明显，</p>
+</li>
+<li>
+<p>ELIXIR 表达后晚电流下降到接近健康供体水平。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>F1759A 转基因小鼠（抗药性心律失常模型）</strong>：</p>
+<ul>
+<li>
+<p>心肌细胞晚电流升高，QT 间期延长，</p>
+</li>
+<li>
+<p>ELIXIR 病毒注射后 → 晚电流下降，<strong>QT 间期显著缩短</strong>，心电图接近正常。</p>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>这是一个 <strong>从细胞 → 动物 → 患者来源细胞</strong> 的完整验证链条，强烈支撑 ELIXIR 的转化潜力。</p>
+</blockquote>
+<hr>
+<p><strong>这一部分的亮点总结</strong>：</p>
+<ol>
+<li>
+<p><strong>癫痫模型</strong>：修复神经元 AP，减少去极化阻滞。</p>
+</li>
+<li>
+<p><strong>心衰模型</strong>：缩短动作电位时程，减少电活动不稳定性。</p>
+</li>
+<li>
+<p><strong>患者来源细胞 &amp; 抗药性小鼠</strong>：成功逆转 LQT3 的病理表型。</p>
+</li>
+</ol>
+<blockquote>
+<p>从神经到心脏，从小鼠到人源细胞，ELIXIR 的“跨系统修复能力”得到了全方位验证。</p>
+</blockquote>
+<hr>
+<h3 id="5-总结与前景从实验室到未来治疗">5. <strong>总结与前景：从实验室到未来治疗</strong></h3>
+<p>通过从零设计的 21 个氨基酸短肽 <strong>ELIXIR</strong>，这篇工作展示了一个令人振奋的事实：</p>
+<p>我们不仅可以理解离子通道的病理机制，还可以 <strong>用计算蛋白设计“写”出一个修复分子，把病态通道拉回正轨</strong>。</p>
+<h4 id="51-elixir-的三大亮点">5.1 <strong>ELIXIR 的三大亮点</strong></h4>
+<ol>
+<li>
+<p><strong>de novo 设计</strong></p>
+<ul>
+<li>
+<p>不依赖天然蛋白或同源片段，完全是从结构逻辑出发设计的新分子。</p>
+</li>
+<li>
+<p>这说明“从零开始写药”的时代正在到来。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>病理选择性</strong></p>
+<ul>
+<li>
+<p>对正常通道几乎没有影响，</p>
+</li>
+<li>
+<p>但能精准识别和修复各种病态突变或修饰导致的晚电流异常。</p>
+</li>
+<li>
+<p>相比传统药物“杀敌一千，自损八百”，ELIXIR 的策略更接近“精准修复”。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>跨疾病通用性</strong></p>
+<ul>
+<li>
+<p>无论是心律失常、癫痫，还是肌强直等钠通道病，ELIXIR 都能发挥作用。</p>
+</li>
+<li>
+<p>这一点极大扩展了它的应用前景，未来可能发展为 <strong>“通道病修复平台”</strong>。</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="52-未来展望">5.2 <strong>未来展望</strong></h4>
+<ul>
+<li>
+<p><strong>临床应用挑战</strong>：</p>
+<ul>
+<li>
+<p>因为针对的靶点在细胞内，所以如何高效、长期、安全地把 ELIXIR 送入细胞，是转化的关键难题。</p>
+</li>
+<li>
+<p>文章中使用了细胞穿透肽和病毒载体，这些方法各有局限。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>优化方向</strong>：</p>
+<ul>
+<li>
+<p>通过 <strong>亲和力成熟</strong> 或 <strong>突变特异性设计</strong>，可以让 ELIXIR 更高效、更精确。</p>
+</li>
+<li>
+<p>也可能通过小分子模拟，找到能模仿 ELIXIR 功能的新药物。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>更大图景</strong>：</p>
+<ul>
+<li>
+<p>钠通道只是第一步，</p>
+</li>
+<li>
+<p>这种 <strong>结构驱动的 de novo 蛋白质设计策略</strong> 完全可以扩展到钙通道、钾通道，甚至其他复杂膜蛋白。</p>
+</li>
+<li>
+<p>它代表了一种 <strong>“精准修复分子缺陷”</strong> 的新药开发范式。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<blockquote>
+<p><strong>一句话总结</strong>：</p>
+<p>ELIXIR 不只是一个为心律失常和癫痫设计的小肽，它更像是一个“概念验证”：<strong>我们可以通过计算蛋白设计，为通道病量身打造修复工具，打开未来精准医学的新可能。</strong></p>
+</blockquote>
+<h3 id="6-蓝极点评">6. <strong>蓝极点评：</strong></h3>
+<blockquote>
+<p>钠离子通道一直是一个很难进行binder设计的靶点，多肽设计相较于大的binder设计也更困难，这篇文章把两件难做的事情结合在一起，通过找到了一个很巧妙的切入点（针对胞内的CTD小区域做设计），通过不太难的设计方法，得到了很好的结果。所以，现在的设计工具已经足够强大，与其追求更好的工具，不如追求对靶点更深的理解。</p>
+</blockquote>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/spxXdKZ_AB8NSPOiw7URVA"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/peptide/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Peptide</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/peptide-drug/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Peptide Drug</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/de-novo-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">De Novo Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/ion-channel/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Ion Channel</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/sodium-channel/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Sodium Channel</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/membrane-protein/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Membrane Protein</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/cell/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Cell</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

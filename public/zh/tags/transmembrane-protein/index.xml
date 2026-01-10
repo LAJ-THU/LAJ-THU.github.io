@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Transmembrane Protein on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/transmembrane-protein/</link>
+    <description>Recent content in Transmembrane Protein on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 27 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/transmembrane-protein/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白</title>
+      <link>http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/</link>
+      <pubDate>Wed, 27 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/</guid>
+      <description>西湖大学卢培龙团队在 Nature 报道首个完全从零设计、可稳定嵌入细胞膜并激活小分子荧光的人工跨膜蛋白。该蛋白不仅实现纳摩尔级亲和力结合，还通过晶体学与冷冻电镜验证其结构与设计高度一致，展示了跨膜功能蛋白可被精准设计的可能性。</description>
+    </item>
+  </channel>
+</rss>

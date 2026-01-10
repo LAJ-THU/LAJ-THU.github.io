@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？ | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="深度解读 Nature 工作《One-shot design of functional protein binders with BindCraft》：通过 AF2 hallucination、ProteinMPNN 优化与多重过滤构建全自动设计流程，在 12 个高难靶点上实现 10–100% 成功率，标志着蛋白设计从筛选走向真正的“设计即所得”。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？">
+  <meta property="og:description" content="深度解读 Nature 工作《One-shot design of functional protein binders with BindCraft》：通过 AF2 hallucination、ProteinMPNN 优化与多重过滤构建全自动设计流程，在 12 个高难靶点上实现 10–100% 成功率，标志着蛋白设计从筛选走向真正的“设计即所得”。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2025-08-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-29T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="Binder">
+    <meta property="article:tag" content="Protein Design">
+    <meta property="article:tag" content="De Novo Design">
+    <meta property="article:tag" content="BindCraft">
+    <meta property="article:tag" content="Alphafold">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/cover.png">
+
+  <meta itemprop="name" content="Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？">
+  <meta itemprop="description" content="深度解读 Nature 工作《One-shot design of functional protein binders with BindCraft》：通过 AF2 hallucination、ProteinMPNN 优化与多重过滤构建全自动设计流程，在 12 个高难靶点上实现 10–100% 成功率，标志着蛋白设计从筛选走向真正的“设计即所得”。">
+  <meta itemprop="datePublished" content="2025-08-29T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-29T00:00:00+00:00">
+  <meta itemprop="wordCount" content="292">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/cover.png">
+  <meta itemprop="keywords" content="BindCraft,one-shot binder design,de novo protein binder,AF2 hallucination,ColabDesign,protein design pipeline,functional protein design,AI4S">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/cover.png">
+  <meta name="twitter:title" content="Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？">
+  <meta name="twitter:description" content="深度解读 Nature 工作《One-shot design of functional protein binders with BindCraft》：通过 AF2 hallucination、ProteinMPNN 优化与多重过滤构建全自动设计流程，在 12 个高难靶点上实现 10–100% 成功率，标志着蛋白设计从筛选走向真正的“设计即所得”。">
+
+	
+<meta name="keywords" content="BindCraft, one-shot binder design, de novo protein binder, AF2 hallucination, ColabDesign, protein design pipeline, functional protein design, AI4S">
+
+
+
+<meta name="description" content="深度解读 Nature 工作《One-shot design of functional protein binders with BindCraft》：通过 AF2 hallucination、ProteinMPNN 优化与多重过滤构建全自动设计流程，在 12 个高难靶点上实现 10–100% 成功率，标志着蛋白设计从筛选走向真正的“设计即所得”。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/cover.png');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              深度解读 Nature 工作《One-shot design of functional protein binders with BindCraft》：通过 AF2 hallucination、ProteinMPNN 优化与多重过滤构建全自动设计流程，在 12 个高难靶点上实现 10–100% 成功率，标志着蛋白设计从筛选走向真正的“设计即所得”。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2025-08-29T00:00:00Z">
+        八月 29, 2025
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>在药物开发领域，以原子级精度“命中”正确靶点从而实现治疗效果，依然是核心挑战。传统的研发流程往往依赖资源密集型的实验筛选，命中率却低得可怜。而越来越多的生物技术公司认为，<strong>AI 引导的发现</strong>，能够在计算机中提前锁定最佳候选分子，是缩短研发周期、节省成本的关键。</p>
+<p>来自洛桑联邦理工学院（EPFL）的博士后 <strong>Martin Pacesa</strong> 专注于开发此类计算流程，从零开始设计全新的功能性蛋白。在传统方法里，这类设计的成功率往往不到 1%。他的愿景是打造一款 <strong>“一键式”工具</strong>，让没有计算背景的生物化学实验室研究人员也能轻松使用。</p>
+<p>在 2024 年 10 月发布于 bioRxiv 的预印本中（我也解读过这篇文章），Pacesa 和 EPFL 的同事们推出了 <strong>BindCraft</strong>——一个全自动的去 novo 蛋白 binder 设计流程，成功率从过去的个位数提高到 <strong>10–100%</strong>，且能获得纳摩尔亲和力，而不需要高通量筛选或实验优化。与此同时，该模型以 <strong>MIT 开源许可</strong>发布，允许商业使用。</p>
+<p>如今，这项工作已正式发表在 <em>Nature</em>，题为《<strong>One-shot design of functional protein binders with BindCraft</strong>》。论文第一作者为 Pacesa，通讯作者包括麻省理工学院的 <strong>Sergey Ovchinnikov</strong> 与 EPFL 的 <strong>Bruno Correia</strong>。</p>
+<p>过去，设计一个能结合的蛋白需要成千上万次筛选；今天，BindCraft 把“<strong>一次一设计</strong>”的梦想拉近了。</p>
+<p>今天我就少讲细节，多聊聊为什么BindCraft值得关注。</p>
+<p><img src="/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/images/image-3.png" alt=""></p>
+<p>🔗原文链接：https://www.nature.com/articles/s41586-025-09429-6</p>
+<hr>
+<blockquote>
+<p>详细信息请查看之前的推送，本文只对文章内容做简单介绍：</p>
+</blockquote>
+<h2 id="一次成型的设计"><strong>“一次成型”的设计</strong></h2>
+<h3 id="方法概述">方法概述：</h3>
+<p> <strong>BindCraft</strong>是一个基于深度学习的自动化蛋白 binder 设计流程。核心思路是：</p>
+<p><img src="/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/images/image-4.png" alt=""></p>
+<ul>
+<li>
+<p><strong>反向传播 AlphaFold2 网络</strong>（AF2 hallucination）：直接在 AF2 模型里通过误差反向传播优化 binder 序列，让它与靶蛋白形成高质量结合界面。</p>
+</li>
+<li>
+<p><strong>多步优化与过滤</strong>：</p>
+<ul>
+<li>
+<p>初始设计用 <strong>AF2 multimer</strong> 生成候选 binder–target 复合物。</p>
+</li>
+<li>
+<p>用 <strong>ProteinMPNNsol</strong> 优化 binder 内部序列（保证折叠稳定性），同时保持界面不变。</p>
+</li>
+<li>
+<p>用 <strong>AF2 monomer</strong> 再预测，避免 multimer 过拟合，并通过 AF2 置信度指标与 Rosetta 打分过滤。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>整个流程自动化，只需输入靶点结构，就能生成候选 binder，无需大规模实验筛选。</p>
+</li>
+</ul>
+<h3 id="实验设计与验证"><strong>实验设计与验证</strong></h3>
+<p>作者在 <strong>12 个具有挑战性的靶点</strong> 上测试了 BindCraft，覆盖免疫受体、过敏原、核酸酶和人工设计蛋白。主要实验包括：</p>
+<p><img src="/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/images/image-5.png" alt=""></p>
+<ol>
+<li>
+<p><strong>免疫相关受体</strong></p>
+<ul>
+<li>
+<p>PD-1、PD-L1、IFNAR2、CD45。</p>
+</li>
+<li>
+<p>多个 binder 在表面等离子共振（SPR）或生物层干涉（BLI）中表现出纳摩尔级亲和力。</p>
+</li>
+<li>
+<p>通过竞争实验验证与天然配体/抗体结合位点的重叠。</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>
+<p><strong>膜蛋白与毒素</strong></p>
+<ul>
+<li>针对 Claudin-1 设计 binder，能竞争性阻断肠毒素 CpE 的结合，从而保护细胞免受毒性。</li>
+</ul>
+</li>
+<li>
+<p><strong>人工蛋白与高阶装配</strong></p>
+<ul>
+<li>针对去 novo 设计的 β-barrel (BBF-14) 和 centriole 相关蛋白 SAS-6，成功得到可结合的 binder，并通过晶体学或比对验证结构精度。</li>
+</ul>
+</li>
+<li>
+<p><strong>过敏原</strong></p>
+<ul>
+<li>
+<p>对尘螨过敏原 Der f7、Der f21 和桦树花粉过敏原 Bet v1 设计 binder。</p>
+</li>
+<li>
+<p>得到的 binder 在晶体学中验证结合模式，并能在患者血清实验中部分阻断 IgE 结合。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>核酸结合酶</strong></p>
+<ul>
+<li>
+<p>针对 Cas9 REC1 区域设计 binder，表现出类似 anti-CRISPR 蛋白的功能，能降低 Cas9 编辑效率。</p>
+</li>
+<li>
+<p>针对 Argonaute (CbAgo) 设计 binder，部分抑制其 DNA 切割活性。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>AAV 衍生病毒载体</strong></p>
+<ul>
+<li>
+<p>在 AAV 衣壳蛋白上插入 binder，实现对 PD-L1 和 HER2 的定向转导。</p>
+</li>
+<li>
+<p>细胞实验表明，这些重新编程的 AAV 能特异性进入表达相应受体的细胞。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="实验结果"><strong>实验结果</strong></h3>
+<ul>
+<li>
+<p>在所有 12 个靶点上都能设计出结合蛋白，成功率 <strong>10–100%</strong>。</p>
+</li>
+<li>
+<p>多数 binder 的亲和力在 <strong>纳摩尔级别</strong>。</p>
+</li>
+<li>
+<p>部分设计通过 <strong>晶体学或冷冻电镜</strong> 直接验证结构精度，r.m.s.d. 在 1–3 Å 范围内。</p>
+</li>
+<li>
+<p>应用示范从 <strong>免疫检查点调控</strong> 到 <strong>过敏原中和</strong>，再到 <strong>Cas9 抑制</strong> 和 <strong>病毒载体定向递送</strong>，覆盖了科研和治疗多个方向。</p>
+</li>
+</ul>
+<blockquote>
+<p>该模型展示了“<strong>一次成型（one-shot）</strong>”的能力：只需少量设计（不超过 10 个），就能得到纳摩尔范围的高亲和力 binder。</p>
+</blockquote>
+<p>宾夕法尼亚大学生物工程系助理教授 <strong>Pranam Chatterjee</strong> 表示，BindCraft 在该领域展现出极具前景的潜力：</p>
+<blockquote>
+<p>“数据涵盖的靶点非常多样，结果非常有说服力。BindCraft 足够简洁，几乎是‘开箱即用’，命中率却很高。”</p>
+</blockquote>
+<p>Chatterjee 以“序列驱动”的蛋白设计方法著称，最近还发表了 <strong>PepMLM</strong>，这是一种蛋白语言模型，可以在无结构输入的情况下，设计长度达 50 个氨基酸的多肽，用于结合与亨廷顿病、病毒感染、白血病等相关的靶点，非常适合药物开发。</p>
+<p>自 BindCraft 发布以来，Pacesa 表示，社区反馈“<strong>极其热烈</strong>”。Merck、Roche、Novo Nordisk、Novartis、AstraZeneca 等跨国药企，以及更多中小型公司都已采纳 BindCraft；学术界也将其扩展到高亲和力多肽的设计。</p>
+<hr>
+<h2 id="我看到的几个亮点"><strong>我看到的几个亮点</strong></h2>
+<ol>
+<li><strong>从“筛选”到“生成”的转折</strong></li>
+</ol>
+<p>过去的 binder 设计都离不开 <strong>高通量筛选</strong>：做几千个、几万个，再从里面挑 hits。BindCraft 展示的是“<strong>one design-one binder</strong>”的雏形，通过严格的计算指标筛选，减少实验试错环节。</p>
+<p>这一点如果未来成熟，会极大降低新药发现的门槛。</p>
+<ul>
+<li><strong>实战成绩已被验证</strong></li>
+</ul>
+<p>BindCraft 在之前的 <strong>EGFR binder 社区竞赛中的Round1拿到第一名</strong>，已经证明了它不仅是个漂亮的理论，而是真能在真实的设计任务里产出高质量的 binder。</p>
+<p><img src="/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/images/image-2.png" alt=""></p>
+<ul>
+<li><strong>来自 ColabDesign 的延伸</strong></li>
+</ul>
+<p>它的核心思路，其实是基于 Sergey Ovchinnikov 之前提出的 <strong>ColabDesign hallucination 方法</strong>。BindCraft 把这个思路进一步扩展，把 binder 的生成流程彻底自动化：结构、序列、界面同时生成。</p>
+<p>这不仅降低了使用门槛，还让实验成功率显著提升。</p>
+<p><img src="/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/images/image-1.png" alt=""></p>
+<ul>
+<li><strong>应用面之广，超出预期</strong></li>
+</ul>
+<p>作者不仅在免疫受体、过敏原上做了示范，还把 Cas9 当作“新型 Acr”去抑制，还试了 AAV 的靶向递送。</p>
+<p>这说明 BindCraft <strong>不是单点突破，而是真正的平台型工具</strong>。</p>
+<ul>
+<li>
+<p><strong>生态价值突出</strong></p>
+</li>
+<li>
+<p><strong>开源生态</strong>：代码、流程全都对学界开放，降低了社区使用门槛。</p>
+</li>
+<li>
+<p><strong>产业生态</strong>：据我了解，Merck、Roche、AZ 等国际药企已经把 BindCraft 纳入自己的工具箱，说明它在产业界也很快得到了认可。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/images/image.png" alt=""></p>
+<ul>
+<li><strong>领域地位的确立</strong></li>
+</ul>
+<p>在预印本阶段，很多人觉得这只是 AF2-hallucination 的一个变体。但 Nature 的接收，意味着它已经被看作是 <strong>新一代 binder 设计的代表作</strong>。</p>
+<p>这也让 BindCraft 和 RFdiffusion、AlphaProteo 等 pipeline 形成了新的格局。</p>
+<hr>
+<h2 id="也要看到的挑战"><strong>也要看到的挑战</strong></h2>
+<ul>
+<li>
+<p><strong>计算成本高</strong>：反向传播 AF2 很吃 GPU。</p>
+</li>
+<li>
+<p><strong>AF2 的局限</strong>：对点突变不敏感，界面精度可能有盲区。</p>
+</li>
+<li>
+<p><strong>应用转化难点</strong>：binder 尺寸偏大（60–240 aa），在体内的免疫原性和递送问题仍需解决。</p>
+</li>
+</ul>
+<blockquote>
+<p>换句话说，BindCraft 并不是“一键即用的药物工厂”，但它让我们看到了这种可能性。</p>
+</blockquote>
+<hr>
+<h2 id="小结"><strong>小结</strong></h2>
+<p>BindCraft 的意义在于，它第一次让我们认真相信：<strong>蛋白 binder 真的可以做到“设计即所得”</strong>。</p>
+<p>凭借自动化流程、开源精神和产业落地，它很可能会成为未来实验室和药企的常规工具。</p>
+<p>当然，真正走向临床还有距离，但这不妨碍它成为 <strong>binder 设计新范式的里程碑</strong>。</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/qdWDvqxEat3HWRS154S-ww"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/binder/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Binder</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/de-novo-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">De Novo Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/bindcraft/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">BindCraft</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/alphafold/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Alphafold</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/computational-biology/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Computational Biology</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/nature/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Nature</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

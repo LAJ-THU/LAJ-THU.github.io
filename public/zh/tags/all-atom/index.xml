@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>All-Atom on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/all-atom/</link>
+    <description>Recent content in All-Atom on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 05 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/all-atom/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ICML 2025 Spotlight｜力文所 Pallatom 开启全原子蛋白设计新范式</title>
+      <link>http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/</link>
+      <pubDate>Fri, 05 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/icml-2025-spotlight%E5%8A%9B%E6%96%87%E6%89%80pallatom-%E5%BC%80%E5%90%AF%E5%85%A8%E5%8E%9F%E5%AD%90%E8%9B%8B%E7%99%BD%E8%AE%BE%E8%AE%A1%E6%96%B0%E8%8C%83%E5%BC%8F/</guid>
+      <description>ICML 2025 Spotlight 工作 Pallatom 提出直接建模 P(all-atom) 的蛋白生成框架，通过 atom14 表示与双轨道架构，实现序列与结构的端到端耦合生成，在设计性、多样性与新颖性上全面超越现有方法，开启全原子蛋白设计新范式。</description>
+    </item>
+  </channel>
+</rss>

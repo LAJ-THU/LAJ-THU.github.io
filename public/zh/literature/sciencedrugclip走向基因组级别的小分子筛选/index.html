@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Science｜DrugCLIP：走向基因组级别的小分子筛选 | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="DrugCLIP 通过对比学习将虚拟筛选推进到基因组尺度，实现亿级分子规模的高效筛选，并构建了可直接使用的 GenomeScreenDB 资源。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="Science｜DrugCLIP：走向基因组级别的小分子筛选">
+  <meta property="og:description" content="DrugCLIP 通过对比学习将虚拟筛选推进到基因组尺度，实现亿级分子规模的高效筛选，并构建了可直接使用的 GenomeScreenDB 资源。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2026-01-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-10T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="虚拟筛选">
+    <meta property="article:tag" content="DrugCLIP">
+    <meta property="article:tag" content="小分子设计">
+    <meta property="article:tag" content="对比学习">
+    <meta property="article:tag" content="药物发现">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/cover.jpg">
+
+  <meta itemprop="name" content="Science｜DrugCLIP：走向基因组级别的小分子筛选">
+  <meta itemprop="description" content="DrugCLIP 通过对比学习将虚拟筛选推进到基因组尺度，实现亿级分子规模的高效筛选，并构建了可直接使用的 GenomeScreenDB 资源。">
+  <meta itemprop="datePublished" content="2026-01-10T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-01-10T00:00:00+00:00">
+  <meta itemprop="wordCount" content="90">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/cover.jpg">
+  <meta itemprop="keywords" content="AI4S,virtual screening,DrugCLIP,contrastive learning,drug discovery,small molecule,genome-scale screening">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/cover.jpg">
+  <meta name="twitter:title" content="Science｜DrugCLIP：走向基因组级别的小分子筛选">
+  <meta name="twitter:description" content="DrugCLIP 通过对比学习将虚拟筛选推进到基因组尺度，实现亿级分子规模的高效筛选，并构建了可直接使用的 GenomeScreenDB 资源。">
+
+	
+<meta name="keywords" content="AI4S, virtual screening, DrugCLIP, contrastive learning, drug discovery, small molecule, genome-scale screening">
+
+
+
+<meta name="description" content="DrugCLIP 通过对比学习将虚拟筛选推进到基因组尺度，实现亿级分子规模的高效筛选，并构建了可直接使用的 GenomeScreenDB 资源。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/cover.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">Science｜DrugCLIP：走向基因组级别的小分子筛选</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              DrugCLIP 通过对比学习将虚拟筛选推进到基因组尺度，实现亿级分子规模的高效筛选，并构建了可直接使用的 GenomeScreenDB 资源。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        Science｜DrugCLIP：走向基因组级别的小分子筛选
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2026-01-10T00:00:00Z">
+        一月 10, 2026
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>今天给大家介绍一篇清华大学智能产业研究院（AIR）的<strong>兰艳艳老师</strong>组联合清华大学生命学院<strong>闫创业老师</strong>、<strong>张伟老师</strong>和清华大学化学系<strong>刘磊老师</strong>刚发表在《Science》上的文章，他们主要解决的是<strong><span style="color: inherit; background-color: rgba(205,178,250,0.7)">基因组级别小分子筛选</span></strong>的难题。</p>
+<p><img src="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/images/image.png" alt=""></p>
+<p>这篇文章本质上回答了这样一个问题：<strong>当我们真的想把小分子筛药做到“全基因组尺度”时，现有的方法还够不够用？</strong></p>
+<p>他们给出的答案并不复杂，也不炫技，但解决的是一个长期被“<strong>算力</strong>”和“<strong>规模</strong>”卡住的核心瓶颈。这也是我觉得这篇文章值得单独拿出来讲一讲的原因。</p>
+<p><img src="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/images/image-1.png" alt=""></p>
+<p>原文链接：https://doi.org/10.1126/science.ads9530</p>
+<hr>
+<h3 id="第一部分当小分子筛药真的走到基因组尺度"><strong>第一部分｜当“小分子筛药”真的走到基因组尺度</strong></h3>
+<p>长期以来，给蛋白找小分子配体这件事，几乎都是“逐靶点”进行的。</p>
+<p>选一个蛋白，准备一个化合物库，跑一轮筛选，然后再换下一个靶点。</p>
+<p><img src="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/images/image-2.png" alt=""></p>
+<p>传统的小分子筛药流程</p>
+<p>问题不在于方法，而在于尺度。</p>
+<p>一旦把问题放到“全基因组”这个层面——成千上万的蛋白，配上百万、甚至上亿级别的小分子——传统的虚拟筛选流程就很快失去现实可行性。</p>
+<p>所以在很长一段时间里，“基因组级别筛药”更多是一种设想：</p>
+<p><strong>我们知道它重要，但很少有人真的把它当成一个能跑起来的工程问题。</strong></p>
+<p>这篇文章做的事情，恰恰是在正面回答这个问题：</p>
+<p><strong>如果不再按“一个靶点一套流程”的思路来做，而是从一开始就以全基因组为目标，筛药这件事能不能被系统地做出来？</strong></p>
+<p>接下来他们给出的，不是一个局部优化方案，而是一整套为“规模”而设计的思路。</p>
+<hr>
+<h3 id="第二部分用对比学习重写筛药这件事"><strong>第二部分｜用对比学习重写“筛药”这件事</strong></h3>
+<p>为了把小分子筛选推到基因组尺度，这篇文章并没有简单地加速传统流程，而是<strong>从建模方式上换了一种思路</strong>。</p>
+<p>他们的核心做法，是引入<strong>对比学习（contrastive learning）</strong>，来学习蛋白口袋和小分子之间的匹配关系。</p>
+<p>在这个框架里，问题不再是“这个小分子摆成什么姿势能不能 dock 进去”，</p>
+<p>而是被重新表述为：<strong>哪些蛋白–小分子对是应该被拉近的，哪些是应该被区分开的</strong>。</p>
+<p>模型通过大量正负样本的对比，学习一个联合表示空间：</p>
+<p>匹配的蛋白口袋和小分子在这个空间里距离更近，不匹配的则被推得更远。</p>
+<p><img src="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/images/image-3.png" alt=""></p>
+<p><em>DrugCLIP模型模型架构</em></p>
+<p>这一步看似只是模型训练方式的变化，但对整个问题的尺度影响非常大。</p>
+<p>一旦这种“<strong><span style="color: inherit; background-color: rgba(205,178,250,0.7)">是否匹配</span></strong>”的关系被编码进表示空间，后续筛选就不再依赖复杂的构象搜索和能量计算，而可以<strong>通过高效的向量计算来完成。</strong></p>
+<p>也正是因为这种建模方式，作者才能把问题从“一个靶点一次筛选”，推进到<strong>“在全基因组范围内同时考虑成千上万个蛋白”</strong>。</p>
+<p>这一步，是整篇文章能够成立的技术基础。</p>
+<hr>
+<h3 id="第三部分不仅能跑得动也筛得出东西"><strong>第三部分｜不仅能跑得动，也筛得出东西</strong></h3>
+<p>把筛选做到基因组尺度，速度只是前提。</p>
+<p>真正关键的是：<strong>这种方法筛出来的结果，能不能经得起实验验证。</strong></p>
+<p>作者在这里给出了两个层次不同、但互相补充的实验案例。</p>
+<p>第一个是 <strong>TRIP12</strong>。</p>
+<p>这是一个并不“友好”的靶点：缺乏已解析的复合物结构，也几乎没有已知的小分子配体。作者直接使用 <strong>AlphaFold 预测结构</strong>来定义结合口袋，并在此基础上进行筛选。</p>
+<p>最终的实验结果显示，在筛选得到的候选分子中，<strong>命中率达到 17.5%</strong>。</p>
+<p>在“没 holo 结构、没先例”的前提下，这个结果本身就说明，这套方法筛出的并不是随机噪声，而是具备真实结合潜力的分子。</p>
+<p><img src="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/images/image-4.png" alt=""></p>
+<p>第二个案例是 <strong>NET（norepinephrine transporter）</strong>。</p>
+<p>与 TRIP12 不同，NET 是一个已有一定研究基础的靶点，对筛选结果的区分能力要求更高，也更接近真实药物发现中的常见场景。</p>
+<p>在 NET 上，作者同样使用模型进行大规模筛选，并对候选分子进行了实验测试。结果表明，模型给出的排序在实验上是有信息量的，活性分子能够被稳定地排在前列，而不是随机分布。</p>
+<p><img src="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/images/image-5.png" alt=""></p>
+<p>这两个例子放在一起，构成了一个很清晰的对照：</p>
+<p>TRIP12 证明了方法在<strong>“几乎没有先验信息”的靶点上也能找到命中</strong>；</p>
+<p>NET 则说明，在<strong>已有研究背景、需要精细区分的体系中</strong>，这套方法同样具备实用价值。</p>
+<p>至少从实验层面来看，这并不是一套只在特殊情况下成立的筛选策略。</p>
+<hr>
+<h3 id="第四部分把筛选结果变成所有人都能用的资源"><strong>第四部分｜把筛选结果变成所有人都能用的资源</strong></h3>
+<p>这篇文章并没有止步于“我们证明这种方法能用”。</p>
+<p>他们更进一步，把这件事当成一个<strong>基础设施问题</strong>来做。</p>
+<p>作者把这套对比学习框架跑在了一个非常激进的尺度上：</p>
+<p>覆盖大约 <strong>1 万个人类蛋白</strong>，对应 <strong>5 亿级别的小分子化合物库</strong>。</p>
+<p>最终得到的，是一个预先计算好的筛选结果集合，并以 <strong>GenomeScreenDB</strong> 的形式对外提供。</p>
+<p><img src="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/images/image-6.png" alt=""></p>
+<p>这个决定，其实很重要。</p>
+<p>它意味着，很多时候你不需要从零开始搭筛选流程，也不需要先投入大量算力。</p>
+<p>如果你关心某一个蛋白，或者某一类靶点，现在可以<strong>先查一查有没有已经被模型“标出来”的小分子线索</strong>。</p>
+<p>这项工作把“基因组级别筛药”从一个方法问题，推进成了一个<strong>可直接使用的资源问题</strong>。</p>
+<hr>
+<h3 id="一点整体感受"><strong>一点整体感受</strong></h3>
+<p>这篇文章并不是在宣称虚拟筛选已经被解决，也不是要取代传统 docking。</p>
+<p>它更像是在补一块长期缺失的拼图：</p>
+<p>当你的目标是<strong>找方向、找线索、做大规模探索</strong>时，现在终于有了一条现实可行的路径。</p>
+<p>在这个意义上，它讨论的不是某一个靶点、某一次筛选，而是</p>
+<p><strong>“我们能不能在全基因组范围内系统地做这件事”</strong>。</p>
+<p>而这一次，答案至少在工程层面上，是肯定的。</p>
+<blockquote>
+<p>来自文章作者的评价：</p>
+<p>DrugCLIP 这一AI虚拟筛选工具相较传统方法，提升了百万倍的筛选速度，同时保持了高准确性。在日常靶点筛选中，我们已实现接近20%的粗筛阳性率，且基于AlphaFold预测的蛋白质结构，DrugCLIP同样展现了优异的阳性率。</p>
+<p>它有效解决了庞大数据库筛选的效率问题，任何规模的筛选都能在短短半天内完成，极大提升了虚拟筛选效率，开启了药物发现的新机遇。</p>
+<p>欢迎大家试用： <a href="https://www.drugclip.com">https://www.drugclip.com</a></p>
+</blockquote>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/gVtA59fJwbJrDyFIysNHpA"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/cell%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E5%9B%A2%E9%98%9F%E4%BB%8E%E9%9B%B6%E8%AE%BE%E8%AE%A1%E5%87%BA%E5%8F%AF%E6%84%9F%E7%94%B5%E7%9A%84%E4%BA%BA%E5%B7%A5%E7%A6%BB%E5%AD%90%E9%80%9A%E9%81%93/" class="link dim">
+                Cell｜西湖大学卢培龙团队从头设计出可“感电”的人工离子通道
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/%E8%99%9A%E6%8B%9F%E7%AD%9B%E9%80%89/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">虚拟筛选</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/drugclip/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">DrugCLIP</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/%E5%B0%8F%E5%88%86%E5%AD%90%E8%AE%BE%E8%AE%A1/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">小分子设计</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">对比学习</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/%E8%8D%AF%E7%89%A9%E5%8F%91%E7%8E%B0/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">药物发现</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/science/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Science</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alphafold on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/alphafold/</link>
+    <description>Recent content in Alphafold on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 22 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/alphafold/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>从 AlphaFold 到 AlphaProteo：DeepMind 如何从“预测”跨越到“设计”？</title>
+      <link>http://localhost:1313/zh/literature/alphaproteo/</link>
+      <pubDate>Mon, 22 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/alphaproteo/</guid>
+      <description>DeepMind 推出 AlphaProteo，将能力从结构预测推进到高亲和力蛋白结合物设计，并在 SARS-CoV-2、VEGF-A 等真实体系中实现功能级验证，标志着蛋白设计迈入可直接应用阶段。</description>
+    </item>
+    <item>
+      <title>蛋白质 Binder 设计的三代演进：从 Rosetta 到 RFdiffusion</title>
+      <link>http://localhost:1313/zh/literature/%E8%9B%8B%E7%99%BD%E8%B4%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%89%E4%BB%A3%E6%BC%94%E8%BF%9B%E4%BB%8E-rosetta-%E5%88%B0-rfdiffusion/</link>
+      <pubDate>Mon, 01 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/%E8%9B%8B%E7%99%BD%E8%B4%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%89%E4%BB%A3%E6%BC%94%E8%BF%9B%E4%BB%8E-rosetta-%E5%88%B0-rfdiffusion/</guid>
+      <description>系统梳理蛋白质 binder 设计从 Rosetta 到 ProteinMPNN / AlphaFold，再到 RFdiffusion 的三代方法学演进。</description>
+    </item>
+    <item>
+      <title>Nature｜BindCraft 正式见刊：最适合新手的蛋白质设计工具？</title>
+      <link>http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/</link>
+      <pubDate>Fri, 29 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/nature-%E6%AD%A3%E5%BC%8F%E5%8F%91%E8%A1%A8bindcraft%E6%8A%8A%E4%B8%80%E6%AC%A1%E4%B8%80%E8%AE%BE%E8%AE%A1%E5%8F%98%E6%88%90%E5%8F%AF%E8%83%BD/</guid>
+      <description>BindCraft 正式发表于 Nature，展示出“one-shot”式蛋白 binder 设计能力：无需高通量筛选，仅通过计算设计即可在多类真实靶点上获得纳摩尔级高亲和力结合蛋白，并已被多家跨国药企实际采用。</description>
+    </item>
+    <item>
+      <title>3,766 个实验数据揭示 Binder 成功率的关键指标</title>
+      <link>http://localhost:1313/zh/literature/3766-%E4%B8%AA%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE%E6%8F%AD%E7%A4%BA%E7%AD%9B%E9%80%89%E8%9B%8B%E7%99%BD%E8%B4%A8-binder-%E6%9C%80%E9%9D%A0%E8%B0%B1%E7%9A%84%E6%8C%87%E6%A0%87%E6%98%AF%E4%BB%80%E4%B9%88/</link>
+      <pubDate>Sat, 16 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/3766-%E4%B8%AA%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE%E6%8F%AD%E7%A4%BA%E7%AD%9B%E9%80%89%E8%9B%8B%E7%99%BD%E8%B4%A8-binder-%E6%9C%80%E9%9D%A0%E8%B0%B1%E7%9A%84%E6%8C%87%E6%A0%87%E6%98%AF%E4%BB%80%E4%B9%88/</guid>
+      <description>基于 3,766 个实验验证的 binder 设计数据，这篇 bioRxiv 预印本系统比较了 AF2、AF3、Boltz-1 等预测指标，提出 AF3 的 ipSAE_min 是目前最稳健的筛选信号，并给出了可直接落地的筛选策略。</description>
+    </item>
+    <item>
+      <title>从结构出发设计肽药，BindCraft 可行吗？</title>
+      <link>http://localhost:1313/zh/literature/bindcraft%E4%B9%9F%E8%83%BD%E8%AE%BE%E8%AE%A1%E8%82%BD%E7%B1%BB%E9%85%8D%E4%BD%93%E4%BA%86/</link>
+      <pubDate>Tue, 29 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/bindcraft%E4%B9%9F%E8%83%BD%E8%AE%BE%E8%AE%A1%E8%82%BD%E7%B1%BB%E9%85%8D%E4%BD%93%E4%BA%86/</guid>
+      <description>系统评估 BindCraft 在肽类 binder 设计中的真实能力：在 MDM2 与 WDR5 位点上实现纳摩尔级命中，并通过结构指导完成 stapling 优化，展示了结构驱动肽药设计的可行路径。</description>
+    </item>
+    <item>
+      <title>EvoBind2：基于蛋白质序列信息设计不同长度的线性与环状肽结合物</title>
+      <link>http://localhost:1313/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/</link>
+      <pubDate>Wed, 09 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/evobind2-%E5%9F%BA%E4%BA%8E%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1%E4%B8%8D%E5%90%8C%E9%95%BF%E5%BA%A6%E7%9A%84%E7%BA%BF%E6%80%A7%E5%92%8C%E7%8E%AF%E7%8A%B6%E8%82%BD%E7%BB%93%E5%90%88%E7%89%A9/</guid>
+      <description>EvoBind2 提出一种完全无需结构与位点信息的“盲设计”框架，仅基于靶蛋白序列即可设计出不同长度的线性与环状肽结合物，在 SPR 实验中获得最高 19 nM 亲和力，并通过对抗性过滤显著提升成功率。</description>
+    </item>
+    <item>
+      <title>BindCraft：一站式设计功能性蛋白 Binder 的自动化平台</title>
+      <link>http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/</link>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/bindcraft%E4%B8%80%E7%AB%99%E5%BC%8F%E8%AE%BE%E8%AE%A1%E5%8A%9F%E8%83%BD%E6%80%A7%E8%9B%8B%E7%99%BDbinder/</guid>
+      <description>BindCraft 提出一个全自动蛋白 binder 设计平台，通过反向优化 AlphaFold2 并结合 MPNN 与 Rosetta，在无需高通量筛选的情况下实现接近 50% 成功率的功能性结合剂设计。</description>
+    </item>
+  </channel>
+</rss>

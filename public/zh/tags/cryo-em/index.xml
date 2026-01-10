@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cryo-EM on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/cryo-em/</link>
+    <description>Recent content in Cryo-EM on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 31 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/cryo-em/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>从静态到动态：AI 在蛋白质动力学建模中的新进展</title>
+      <link>http://localhost:1313/zh/literature/generation-of-protein-dynamics-by-machine-learning/</link>
+      <pubDate>Sun, 31 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/generation-of-protein-dynamics-by-machine-learning/</guid>
+      <description>围绕“如何用机器学习刻画蛋白质构象集合”，系统梳理了四条核心路径：多态结构生成、分子动力学加速、无序蛋白建模与实验约束融合，展现出从“结构预测”走向“动态建模”的清晰技术演化方向。</description>
+    </item>
+    <item>
+      <title>Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白</title>
+      <link>http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/</link>
+      <pubDate>Wed, 27 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/</guid>
+      <description>西湖大学卢培龙团队在 Nature 报道首个完全从零设计、可稳定嵌入细胞膜并激活小分子荧光的人工跨膜蛋白。该蛋白不仅实现纳摩尔级亲和力结合，还通过晶体学与冷冻电镜验证其结构与设计高度一致，展示了跨膜功能蛋白可被精准设计的可能性。</description>
+    </item>
+    <item>
+      <title>Click Fusion：基于人工设计融合蛋白的 GPCR 非活化态结构解析新策略</title>
+      <link>http://localhost:1313/zh/literature/click-fusion%E5%9F%BA%E4%BA%8E%E4%BA%BA%E5%B7%A5%E8%AE%BE%E8%AE%A1%E8%9E%8D%E5%90%88%E8%9B%8B%E7%99%BD%E7%9A%84-gpcr-%E9%9D%9E%E6%B4%BB%E5%8C%96%E6%80%81%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%E6%96%B0%E7%AD%96%E7%95%A5/</link>
+      <pubDate>Tue, 12 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/click-fusion%E5%9F%BA%E4%BA%8E%E4%BA%BA%E5%B7%A5%E8%AE%BE%E8%AE%A1%E8%9E%8D%E5%90%88%E8%9B%8B%E7%99%BD%E7%9A%84-gpcr-%E9%9D%9E%E6%B4%BB%E5%8C%96%E6%80%81%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%E6%96%B0%E7%AD%96%E7%95%A5/</guid>
+      <description>提出 Click Fusion 策略，通过 de novo 设计的刚性融合蛋白稳定 GPCR 的非活化构象，使原本难以解析的 inactive 态结构可被高分辨率 cryo-EM 成功解析，并在多个受体上验证其通用性与可迁移性。</description>
+    </item>
+    <item>
+      <title>Cryo-ET 是结构生物学的未来吗？——前景与挑战</title>
+      <link>http://localhost:1313/zh/literature/cryo-et-%E6%98%AF%E7%BB%93%E6%9E%84%E7%94%9F%E7%89%A9%E5%AD%A6%E7%9A%84%E6%9C%AA%E6%9D%A5%E5%90%97%E5%89%8D%E6%99%AF%E4%B8%8E%E6%8C%91%E6%88%98/</link>
+      <pubDate>Mon, 07 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/cryo-et-%E6%98%AF%E7%BB%93%E6%9E%84%E7%94%9F%E7%89%A9%E5%AD%A6%E7%9A%84%E6%9C%AA%E6%9D%A5%E5%90%97%E5%89%8D%E6%99%AF%E4%B8%8E%E6%8C%91%E6%88%98/</guid>
+      <description>系统解读 Cryo-ET 的技术原理、样本制备、成像物理限制、图像分析与多模态融合路径，讨论其作为“原位结构组学平台”的潜力，同时直面其在通量、自动化与算法层面的核心瓶颈。</description>
+    </item>
+    <item>
+      <title>Nature Nanotechnology｜从头设计可对 pH 响应的自组装螺旋蛋白丝</title>
+      <link>http://localhost:1313/zh/literature/nature-biotechnology--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%8F%AF%E5%AF%B9-ph-%E5%93%8D%E5%BA%94%E7%9A%84%E8%87%AA%E7%BB%84%E8%A3%85%E8%9E%BA%E6%97%8B%E8%9B%8B%E7%99%BD%E4%B8%9D/</link>
+      <pubDate>Fri, 24 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/nature-biotechnology--%E4%BB%8E%E5%A4%B4%E8%AE%BE%E8%AE%A1%E5%8F%AF%E5%AF%B9-ph-%E5%93%8D%E5%BA%94%E7%9A%84%E8%87%AA%E7%BB%84%E8%A3%85%E8%9E%BA%E6%97%8B%E8%9B%8B%E7%99%BD%E4%B8%9D/</guid>
+      <description>Nature Nanotechnology 报道一种完全从头设计的螺旋蛋白丝，可在不同 pH 条件下实现可逆自组装与解聚，并通过 cryo-EM 精确解析其原子结构，展示了蛋白质作为“可编程纳米材料”的巨大潜力。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白 | 蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="深度解读 Nature 工作：研究团队从水溶性荧光激活蛋白出发，借助 Rosetta 与深度学习 hallucination 方法成功构建跨膜版本 tmFAP，并完成结构、生物物理与活细胞层面的完整验证，为人工膜蛋白与分子传感器设计奠定基础。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白">
+  <meta property="og:description" content="深度解读 Nature 工作：研究团队从水溶性荧光激活蛋白出发，借助 Rosetta 与深度学习 hallucination 方法成功构建跨膜版本 tmFAP，并完成结构、生物物理与活细胞层面的完整验证，为人工膜蛋白与分子传感器设计奠定基础。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+    <meta property="article:published_time" content="2025-08-27T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-27T00:00:00+00:00">
+    <meta property="article:tag" content="AI4S">
+    <meta property="article:tag" content="De Novo Design">
+    <meta property="article:tag" content="Membrane Protein">
+    <meta property="article:tag" content="Transmembrane Protein">
+    <meta property="article:tag" content="Protein Design">
+    <meta property="article:tag" content="Fluorescence Sensor">
+    <meta property="og:image" content="http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/cover.png">
+
+  <meta itemprop="name" content="Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白">
+  <meta itemprop="description" content="深度解读 Nature 工作：研究团队从水溶性荧光激活蛋白出发，借助 Rosetta 与深度学习 hallucination 方法成功构建跨膜版本 tmFAP，并完成结构、生物物理与活细胞层面的完整验证，为人工膜蛋白与分子传感器设计奠定基础。">
+  <meta itemprop="datePublished" content="2025-08-27T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-08-27T00:00:00+00:00">
+  <meta itemprop="wordCount" content="372">
+  <meta itemprop="image" content="http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/cover.png">
+  <meta itemprop="keywords" content="de novo membrane protein design,fluorescent activating protein,tmFAP,wFAP,hallucination protein design,ColabDesign,cryo-EM validation,AI4S">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/cover.png">
+  <meta name="twitter:title" content="Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白">
+  <meta name="twitter:description" content="深度解读 Nature 工作：研究团队从水溶性荧光激活蛋白出发，借助 Rosetta 与深度学习 hallucination 方法成功构建跨膜版本 tmFAP，并完成结构、生物物理与活细胞层面的完整验证，为人工膜蛋白与分子传感器设计奠定基础。">
+
+	
+<meta name="keywords" content="de novo membrane protein design, fluorescent activating protein, tmFAP, wFAP, hallucination protein design, ColabDesign, cryo-EM validation, AI4S">
+
+
+
+<meta name="description" content="深度解读 Nature 工作：研究团队从水溶性荧光激活蛋白出发，借助 Rosetta 与深度学习 hallucination 方法成功构建跨膜版本 tmFAP，并完成结构、生物物理与活细胞层面的完整验证，为人工膜蛋白与分子传感器设计奠定基础。">
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  
+  
+  
+  <header class="cover bg-center" style="background-image: url('/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/cover.png');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白</div>
+          
+            <div class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              深度解读 Nature 工作：研究团队从水溶性荧光激活蛋白出发，借助 Rosetta 与深度学习 hallucination 方法成功构建跨膜版本 tmFAP，并完成结构、生物物理与活细胞层面的完整验证，为人工膜蛋白与分子传感器设计奠定基础。
+            </div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        Nature｜西湖大学卢培龙团队首次 de novo 设计出跨膜荧光激活蛋白
+      </h1>
+
+      
+
+      
+      <time class="f6 mv4 dib tracked"
+            datetime="2025-08-27T00:00:00Z">
+        八月 27, 2025
+      </time>
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <blockquote>
+<p><strong>蓝极说</strong>：</p>
+<p>在蛋白质设计的世界里，水溶性蛋白早已被频频攻克，但<strong>跨膜蛋白</strong>一直是个“硬骨头”——结构复杂、难以稳定、几乎无法自由设计。</p>
+<p>这次，我想和大家分享的是卢培龙老师团队今年年初发表在 <em>Nature</em> 上的一篇重磅成果：<strong>他们不仅成功设计出能点亮荧光的小分子结合蛋白，还让它们稳定地“扎根”在细胞膜里，功能甚至超过了天然膜蛋白</strong>。</p>
+<p>为什么要读这篇文章？因为它不仅是蛋白质设计的一次技术突破，更像是打开了一扇新大门：<strong>未来我们或许可以自由定制跨膜探针、传感器，甚至人工通道和受体。</strong></p>
+</blockquote>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-8.png" alt=""></p>
+<p>🔗原文链接：https://www.nature.com/articles/s41586-025-08598-8</p>
+<hr>
+<h1 id="1-为什么这项工作重要">1. <strong>为什么这项工作重要？</strong></h1>
+<p>跨膜蛋白是生命活动中最重要的一类分子之一。它们镶嵌在细胞膜上，负责物质运输、能量转换和信号传递，几乎是<strong>“生命的闸门”</strong>。如果没有跨膜蛋白，细胞就像一个密不透风的气泡，既无法与外界沟通，也无法维持内部稳态。</p>
+<p>但在蛋白质设计领域，跨膜蛋白一直是“硬骨头”。原因在于：</p>
+<ol>
+<li>
+<p>天然跨膜蛋白种类有限，已知结构远少于可溶性蛋白；</p>
+</li>
+<li>
+<p>在疏水性膜环境中要形成稳定折叠已经很难，更别提在其中“精准凿出”一个能识别小分子的结合口袋；</p>
+</li>
+<li>
+<p>过去的 <em>de novo</em> 设计尝试，大多只能做到简单的金属离子结合（如血红素），而对<strong>小分子非共价识别</strong>几乎无人问津。</p>
+</li>
+</ol>
+<p>正因如此，西湖大学卢培龙团队这篇今年发表在Nature的工作才显得格外突破。他们不仅设计出<strong>能结合荧光小分子</strong>的<strong>水溶性蛋白</strong>，还进一步把它“<strong>跨膜化</strong>”，让它在细胞膜中也能稳定工作，并且实现了精准的荧光激活。</p>
+<p>这意味着什么？意味着研究者可以像“拼乐高”一样，自主构建一类全新的跨膜传感器，用来成像、检测，甚至未来作为人工通道和受体的基础。</p>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-10.png" alt=""></p>
+<p>在文章的配图 <strong>Fig.1a</strong> （上图）中，作者用一张非常直观的示意图告诉我们：他们选择的荧光小分子 HBC，在溶液里是“黑的”，只有当被蛋白紧紧固定成平面构象时才会发光。于是，蛋白设计的挑战就被清晰定义为：<strong>如何在一个人工构建的口袋里，把 HBC 分子卡到合适的形状，从而点亮它？</strong></p>
+<p>这一张图，就奠定了整篇文章的核心逻辑：<strong>从分子识别出发，通过设计实现点亮。</strong></p>
+<hr>
+<h1 id="2-从水溶性-fap-wfap-开始">2. <strong>从水溶性 FAP (wFAP) 开始</strong></h1>
+<p>既然目标是跨膜蛋白，那为什么研究团队没有直接一开始就去设计跨膜蛋白呢？</p>
+<p>因为难度太大。于是他们选择了一条“曲线救国”的路线：<strong>先在水溶性环境下设计出能点亮荧光分子的蛋白——water-soluble FAP (wFAP)，再逐步跨膜化</strong>。</p>
+<h3 id="21-设计路线迭代式的人机协同">2.1 <strong>设计路线：迭代式的“人机协同”</strong></h3>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-9.png" alt=""></p>
+<p>在 <strong>Fig.1b</strong> 里，作者画出了一个复杂但清晰的设计循环：</p>
+<ol>
+<li>
+<p><strong>骨架生成</strong>：先用参数方程生成一系列<strong>四螺旋束</strong>骨架；</p>
+</li>
+<li>
+<p><strong>口袋初步对接</strong>：把荧光分子 HBC 放入骨架，用<strong> RIFdock </strong>来寻找可能的相互作用；</p>
+</li>
+<li>
+<p><strong>序列优化</strong>：用 <strong>Rosetta</strong> 优化口袋周围氨基酸的排布；</p>
+</li>
+<li>
+<p><strong>模型评估</strong>：丢给 <strong>AlphaFold2</strong> 去预测，看看它能否稳定折叠成预期的结构；</p>
+</li>
+<li>
+<p><strong>反馈修正</strong>：如果 AlphaFold2 预测结果和设计不一致，就继续<strong>调整</strong>序列和骨架，直到收敛。</p>
+</li>
+</ol>
+<p>这一点非常关键：团队没有把深度学习当成“最后的检查”，而是把它<strong>嵌入整个循环</strong>，形成了 <strong>能量函数（Rosetta）+ 深度学习（AF2）双引擎驱动</strong> 的设计框架。</p>
+<h3 id="22-逐步优化从弱到强">2.2 <strong>逐步优化：从弱到强</strong></h3>
+<p>实验结果显示：第一批 wFAP（wFAP0）虽然能点亮 HBC 分子，但效果太弱，不足以在复杂环境下使用。</p>
+<p>于是研究者对其进行<strong>定向进化</strong>和<strong>口袋微调</strong>，最终得到更优的 <strong>wFAP1.1 和 wFAP1.2</strong>。</p>
+<p>在 <strong>Fig.1c–f</strong> 中可以直观看到改进的效果：</p>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image.png" alt=""></p>
+<ul>
+<li>
+<p><strong>荧光光谱</strong>：wFAP1.1 和 wFAP1.2 在 495 nm 激发、570 nm 发射下表现出极高亮度；</p>
+</li>
+<li>
+<p><strong>结合常数 (Kd)</strong>：wFAP1.1 对 HBC 的结合达到 <strong>58 nM</strong>，比 wFAP0 提升了一个数量级；</p>
+</li>
+<li>
+<p><strong>亮度</strong>：wFAP1.1–HBC599 复合物的亮度，已经超过了经典的 GFP。</p>
+</li>
+</ul>
+<h3 id="23-科学亮点">2.3 <strong>科学亮点</strong></h3>
+<ul>
+<li>
+<p>这是首次用纯设计手段，构建出一个比 GFP 更亮的人工荧光蛋白；</p>
+</li>
+<li>
+<p>蛋白的口袋结构和分子对接方式与 AF2 预测高度吻合，说明<strong>人工设计真的能和自然折叠“对上号”</strong>；</p>
+</li>
+<li>
+<p>这为跨膜化奠定了坚实基础：先证明口袋能精确设计，再把它迁移到膜环境中。</p>
+</li>
+</ul>
+<blockquote>
+<p>换句话说，这一步是整个工作的“<strong>打地基</strong>”：如果没有一个足够稳定、足够亮的 wFAP，后续的跨膜化几乎不可能成功。</p>
+</blockquote>
+<hr>
+<h1 id="3-跨膜化--tmfap-的设计与优化">3. <strong>跨膜化 → tmFAP 的设计与优化</strong></h1>
+<p>在水溶性环境里，wFAP 已经表现出强大性能，那么接下来的挑战就是：<strong>能不能把它“植入”膜中？</strong></p>
+<p>这一步远比想象中困难。</p>
+<h3 id="31-难点为什么跨膜这么难">3.1 <strong>难点：为什么跨膜这么难？</strong></h3>
+<p>研究团队首先尝试了一个“直觉方案”：</p>
+<p>把 wFAP 的表面氨基酸替换成疏水残基，让它能够镶嵌在膜里。</p>
+<p>结果却失败了。原因有二：</p>
+<ol>
+<li>
+<p>跨膜环境要求蛋白表面必须高度疏水，这样的改造往往会破坏原本的四螺旋堆积；</p>
+</li>
+<li>
+<p>更致命的是，口袋的预组织结构在“表面换肤”后塌陷，无法再稳定结合小分子。</p>
+</li>
+</ol>
+<blockquote>
+<p>换句话说，<strong>直接跨膜化，就像强行把一只金鱼丢进沙漠，它根本活不下去</strong>。</p>
+</blockquote>
+<h3 id="32-突破深度学习的幻觉方法">3.2 <strong>突破：深度学习的“幻觉”方法</strong></h3>
+<p>于是研究团队转向了更激进的思路——利用 <strong>ColabDesign 的 hallucination（幻觉）策略</strong>。</p>
+<p>这一方法的核心在于：</p>
+<ul>
+<li>
+<p>把 wFAP 的口袋核心固定住，</p>
+</li>
+<li>
+<p>让深度学习网络去“幻觉”出合适的跨膜序列，</p>
+</li>
+<li>
+<p>在满足跨膜条件的同时，确保口袋结构不被破坏。</p>
+</li>
+</ul>
+<p>在 <strong>Fig.2a–b</strong> 中可以直观看到这种思路：</p>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-1.png" alt=""></p>
+<ul>
+<li>
+<p>a图左侧是水溶性的 wFAP（表面带电）；</p>
+</li>
+<li>
+<p>a图右侧是跨膜化后的 tmFAP（表面一圈黑色的疏水带，约 30 Å 跨膜跨度）；</p>
+</li>
+<li>
+<p>b图则展示了 hallucination 的工作流：输入骨架，冻结口袋，剩下的交给网络生成。</p>
+</li>
+</ul>
+<h3 id="33-成果点亮-tmfap">3.3 <strong>成果：点亮 tmFAP</strong></h3>
+<p>经过这一流程，研究者获得了多个候选 tmFAP，其中 <strong>tmFAP1.1 和 tmFAP1.2</strong> 表现最出色。</p>
+<ul>
+<li>
+<p>tmFAP1.1 在膜环境下能稳定表达，并与 HBC 分子结合，初步 Kd ~ 230 nM；</p>
+</li>
+<li>
+<p>tmFAP1.2 通过进一步优化，亲和力提升到 <strong>18 nM</strong>，量子产率高达 <strong>0.84</strong>，几乎与天然 RNA aptamer Pepper 持平；</p>
+</li>
+<li>
+<p>更重要的是，tmFAP 对目标分子 HBC599 表现出高度特异性，几乎不与其他类似分子结合（<strong>Fig.2e–f</strong>）。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-2.png" alt=""></p>
+<h3 id="34-科学亮点">3.4 <strong>科学亮点</strong></h3>
+<ul>
+<li>
+<p><strong>第一次</strong> 在跨膜蛋白中实现了非共价小分子识别，并且亲和力达到纳摩尔级；</p>
+</li>
+<li>
+<p>跨膜口袋的设计不是“运气撞上”，而是通过深度学习幻觉精准生成，这标志着 AI 在跨膜蛋白设计中真正发挥了“创造力”；</p>
+</li>
+<li>
+<p>tmFAP 的亮度和性能，已经不再是“概念验证”，而是完全有潜力应用于活细胞成像。</p>
+</li>
+</ul>
+<blockquote>
+<p>用一句话总结：<strong>这一部分是把金鱼变成了会在沙漠里游泳的“沙漠鱼”——它们真的能在跨膜环境里稳定存在，还能点亮荧光。</strong></p>
+</blockquote>
+<hr>
+<h1 id="4-结构验证设计与现实高度吻合">4. <strong>结构验证：设计与现实高度吻合</strong></h1>
+<p>在蛋白质设计领域，最常见的质疑是：<strong>设计出来的模型和现实中折叠的蛋白，真的一样吗？</strong></p>
+<p>很多时候，计算机模型看似完美，但一到实验就“翻车”。</p>
+<p>卢老师团队的厉害之处在于，他们不仅让 wFAP 和 tmFAP 在功能上表现优异，还通过高分辨率结构学手段证明：<strong>设计与现实几乎一模一样</strong>。</p>
+<h3 id="41-wfap-的晶体结构模型与现实重叠">4.1 <strong>wFAP 的晶体结构：模型与现实重叠</strong></h3>
+<p>在 <strong>Fig.3a–d</strong> 中，作者展示了 wFAP1.1 的晶体结构（分辨率 2.3 Å，空口袋）和与 HBC599 结合后的结构（分辨率 2.1 Å）。</p>
+<p>结果令人惊讶：</p>
+<ul>
+<li>
+<p>口袋的 Cα RMSD 仅 <strong>0.4–0.6 Å</strong>，几乎和设计模型重合；</p>
+</li>
+<li>
+<p>HBC599 分子紧紧嵌在口袋里，与预测的结合方式完全一致；</p>
+</li>
+<li>
+<p>关键氨基酸（如 D51、D26）和 HBC 的相互作用，在实验结构中被清晰捕捉到。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-3.png" alt=""></p>
+<blockquote>
+<p>这意味着：<strong>wFAP 的口袋并不是实验偶然形成，而是设计驱动下的稳定构象。</strong></p>
+</blockquote>
+<h3 id="42-tmfap-的-cryo-em-结构小蛋白的硬核考验">4.2 <strong>tmFAP 的 cryo-EM 结构：小蛋白的“硬核考验”</strong></h3>
+<p>跨膜蛋白更难解析，尤其是这种只有四根螺旋的小蛋白。</p>
+<p>作者采用了巧妙的“<strong>BRIL 融合 + Fab</strong>”策略，把 tmFAP1.1 稳定化后进行冷冻电镜解析（<strong>Fig.4a–c</strong>）。</p>
+<p>结果依旧惊艳：</p>
+<ul>
+<li>
+<p>分辨率 2.79 Å，四螺旋束完整呈现；</p>
+</li>
+<li>
+<p>HBC599 的密度清晰可见，被完全包裹在螺旋核心中；</p>
+</li>
+<li>
+<p>口袋残基的位置与设计模型高度吻合，RMSD 仅 <strong>0.74 Å</strong>。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-4.png" alt=""></p>
+<p>更有意思的是，作者还通过点突变实验进一步验证：</p>
+<p>只要改动几个口袋关键残基（如 D26A、W131A），荧光信号就完全消失。</p>
+<p>这和结构信息完全对应，再次说明设计口袋确实是“按图施工”的。</p>
+<h3 id="43-科学亮点">4.3 <strong>科学亮点</strong></h3>
+<ul>
+<li>
+<p>这是 <em>de novo</em> 蛋白设计少有的“全链闭环”：从<strong>计算模型 → 功能验证 → 高分辨率结构 → 与模型重叠</strong>；</p>
+</li>
+<li>
+<p>结构学结果让这项工作从“好像有效”变成了“确实精确”，奠定了设计方法的可靠性；</p>
+</li>
+<li>
+<p>尤其是 tmFAP 的 cryo-EM 成功解析，说明即使是人工设计的跨膜小蛋白，也能达到天然蛋白的结构稳定度。</p>
+</li>
+</ul>
+<blockquote>
+<p>一句话总结：<strong>结构验证这一步把文章从“功能演示”提升到“原子级精确”，是整个工作最硬的证据。</strong></p>
+</blockquote>
+<hr>
+<h1 id="5-在活细胞中的表现">5. <strong>在活细胞中的表现</strong></h1>
+<p>蛋白设计如果只在纯化的体系里好用，其实价值有限。真正的考验是：<strong>能不能在活细胞中稳定表达，并且完成它的功能？</strong></p>
+<p>卢老师团队在这一点上同样给出了漂亮的答案。</p>
+<h3 id="51-wfap自由分布甚至可定位线粒体">5.1 <strong>wFAP：自由分布，甚至可定位线粒体</strong></h3>
+<p>在 <strong>Fig.5a–b</strong> 中，作者展示了大肠杆菌和 CHO 细胞的成像结果：</p>
+<ul>
+<li>
+<p>在细胞质中表达的 <strong>wFAP1.1</strong>，遇到 HBC599 分子后，全细胞均匀亮起红色荧光；</p>
+</li>
+<li>
+<p>当 wFAP1.1 融合上线粒体定位信号（SYNJ2BP）时，荧光就清晰地只出现在线粒体位置。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-5.png" alt=""></p>
+<p>这说明：<strong>设计的蛋白不仅能点亮分子，还能作为“分子灯泡”被精准安放到细胞器。</strong></p>
+<h3 id="52-tmfap镶嵌在膜上点亮边界">5.2 <strong>tmFAP：镶嵌在膜上，点亮边界</strong></h3>
+<p>相比之下，跨膜版本的 <strong>tmFAP1.2 和 tmFAP3</strong>，则在细胞膜或内膜系统中“点亮边界”。</p>
+<ul>
+<li>
+<p>在大肠杆菌中，tmFAP1.2 的荧光信号清晰地环绕在细胞周边，而细胞质是暗的；</p>
+</li>
+<li>
+<p>在哺乳动物 CHO 细胞中，tmFAP1.1 分布于内膜系统，而 <strong>tmFAP3</strong> 经过进一步优化后，可以定位到质膜，并在膜上产生明亮荧光（<strong>Fig.5c</strong>）。</p>
+</li>
+</ul>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-6.png" alt=""></p>
+<p>更酷的是，在非哺乳动物的 <em>Xenopus</em> 卵母细胞里，tmFAP3 同样能成功镶嵌到质膜，并点亮大面积的荧光区域。这说明它的适用性不受细胞种类限制。</p>
+<h3 id="53-科学亮点">5.3 <strong>科学亮点</strong></h3>
+<ul>
+<li>
+<p>wFAP 和 tmFAP 在活细胞中的荧光信号强烈、背景极低，说明设计具有高度特异性；</p>
+</li>
+<li>
+<p>跨膜版本的 tmFAP 可以直接作为膜标记工具，甚至为未来的电生理和膜动力学研究打开了可能性；</p>
+</li>
+<li>
+<p>设计蛋白能够在不同细胞环境中正确折叠、定位和工作，这一点极大提升了它们作为“通用工具”的潜力。</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>这些设计出来的蛋白，不是实验室里的“摆设”，而是能在真正的生命系统中工作、发光的工具</strong></p>
+</blockquote>
+<hr>
+<h1 id="6-结论与展望">6. <strong>结论与展望</strong></h1>
+<p>这项工作最震撼的地方在于：<strong>它不仅证明了“跨膜蛋白–小分子非共价结合”是可设计的，而且做得比天然体系更好。</strong></p>
+<h3 id="61-和天然荧光膜蛋白的对比">6.1 <strong>和天然荧光膜蛋白的对比</strong></h3>
+<p>在 <strong>Fig.6</strong> 中，作者把他们设计的 tmFAP 和经典的天然膜蛋白 <strong>archaerhodopsin-3</strong> 放在一起比较：</p>
+<p><img src="/zh/literature/nature--%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E8%80%81%E5%B8%88%E9%A6%96%E6%AC%A1-de-novo-%E8%AE%BE%E8%AE%A1%E5%87%BA%E8%B7%A8%E8%86%9C%E8%8D%A7%E5%85%89%E6%BF%80%E6%B4%BB%E8%9B%8B%E7%99%BD/images/image-7.png" alt=""></p>
+<ul>
+<li>
+<p><strong>体积更小</strong>：tmFAP 只有四根跨膜螺旋，而 rhodopsin 有七根；</p>
+</li>
+<li>
+<p><strong>结合方式不同</strong>：tmFAP 与 HBC599 是非共价结合，灵活可替换；而 rhodopsin 必须依赖共价固定的视黄醛分子；</p>
+</li>
+<li>
+<p><strong>亮度更高</strong>：tmFAP1.2 的亮度几乎比 archaerhodopsin-3 高出一千倍，甚至超过了迄今最亮的天然 rhodopsin（NeoR）。</p>
+</li>
+</ul>
+<blockquote>
+<p>这意味着：设计出的蛋白已经不是“模仿自然”，而是<strong>超越自然</strong>。</p>
+</blockquote>
+<h3 id="62-应用前景">6.2 <strong>应用前景</strong></h3>
+<ul>
+<li>
+<p><strong>成像工具</strong>：tmFAP 可以作为新一代膜定位探针，结合不同的人工荧光分子，扩展成多色工具箱；</p>
+</li>
+<li>
+<p><strong>传感器开发</strong>：通过替换荧光分子或优化口袋，可以设计成 pH、膜电位甚至代谢物的传感器；</p>
+</li>
+<li>
+<p><strong>分子机器的基石</strong>：这类高精度的跨膜口袋，未来可能被拓展为人工受体、转运体或离子通道。</p>
+</li>
+</ul>
+<p>更进一步，tmFAP 的结合是非共价的，这意味着染料在光漂白后可以被溶液中的新分子替换，从而实现<strong>长时间成像不中断</strong>——这是天然荧光蛋白难以企及的优势。</p>
+<h3 id="63-总结">6.3 <strong>总结</strong></h3>
+<p>从 <strong>水溶性设计 → 跨膜化 → 结构验证 → 细胞应用 → 对比天然体系</strong>，卢培龙团队展示了一条完整的、可复制的“设计路线”。</p>
+<p>这不仅是一次 <em>de novo</em> 蛋白设计的突破，更像是在为未来的“人工膜蛋白学”奠基。</p>
+<blockquote>
+<p><strong>他们让我们看到了一个未来——跨膜蛋白不再是自然的恩赐，而是人类可以自由设计、定制和超越的分子机器。</strong></p>
+</blockquote>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+          <a href="https://mp.weixin.qq.com/s/-nG3a1vDrdcwMgsIqq8cnw"
+             target="_blank"
+             rel="noopener"
+             class="ba b--dark-green bg-washed-green br2 dark-green dib f7 hover-bg-light-green link ph3 pv2">
+            去公众号阅读完整版 →
+          </a>
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+   <li class="list di">
+     <a href="/zh/tags/ai4s/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">AI4S</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/de-novo-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">De Novo Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/membrane-protein/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Membrane Protein</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/transmembrane-protein/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Transmembrane Protein</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/protein-design/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Protein Design</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/fluorescence-sensor/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Fluorescence Sensor</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/cryo-em/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Cryo-EM</a>
+   </li>
+  
+   <li class="list di">
+     <a href="/zh/tags/nature/" class="link f5 grow br-pill ba ph3 pv2 mb2 dib black sans-serif no-underline">Nature</a>
+   </li>
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

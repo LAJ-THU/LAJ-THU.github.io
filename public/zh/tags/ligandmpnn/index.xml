@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>LigandMPNN on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/ligandmpnn/</link>
+    <description>Recent content in LigandMPNN on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 18 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/ligandmpnn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>蛋白质设计必看！ProteinMPNN 的升级版 LigandMPNN</title>
+      <link>http://localhost:1313/zh/literature/ligandmpnn/</link>
+      <pubDate>Fri, 18 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/ligandmpnn/</guid>
+      <description>LigandMPNN 在 ProteinMPNN 基础上引入配体原子级上下文建模，可同时感知蛋白与小分子、核酸、金属离子的空间关系，在序列设计与侧链构象预测上全面超越 Rosetta 与传统方法，并通过多组结合实验验证其真实功能性。</description>
+    </item>
+  </channel>
+</rss>

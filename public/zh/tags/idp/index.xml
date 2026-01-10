@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>IDP on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/idp/</link>
+    <description>Recent content in IDP on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 19 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/idp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>David Baker 新作！针对柔性 IDP 设计高亲和力结合蛋白</title>
+      <link>http://localhost:1313/zh/literature/design-of-intrinsically-disordered-region-binding-proteins/</link>
+      <pubDate>Sat, 19 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/design-of-intrinsically-disordered-region-binding-proteins/</guid>
+      <description>Baker 团队提出一套通用的计算设计框架，可针对任意本质无序区域（IDR）序列设计高亲和力、高特异性的结合蛋白，在 43 个目标中获得 39 个成功命中，并通过晶体结构与 NMR 验证“诱导契合”机制。</description>
+    </item>
+  </channel>
+</rss>

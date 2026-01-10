@@ -1,0 +1,7 @@
+{{ with .Params.keywords }}
+<meta name="keywords" content="{{ delimit . ", " }}">
+{{ end }}
+
+{{ with .Params.description }}
+<meta name="description" content="{{ . }}">
+{{ end }}

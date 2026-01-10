@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="
+今天给大家介绍一下一篇在蛋白质设计领域很重要的一篇文章，ProteinMPNN的升级版——LigandMPNN。一作还是ProteinMPNN的作者，最后通讯还是David Baker，是一次对原有模型的升级。文章发表在Nature Methods上。
+本研究的提出正处于蛋白质设计方法从“结构主导”向“功能导向”转型的关键阶段。在 AlphaFold 推动蛋白结构预测大突破之后，研究重心逐渐转向“如何设计能执行特定功能的蛋白”，而功能往往依赖于蛋白与小分子、核酸或金属等非蛋白配体之间的相互作用。
+在这一背景下，LigandMPNN 的出现填补了长期以来蛋白设计工具无法建模原子级配体上下文的空白，为药物靶点设计、酶活性位点工程、合成受体开发等方向打开了新的可能性。
+
+1.  背景：为什么要做 LigandMPNN？
+我们先从最基础的概念说起。
+ 蛋白质设计的三步走（大多数方法流程）
+
+
+设计骨架：创建能完成特定功能的蛋白结构（比如结合小分子）。
+
+
+设计序列：找到一条氨基酸序列，能折叠成上面那个骨架，并实现功能。
+
+
+结构验证：用 AlphaFold 或其他工具预测结构，看看设计是否可靠。
+
+
+
+LigandMPNN这篇文章关注的是第 2 步：设计氨基酸序列。
+以前是怎么做序列设计的？
+过去的方法分两类：
+其中，ProteinMPNN 是目前最流行的深度学习方法之一。它基于图神经网络，输入蛋白质主链结构，输出一条最可能折叠成该结构的氨基酸序列。
+
+但是有个关键的“短板”：
+
+ProteinMPNN 只看蛋白主链（backbone）坐标！
+
+这意味着它在“设计结合功能”时会犯一个严重错误：
+
+假设你想设计一个能结合小分子的蛋白：
+
+
+小分子在哪儿？什么形状？带不带电？
+
+
+哪些残基在旁边需要“贴合”它、形成氢键？
+
+
+ProteinMPNN 完全不知道这些信息！
+它就像是让人“闭着眼睛去设计钥匙”，根本看不到门锁。
+
+举个例子：设计结合胆酸的蛋白
+
+Rosetta 设计一个蛋白想结合胆酸，但因为设计时不考虑胆酸的位置和形状，它设计出的氨基酸没办法与胆酸形成合适的结合位点，实验中完全不结合。
+
+
+所以，LigandMPNN 的动机很清楚：
+
+我们需要一个“知道配体上下文”的模型，来更精确地设计蛋白序列。
+
+也就是说，我们要让模型不仅知道“我这个蛋白结构长啥样”，还知道：
+
+
+旁边有个什么小分子
+
+
+那个小分子原子分布在哪
+
+
+哪些残基需要去和它互动
+
+
+只有这样，才能设计出真正功能性的结合蛋白、酶、传感器等。
+总结一下背景部分的核心问题：
+2. LigandMPNN 是怎么做的？（方法拆解）
+总体思路
+
+把蛋白和配体都看作“图结构”（Graph），用图神经网络（GNN）来学习它们之间的相互关系，从而设计出合适的氨基酸序列和侧链构象。
+
+看图从左到右、从上到下讲起：
+🔷 1. 输入是什么？
+
+🔹（左下）蛋白主链坐标：
+
+每个残基的原子位置：N, Cα, C, O（这4个原子是主链的“骨架”）
+
+🔹（左下）配体原子信息：
+
+
+每个原子的坐标 (xyz)
+
+
+它是什么元素（如 O、C）">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/ligandmpnn/ligandmpnn/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/ligandmpnn/ligandmpnn/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="今天给大家介绍一下一篇在蛋白质设计领域很重要的一篇文章，ProteinMPNN的升级版——LigandMPNN。一作还是ProteinMPNN的作者，最后通讯还是David Baker，是一次对原有模型的升级。文章发表在Nature Methods上。
+本研究的提出正处于蛋白质设计方法从“结构主导”向“功能导向”转型的关键阶段。在 AlphaFold 推动蛋白结构预测大突破之后，研究重心逐渐转向“如何设计能执行特定功能的蛋白”，而功能往往依赖于蛋白与小分子、核酸或金属等非蛋白配体之间的相互作用。
+在这一背景下，LigandMPNN 的出现填补了长期以来蛋白设计工具无法建模原子级配体上下文的空白，为药物靶点设计、酶活性位点工程、合成受体开发等方向打开了新的可能性。
+1. 背景：为什么要做 LigandMPNN？ 我们先从最基础的概念说起。
+蛋白质设计的三步走（大多数方法流程） 设计骨架：创建能完成特定功能的蛋白结构（比如结合小分子）。
+设计序列：找到一条氨基酸序列，能折叠成上面那个骨架，并实现功能。
+结构验证：用 AlphaFold 或其他工具预测结构，看看设计是否可靠。
+LigandMPNN这篇文章关注的是第 2 步：设计氨基酸序列。
+以前是怎么做序列设计的？ 过去的方法分两类：
+其中，ProteinMPNN 是目前最流行的深度学习方法之一。它基于图神经网络，输入蛋白质主链结构，输出一条最可能折叠成该结构的氨基酸序列。
+但是有个关键的“短板”： ProteinMPNN 只看蛋白主链（backbone）坐标！
+这意味着它在“设计结合功能”时会犯一个严重错误：
+假设你想设计一个能结合小分子的蛋白： 小分子在哪儿？什么形状？带不带电？
+哪些残基在旁边需要“贴合”它、形成氢键？
+ProteinMPNN 完全不知道这些信息！
+它就像是让人“闭着眼睛去设计钥匙”，根本看不到门锁。
+举个例子：设计结合胆酸的蛋白 Rosetta 设计一个蛋白想结合胆酸，但因为设计时不考虑胆酸的位置和形状，它设计出的氨基酸没办法与胆酸形成合适的结合位点，实验中完全不结合。 所以，LigandMPNN 的动机很清楚： 我们需要一个“知道配体上下文”的模型，来更精确地设计蛋白序列。
+也就是说，我们要让模型不仅知道“我这个蛋白结构长啥样”，还知道：
+旁边有个什么小分子
+那个小分子原子分布在哪
+哪些残基需要去和它互动
+只有这样，才能设计出真正功能性的结合蛋白、酶、传感器等。
+总结一下背景部分的核心问题： 2. LigandMPNN 是怎么做的？（方法拆解） 总体思路 把蛋白和配体都看作“图结构”（Graph），用图神经网络（GNN）来学习它们之间的相互关系，从而设计出合适的氨基酸序列和侧链构象。
+看图从左到右、从上到下讲起： 🔷 1. 输入是什么？ 🔹（左下）蛋白主链坐标： 每个残基的原子位置：N, Cα, C, O（这4个原子是主链的“骨架”） 🔹（左下）配体原子信息： 每个原子的坐标 (xyz)
+它是什么元素（如 O、C）">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="今天给大家介绍一下一篇在蛋白质设计领域很重要的一篇文章，ProteinMPNN的升级版——LigandMPNN。一作还是ProteinMPNN的作者，最后通讯还是David Baker，是一次对原有模型的升级。文章发表在Nature Methods上。
+本研究的提出正处于蛋白质设计方法从“结构主导”向“功能导向”转型的关键阶段。在 AlphaFold 推动蛋白结构预测大突破之后，研究重心逐渐转向“如何设计能执行特定功能的蛋白”，而功能往往依赖于蛋白与小分子、核酸或金属等非蛋白配体之间的相互作用。
+在这一背景下，LigandMPNN 的出现填补了长期以来蛋白设计工具无法建模原子级配体上下文的空白，为药物靶点设计、酶活性位点工程、合成受体开发等方向打开了新的可能性。
+1. 背景：为什么要做 LigandMPNN？ 我们先从最基础的概念说起。
+蛋白质设计的三步走（大多数方法流程） 设计骨架：创建能完成特定功能的蛋白结构（比如结合小分子）。
+设计序列：找到一条氨基酸序列，能折叠成上面那个骨架，并实现功能。
+结构验证：用 AlphaFold 或其他工具预测结构，看看设计是否可靠。
+LigandMPNN这篇文章关注的是第 2 步：设计氨基酸序列。
+以前是怎么做序列设计的？ 过去的方法分两类：
+其中，ProteinMPNN 是目前最流行的深度学习方法之一。它基于图神经网络，输入蛋白质主链结构，输出一条最可能折叠成该结构的氨基酸序列。
+但是有个关键的“短板”： ProteinMPNN 只看蛋白主链（backbone）坐标！
+这意味着它在“设计结合功能”时会犯一个严重错误：
+假设你想设计一个能结合小分子的蛋白： 小分子在哪儿？什么形状？带不带电？
+哪些残基在旁边需要“贴合”它、形成氢键？
+ProteinMPNN 完全不知道这些信息！
+它就像是让人“闭着眼睛去设计钥匙”，根本看不到门锁。
+举个例子：设计结合胆酸的蛋白 Rosetta 设计一个蛋白想结合胆酸，但因为设计时不考虑胆酸的位置和形状，它设计出的氨基酸没办法与胆酸形成合适的结合位点，实验中完全不结合。 所以，LigandMPNN 的动机很清楚： 我们需要一个“知道配体上下文”的模型，来更精确地设计蛋白序列。
+也就是说，我们要让模型不仅知道“我这个蛋白结构长啥样”，还知道：
+旁边有个什么小分子
+那个小分子原子分布在哪
+哪些残基需要去和它互动
+只有这样，才能设计出真正功能性的结合蛋白、酶、传感器等。
+总结一下背景部分的核心问题： 2. LigandMPNN 是怎么做的？（方法拆解） 总体思路 把蛋白和配体都看作“图结构”（Graph），用图神经网络（GNN）来学习它们之间的相互关系，从而设计出合适的氨基酸序列和侧链构象。
+看图从左到右、从上到下讲起： 🔷 1. 输入是什么？ 🔹（左下）蛋白主链坐标： 每个残基的原子位置：N, Cα, C, O（这4个原子是主链的“骨架”） 🔹（左下）配体原子信息： 每个原子的坐标 (xyz)
+它是什么元素（如 O、C）">
+  <meta itemprop="wordCount" content="465">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="今天给大家介绍一下一篇在蛋白质设计领域很重要的一篇文章，ProteinMPNN的升级版——LigandMPNN。一作还是ProteinMPNN的作者，最后通讯还是David Baker，是一次对原有模型的升级。文章发表在Nature Methods上。
+本研究的提出正处于蛋白质设计方法从“结构主导”向“功能导向”转型的关键阶段。在 AlphaFold 推动蛋白结构预测大突破之后，研究重心逐渐转向“如何设计能执行特定功能的蛋白”，而功能往往依赖于蛋白与小分子、核酸或金属等非蛋白配体之间的相互作用。
+在这一背景下，LigandMPNN 的出现填补了长期以来蛋白设计工具无法建模原子级配体上下文的空白，为药物靶点设计、酶活性位点工程、合成受体开发等方向打开了新的可能性。
+1. 背景：为什么要做 LigandMPNN？ 我们先从最基础的概念说起。
+蛋白质设计的三步走（大多数方法流程） 设计骨架：创建能完成特定功能的蛋白结构（比如结合小分子）。
+设计序列：找到一条氨基酸序列，能折叠成上面那个骨架，并实现功能。
+结构验证：用 AlphaFold 或其他工具预测结构，看看设计是否可靠。
+LigandMPNN这篇文章关注的是第 2 步：设计氨基酸序列。
+以前是怎么做序列设计的？ 过去的方法分两类：
+其中，ProteinMPNN 是目前最流行的深度学习方法之一。它基于图神经网络，输入蛋白质主链结构，输出一条最可能折叠成该结构的氨基酸序列。
+但是有个关键的“短板”： ProteinMPNN 只看蛋白主链（backbone）坐标！
+这意味着它在“设计结合功能”时会犯一个严重错误：
+假设你想设计一个能结合小分子的蛋白： 小分子在哪儿？什么形状？带不带电？
+哪些残基在旁边需要“贴合”它、形成氢键？
+ProteinMPNN 完全不知道这些信息！
+它就像是让人“闭着眼睛去设计钥匙”，根本看不到门锁。
+举个例子：设计结合胆酸的蛋白 Rosetta 设计一个蛋白想结合胆酸，但因为设计时不考虑胆酸的位置和形状，它设计出的氨基酸没办法与胆酸形成合适的结合位点，实验中完全不结合。 所以，LigandMPNN 的动机很清楚： 我们需要一个“知道配体上下文”的模型，来更精确地设计蛋白序列。
+也就是说，我们要让模型不仅知道“我这个蛋白结构长啥样”，还知道：
+旁边有个什么小分子
+那个小分子原子分布在哪
+哪些残基需要去和它互动
+只有这样，才能设计出真正功能性的结合蛋白、酶、传感器等。
+总结一下背景部分的核心问题： 2. LigandMPNN 是怎么做的？（方法拆解） 总体思路 把蛋白和配体都看作“图结构”（Graph），用图神经网络（GNN）来学习它们之间的相互关系，从而设计出合适的氨基酸序列和侧链构象。
+看图从左到右、从上到下讲起： 🔷 1. 输入是什么？ 🔹（左下）蛋白主链坐标： 每个残基的原子位置：N, Cα, C, O（这4个原子是主链的“骨架”） 🔹（左下）配体原子信息： 每个原子的坐标 (xyz)
+它是什么元素（如 O、C）">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p><img src="images/image-13.png" alt=""></p>
+<p>今天给大家介绍一下一篇在蛋白质设计领域很重要的一篇文章，ProteinMPNN的升级版——LigandMPNN。一作还是ProteinMPNN的作者，最后通讯还是David Baker，是一次对原有模型的升级。文章发表在Nature Methods上。</p>
+<p>本研究的提出正处于蛋白质设计方法从“结构主导”向“功能导向”转型的关键阶段。在 AlphaFold 推动蛋白结构预测大突破之后，研究重心逐渐转向“如何设计能执行特定功能的蛋白”，而<strong>功能往往依赖于蛋白与小分子、核酸或金属等非蛋白配体之间的相互作用</strong>。</p>
+<p>在这一背景下，LigandMPNN 的出现填补了长期以来蛋白设计工具<strong>无法建模原子级配体上下文</strong>的空白，为<strong>药物靶点设计、酶活性位点工程、合成受体开发</strong>等方向打开了新的可能性。</p>
+<hr>
+<h2 id="1x20x20背景为什么要做-ligandmpnn">1. <strong> 背景：为什么要做 LigandMPNN？</strong></h2>
+<p>我们先从最基础的概念说起。</p>
+<h4 id="x20蛋白质设计的三步走大多数方法流程"><strong> 蛋白质设计的三步走（大多数方法流程）</strong></h4>
+<ol>
+<li>
+<p><strong>设计骨架</strong>：创建能完成特定功能的蛋白结构（比如结合小分子）。</p>
+</li>
+<li>
+<p><strong>设计序列</strong>：找到一条氨基酸序列，能折叠成上面那个骨架，并实现功能。</p>
+</li>
+<li>
+<p><strong>结构验证</strong>：用 AlphaFold 或其他工具预测结构，看看设计是否可靠。</p>
+</li>
+</ol>
+<p><img src="images/image-9.png" alt=""></p>
+<p>LigandMPNN这篇文章关注的是第 2 步：<strong>设计氨基酸序列</strong>。</p>
+<h4 id="以前是怎么做序列设计的"><strong>以前是怎么做序列设计的？</strong></h4>
+<p>过去的方法分两类：</p>
+<p>其中，<strong>ProteinMPNN 是目前最流行的深度学习方法之一</strong>。它基于图神经网络，输入蛋白质主链结构，输出一条最可能折叠成该结构的氨基酸序列。</p>
+<p><img src="images/image-10.png" alt=""></p>
+<h4 id="但是有个关键的短板"><strong>但是有个关键的“短板”：</strong></h4>
+<blockquote>
+<p><strong>ProteinMPNN 只看蛋白主链（backbone）坐标！</strong></p>
+</blockquote>
+<p>这意味着它在“设计结合功能”时会犯一个严重错误：</p>
+<hr>
+<h4 id="假设你想设计一个能结合小分子的蛋白"><strong>假设你想设计一个能结合小分子的蛋白：</strong></h4>
+<ul>
+<li>
+<p>小分子在哪儿？什么形状？带不带电？</p>
+</li>
+<li>
+<p>哪些残基在旁边需要“贴合”它、形成氢键？</p>
+</li>
+</ul>
+<p>ProteinMPNN 完全不知道这些信息！</p>
+<p>它就像是让人“<strong>闭着眼睛去设计钥匙”，根本看不到门锁</strong>。</p>
+<hr>
+<h4 id="举个例子设计结合胆酸的蛋白"><strong>举个例子：设计结合胆酸的蛋白</strong></h4>
+<ul>
+<li>Rosetta 设计一个蛋白想结合胆酸，但因为设计时不考虑胆酸的位置和形状，它设计出的氨基酸没办法与胆酸形成合适的结合位点，<strong>实验中完全不结合</strong>。</li>
+</ul>
+<hr>
+<h4 id="所以ligandmpnn-的动机很清楚"><strong>所以，LigandMPNN 的动机很清楚：</strong></h4>
+<blockquote>
+<p><strong>我们需要一个“知道配体上下文”的模型，来更精确地设计蛋白序列。</strong></p>
+</blockquote>
+<p>也就是说，我们要让模型不仅知道“我这个蛋白结构长啥样”，还知道：</p>
+<ul>
+<li>
+<p>旁边有个什么小分子</p>
+</li>
+<li>
+<p>那个小分子原子分布在哪</p>
+</li>
+<li>
+<p>哪些残基需要去和它互动</p>
+</li>
+</ul>
+<p>只有这样，才能设计出真正功能性的结合蛋白、酶、传感器等。</p>
+<h4 id="总结一下背景部分的核心问题"><strong>总结一下背景部分的核心问题：</strong></h4>
+<h2 id="2-ligandmpnn-是怎么做的方法拆解">2. <strong>LigandMPNN 是怎么做的？（方法拆解）</strong></h2>
+<h3 id="总体思路"><strong>总体思路</strong></h3>
+<blockquote>
+<p>把蛋白和配体都看作“图结构”（Graph），用<strong>图神经网络</strong>（GNN）来学习它们之间的相互关系，从而设计出合适的氨基酸序列和侧链构象。</p>
+</blockquote>
+<h3 id="看图从左到右从上到下讲起"><strong>看图从左到右、从上到下讲起：</strong></h3>
+<h4 id="-1-输入是什么"><strong>🔷 1. 输入是什么？</strong></h4>
+<p><img src="images/image-7.png" alt=""></p>
+<h5 id="左下蛋白主链坐标"><strong>🔹（左下）蛋白主链坐标：</strong></h5>
+<ul>
+<li>每个残基的原子位置：<strong>N, Cα, C, O</strong>（这4个原子是主链的“骨架”）</li>
+</ul>
+<h5 id="左下配体原子信息"><strong>🔹（左下）配体原子信息：</strong></h5>
+<ul>
+<li>
+<p>每个原子的坐标 (xyz)</p>
+</li>
+<li>
+<p>它是什么元素（如 O、C）</p>
+</li>
+</ul>
+<p>👉 这些构成了 LigandMPNN 的输入。</p>
+<hr>
+<h4 id="-2-三种图结构关键创新"><strong>🔷 2. 三种图结构：关键创新！</strong></h4>
+<p><img src="images/image-11.png" alt=""></p>
+<h5 id="-左上protein-graph-蛋白图"><strong>🟩 （左上）Protein Graph 蛋白图</strong></h5>
+<ul>
+<li>
+<p>节点是残基（i, j）</p>
+</li>
+<li>
+<p>边是残基之间的距离（绿色虚线，基于 Cα–Cα 距离）</p>
+</li>
+<li>
+<p>这类似于 ProteinMPNN 的输入方式</p>
+</li>
+</ul>
+<h5 id="-右上ligand-graph-配体图"><strong>🟦 （右上）Ligand Graph 配体图</strong></h5>
+<ul>
+<li>
+<p>节点是配体中的每个原子</p>
+</li>
+<li>
+<p>边是原子间的距离（蓝色虚线）</p>
+</li>
+<li>
+<p>表示配体原子之间的“内部联系”</p>
+</li>
+</ul>
+<h5 id="-中上proteinligand-graph-蛋白-配体图"><strong>🟥 （中上）Protein–Ligand Graph 蛋白-配体图</strong></h5>
+<ul>
+<li>
+<p>将每个蛋白残基与<strong>最近的 25 个配体原子</strong>连接（红色虚线）</p>
+</li>
+<li>
+<p>表示残基与附近小分子原子的空间关系</p>
+</li>
+</ul>
+<p>📌 这三张图<strong>共同描述了蛋白+配体的空间环境和相互作用</strong>。</p>
+<hr>
+<h4 id="-3-网络结构下方中部ligandmpnn-由三块组成"><strong>🔷 3. 网络结构（下方中部）LigandMPNN 由三块组成：</strong></h4>
+<p><img src="images/image-2.png" alt=""></p>
+<h5 id="-protein-backbone-encoder"><strong>🟩 Protein backbone encoder</strong></h5>
+<ul>
+<li>首先处理蛋白主链图，提取蛋白的空间结构信息</li>
+</ul>
+<h5 id="-proteinligand-encoder"><strong>🟦 Protein–Ligand encoder</strong></h5>
+<ul>
+<li>融合蛋白和配体之间的图关系，学习谁靠近谁、谁可能要互动</li>
+</ul>
+<p>✅ 这是最重要的模块，<strong>让模型知道“哪个残基需要和哪个配体原子互动”</strong></p>
+<h5 id="-decoder"><strong>🟥</strong> <strong>Decoder</strong></h5>
+<ul>
+<li>
+<p>结合前面提取的信息</p>
+</li>
+<li>
+<p>预测每个位置应该放哪个氨基酸（输出的是一段序列）</p>
+</li>
+<li>
+<p>还会预测侧链的四个 Chi 角（Chi1–Chi4），来还原出完整结构</p>
+</li>
+</ul>
+<hr>
+<h4 id="-4-输出是什么"><strong>🔷 4. 输出是什么？</strong></h4>
+<p><img src="images/image-5.png" alt=""></p>
+<ul>
+<li>
+<p>一段氨基酸序列（比如 NGREEVVEYVKEIQ）</p>
+</li>
+<li>
+<p>每个残基的侧链构象（Chi1, Chi2, Chi3, Chi4）</p>
+</li>
+</ul>
+<p>也就是说，LigandMPNN 不是只输出“字母序列”，而是给出一个“<strong>几乎完整的蛋白结构</strong>”，特别是在<strong>结合位点的区域特别准确</strong>。</p>
+<hr>
+<h3 id="-总结一句话"><strong>🧠 总结一句话：</strong></h3>
+<blockquote>
+<p>LigandMPNN 用图神经网络处理蛋白 + 配体的“空间上下文”，从而更智能地设计出能够结合配体的蛋白序列和三维结构。</p>
+</blockquote>
+<h2 id="3-ligandmpnn的实验效果如何真的有效吗">3. LigandMPNN的实验效果如何？真的有效吗？</h2>
+<h3 id="31-ligandmpnn-的整体性能比对每个上下文">3.1 <strong>LigandMPNN 的整体性能比对（每个上下文）</strong></h3>
+<p><img src="images/image-1.png" alt=""></p>
+<p>这是最直接的比较图！</p>
+<h4 id="图解说明"><strong>图解说明：</strong></h4>
+<ul>
+<li>
+<p>分成三列，对应三种上下文：</p>
+<ul>
+<li>
+<p><strong>左：小分子（small molecule）</strong></p>
+</li>
+<li>
+<p><strong>中：核苷酸（nucleotide）</strong></p>
+</li>
+<li>
+<p><strong>右：金属离子（metal）</strong></p>
+</li>
+</ul>
+</li>
+<li>
+<p>每列下方是三个模型的表现对比：</p>
+<ul>
+<li>
+<p>蓝色：Rosetta</p>
+</li>
+<li>
+<p>橙色：ProteinMPNN</p>
+</li>
+<li>
+<p>绿色：LigandMPNN</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Y 轴表示的是 <strong>native sequence recovery（序列恢复率）</strong>：</p>
+<ul>
+<li>即预测的氨基酸序列有多少与真实结构一致，越高越好！</li>
+</ul>
+</li>
+</ul>
+<p>✅ 明显看到：<strong>LigandMPNN 在所有上下文下表现都最强，尤其是在金属离子上下文提升最大</strong>。</p>
+<hr>
+<h3 id="32-ligandmpnn-vs-rosetta-每个蛋白的对比">3.2 <strong>LigandMPNN vs Rosetta 每个蛋白的对比</strong></h3>
+<p><img src="images/image-3.png" alt=""></p>
+<p>这三张图是<strong>逐个蛋白的点对点比较</strong>（每一个点是一个蛋白）：</p>
+<ul>
+<li>
+<p>横轴是 Rosetta 的表现（序列恢复率）</p>
+</li>
+<li>
+<p>纵轴是 LigandMPNN 的表现</p>
+</li>
+<li>
+<p>点的颜色表示 LigandMPNN 的预测置信度（越黄越有信心）</p>
+</li>
+</ul>
+<p><strong>观察：</strong></p>
+<ul>
+<li>
+<p><strong>大多数点都在对角线的上方</strong>：意味着 LigandMPNN 在大多数蛋白上比 Rosetta 好。</p>
+</li>
+<li>
+<p>颜色越黄的点，越靠近图的右上角 → <strong>说明模型对自己“表现好”的地方也更有信心</strong>。</p>
+</li>
+<li>
+<p>不同上下文中（小分子、核酸、金属）都有类似趋势。</p>
+</li>
+</ul>
+<hr>
+<h3 id="33-置信度-vs-实际准确率">3.3 <strong>置信度 vs 实际准确率</strong></h3>
+<p><img src="images/image-8.png" alt=""></p>
+<p>这三张图展示了一个非常实用的指标：</p>
+<blockquote>
+<p>模型自己预测的“置信度”值（横轴）是否真的和“预测准确率”成正比？</p>
+</blockquote>
+<p>结果是——✅ <strong>是的！</strong></p>
+<ul>
+<li>
+<p>点基本都排在一条“向上走的对角线”附近</p>
+</li>
+<li>
+<p>越自信的预测（右边的点），序列恢复率越高（上边的点）</p>
+</li>
+</ul>
+<p>这意味着：</p>
+<blockquote>
+<p>LigandMPNN 不仅能“预测得好”，而且能“知道自己有没有把握”</p>
+</blockquote>
+<h3 id="34-最重要的结论ligandmpnn-真正有效吗">3.4 <strong>最重要的结论：LigandMPNN 真正有效吗？</strong></h3>
+<p>是的，非常有效！</p>
+<ul>
+<li>
+<p><strong>相比旧方法有明显性能提升</strong></p>
+<ul>
+<li>不论是序列预测，还是侧链构象</li>
+</ul>
+</li>
+<li>
+<p><strong>更适用于与配体（小分子、DNA、金属）结合的场景</strong></p>
+</li>
+<li>
+<p><strong>预测结果有置信度评分 → 更易筛选可靠设计</strong></p>
+</li>
+</ul>
+<h3 id="35-小结这张图的三句话">3.5 <strong>小结这张图的三句话：</strong></h3>
+<ol>
+<li>
+<p>LigandMPNN 在小分子、核酸、金属场景中，序列设计效果全面领先。</p>
+</li>
+<li>
+<p>它对大多数蛋白的设计都优于 Rosetta，特别是在功能位点附近。</p>
+</li>
+<li>
+<p>它知道自己哪儿预测得准，帮助你挑选更可靠的设计结果。</p>
+</li>
+</ol>
+<h2 id="4-ligandmpnn对侧链恢复效果如何">4. LigandMPNN对侧链恢复效果如何？</h2>
+<p>LigandMPNN 的另一个重要能力：</p>
+<blockquote>
+<p>✅ <strong>不仅能预测氨基酸序列，还能预测残基侧链的构象（特别是 Chi1 和 Chi2 角）</strong>。</p>
+</blockquote>
+<p>这在功能位点非常关键 —— 因为是否能和配体“卡得住”很大程度上依赖于侧链的摆放方向。</p>
+<p>这一章节的目标：<strong>评估 LigandMPNN 的侧链构象预测精度</strong>，并和 Rosetta 做比较。</p>
+<hr>
+<h3 id="41-不同上下文下的-chi1--chi2-准确率比较">4.1 <strong>不同上下文下的 chi1 / chi2 准确率比较</strong></h3>
+<p><img src="images/image-12.png" alt=""></p>
+<p>分成三列，表示三种不同的配体环境：</p>
+<p>每列下方是 3 个模型在预测侧链构象的表现：</p>
+<ul>
+<li>
+<p><strong>Rosetta</strong>：传统物理模拟方法</p>
+</li>
+<li>
+<p><strong>LigandMPNN-wo</strong>：只用蛋白图，不考虑配体上下文（ablation test）</p>
+</li>
+<li>
+<p><strong>LigandMPNN</strong>：完整版，考虑了配体信息</p>
+</li>
+</ul>
+<p><strong>关键指标：</strong></p>
+<p>Y轴：预测角度在10°以内的比例（越高越好）</p>
+<p>颜色：</p>
+<ul>
+<li>
+<p>蓝色：Chi1 角</p>
+</li>
+<li>
+<p>橙色：Chi2 角</p>
+</li>
+</ul>
+<p><strong>总结图 a 结论：</strong></p>
+<ul>
+<li>
+<p><strong>LigandMPNN 在所有环境下都比 Rosetta 表现更好</strong></p>
+</li>
+<li>
+<p>考虑配体上下文后（LigandMPNN vs LigandMPNN-wo），性能进一步提升</p>
+</li>
+<li>
+<p>Chi1 预测普遍比 Chi2 准确（这是侧链预测中的普遍现象）</p>
+</li>
+<li>
+<p>小分子结合位点提升尤为明显（尤其 Chi2 角）</p>
+</li>
+</ul>
+<h3 id="42-逐蛋白的对比分析chi1">4.2 <strong>逐蛋白的对比分析（Chi1）</strong></h3>
+<p><img src="images/image.png" alt=""></p>
+<p>这三个散点图，每一个点表示一个蛋白：</p>
+<ul>
+<li>
+<p>横轴：Rosetta 的 chi1 精度</p>
+</li>
+<li>
+<p>纵轴：LigandMPNN 的 chi1 精度</p>
+</li>
+<li>
+<p>越多点落在对角线上方 → LigandMPNN 表现更好</p>
+</li>
+</ul>
+<p><strong>📊 观察：</strong></p>
+<ul>
+<li>
+<p><strong>绝大多数点都在对角线之上</strong> → 说明 LigandMPNN 在侧链角度预测上优于 Rosetta</p>
+</li>
+<li>
+<p>尤其在 Chi1 预测上，表现稳定，提升幅度大</p>
+</li>
+</ul>
+<h3 id="43-小结ligandmpnn-侧链预测准确性如何">4.3 <strong>小结：LigandMPNN 侧链预测准确性如何？</strong></h3>
+<p>非常好，原因包括：</p>
+<ol>
+<li>
+<p><strong>精度高</strong>：Chi1 和 Chi2 的预测精度显著超过 Rosetta 和无配体模型</p>
+</li>
+<li>
+<p><strong>配体信息有用</strong>：加入上下文后预测更精确，尤其是功能位点</p>
+</li>
+<li>
+<p><strong>泛化性强</strong>：在不同类型的配体（小分子、DNA、金属）中都表现良好</p>
+</li>
+</ol>
+<h2 id="5-ligandmpnn-工作的实验验证">5. LigandMPNN 工作的<strong>实验验证</strong></h2>
+<p>这一部分是 LigandMPNN 工作的<strong>实验验证部分</strong>，展示了它在实际蛋白—配体结合设计中的有效性。</p>
+<p>这一部分采用<strong>功能实验和结构建模双重手段</strong>，验证 LigandMPNN 是否能设计出真正有功能的结合蛋白。</p>
+<h3 id="51-rocuronium-结合蛋白的设计实验">5.1 <strong>Rocuronium 结合蛋白的设计实验</strong></h3>
+<p><img src="images/image-6.png" alt=""></p>
+<p><strong>✅ 背景：</strong></p>
+<p>Rocuronium 是一种临床肌肉松弛剂（小分子药物）。目标是设计一个蛋白能够<strong>高亲和力地结合 Rocuronium</strong>。</p>
+<hr>
+<p><strong>🔬 左侧结构图：</strong></p>
+<ul>
+<li>
+<p>左图：<strong>Rosetta设计的非结合蛋白（nonbinder）</strong></p>
+<ul>
+<li>
+<p>H106 位点是组氨酸（His），未能与 Rocuronium 形成有效配位</p>
+</li>
+<li>
+<p>预测信心低（红色表示）</p>
+</li>
+</ul>
+</li>
+<li>
+<p>右图：<strong>LigandMPNN 重新设计的结合蛋白</strong></p>
+<ul>
+<li>
+<p>同一位置改为酪氨酸（Y106），与配体形成明确的极性接触</p>
+</li>
+<li>
+<p>配体处残基显示高置信度（深蓝色）</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>说明 LigandMPNN 能有效识别关键结合残基，并精确构建结合位点的几何环境。</p>
+</blockquote>
+<hr>
+<p><strong>📈 右侧柱状图：流式细胞术绑定实验</strong></p>
+<ul>
+<li>
+<p>测量蛋白与带荧光标记 Rocuronium 的结合能力</p>
+</li>
+<li>
+<p>X轴：荧光强度（代表结合信号）</p>
+</li>
+<li>
+<p>Y轴：细胞数</p>
+</li>
+</ul>
+<p>结果：</p>
+<ul>
+<li>
+<p><strong>LigandMPNN 设计（红色）出现明显右移</strong> → 结合能力更强</p>
+</li>
+<li>
+<p>Rosetta 设计的蛋白结合弱（蓝色靠左）</p>
+</li>
+</ul>
+<blockquote>
+<p>实验验证 LigandMPNN 能设计出实际功能性更强的蛋白。</p>
+</blockquote>
+<h3 id="52-胆酸cholic-acid结合蛋白的实验验证">5.2 <strong>胆酸（Cholic acid）结合蛋白的实验验证</strong></h3>
+<p><strong>✅ 背景：</strong></p>
+<p>胆酸是一种类固醇分子，这个任务更加挑战，因为它结构复杂、疏水性强。</p>
+<p><img src="images/image-4.png" alt=""></p>
+<hr>
+<p><strong>🔬 左侧结构图：</strong></p>
+<ul>
+<li>
+<p>Rosetta 重新设计的蛋白（左）：F8 位置为苯丙氨酸（Phe），未形成稳定接触</p>
+</li>
+<li>
+<p>LigandMPNN 设计的蛋白（右）：改为酪氨酸（Y8），形成氢键和疏水接触</p>
+</li>
+</ul>
+<p>侧链布局更合理，结合口袋更“贴合”胆酸形状</p>
+<hr>
+<p><strong>📈 右侧图：荧光偏振实验测定结合亲和力</strong></p>
+<ul>
+<li>
+<p>Y轴：荧光偏振（代表结合程度）</p>
+</li>
+<li>
+<p>X轴：log([胆酸结合蛋白]浓度)</p>
+</li>
+<li>
+<p>红色曲线（LigandMPNN）：</p>
+<ul>
+<li>
+<p>显示出清晰的结合饱和曲线</p>
+</li>
+<li>
+<p>拟合出的 Kd = 331.3 nM（即纳摩尔级亲和力）</p>
+</li>
+</ul>
+</li>
+<li>
+<p>蓝色曲线（Rosetta）：几乎无结合信号</p>
+</li>
+</ul>
+<blockquote>
+<p>说明 LigandMPNN 设计出的胆酸结合蛋白不仅结构合理，而且<strong>功能显著增强</strong>，Kd 达到生物学可用水平。</p>
+</blockquote>
+<hr>
+<p><strong>🧠 专业总结（Figure 4）：</strong></p>
+<ol>
+<li>
+<p><strong>功能验证结果表明 LigandMPNN 可用于构建高亲和力蛋白—配体结合界面</strong>；</p>
+</li>
+<li>
+<p><strong>相比 Rosetta，其预测更贴合实际结构，绑定位点残基布局更优化</strong>；</p>
+</li>
+<li>
+<p><strong>设计成功率和功能活性在多个模型体系中均显著提升</strong>。</p>
+</li>
+</ol>
+<h2 id="6x20x20讨论与总结discussion--conclusion">6. <strong> 讨论与总结（Discussion &amp; Conclusion）</strong></h2>
+<h3 id="61-方法创新与主要贡献">6.1 <strong>方法创新与主要贡献</strong></h3>
+<p>LigandMPNN 是一种将蛋白质设计任务与原子级配体上下文信息相结合的通用深度学习框架，拓展了传统 backbone-only 方法（如 ProteinMPNN）的能力边界。其主要创新体现在：</p>
+<ol>
+<li>
+<p><strong>多图结构编码机制</strong>：通过分别构建蛋白骨架图、配体原子图以及蛋白–配体交互图，LigandMPNN 能够捕捉结合位点的精细结构特征与物理环境，显著提升序列与构象预测准确性。</p>
+</li>
+<li>
+<p><strong>上下文感知序列设计</strong>：与只看蛋白自身结构的模型不同，LigandMPNN 能够“看到”配体，自动调整结合位点残基类型与侧链朝向，从而优化相互作用界面。</p>
+</li>
+<li>
+<p><strong>高效端到端预测能力</strong>：模型不仅生成氨基酸序列，还能同时输出侧链旋转角（chi angles），使得设计结果更接近真实三维结构。</p>
+</li>
+</ol>
+<hr>
+<h3 id="62-实验与评估表现">6.2 <strong>实验与评估表现</strong></h3>
+<p>在系统评估中，LigandMPNN 显著优于 Rosetta 和 ProteinMPNN，尤其在涉及小分子、核酸、金属等非蛋白组分的结合场景下，具有以下优势：</p>
+<ul>
+<li>
+<p><strong>序列恢复率提升</strong>：平均提升 10–40%，在金属结合场景中提升尤为显著（Rosetta 36% → LigandMPNN 78%）。</p>
+</li>
+<li>
+<p><strong>侧链构象更精确</strong>：chi1 和 chi2 的角度预测准确率全面领先，尤其在功能位点周围精度更高。</p>
+</li>
+<li>
+<p><strong>功能验证有效</strong>：多项结合实验表明，LigandMPNN 所设计的蛋白在现实中具有实际结合能力（如 rocuronium、胆酸结合蛋白），且 Kd 达到纳摩尔级别。</p>
+</li>
+</ul>
+<hr>
+<h3 id="63-研究意义与应用前景">6.3 <strong>研究意义与应用前景</strong></h3>
+<p>LigandMPNN 具备良好的泛化能力，可用于多种类型的配体蛋白设计任务。这意味着：</p>
+<ul>
+<li>
+<p>对药物研发、酶工程、合成生物学等领域具有直接推动作用；</p>
+</li>
+<li>
+<p>其高效的设计能力有望配合 AlphaFold 等工具，形成端到端的“结构到功能”设计工作流；</p>
+</li>
+<li>
+<p>支持大规模、高通量的配体导向蛋白筛选与优化流程。</p>
+</li>
+</ul>
+<hr>
+<h3 id="64-局限性与未来方向">6.4 <strong>局限性与未来方向</strong></h3>
+<p>尽管 LigandMPNN 展现出优越性能，作者也指出一些值得关注的局限与改进空间：</p>
+<ul>
+<li>
+<p><strong>输入结构质量敏感</strong>：如果蛋白–配体复合物结构来源不准确（如对接预测），模型性能可能下降；</p>
+</li>
+<li>
+<p><strong>尚未显式考虑结合能量或动力学信息</strong>，未来可结合物理能量函数或分子动力学增强模型物理可解释性；</p>
+</li>
+<li>
+<p><strong>当前模型仍是结构到序列方向，逆向的“从功能到结构”设计能力仍待探索</strong>。</p>
+</li>
+</ul>
+<hr>
+<h3 id="65-总结">6.5 <strong>总结：</strong></h3>
+<blockquote>
+<p>LigandMPNN 提供了一种上下文感知的蛋白序列设计方法，首次在结合位点级别实现了结构–配体联合建模，显著提升了功能蛋白的设计准确率与适用性。该方法为多组分蛋白设计（multi-component protein design）奠定了基础，代表了结构生物设计进入“原子级配体感知”时代的关键一步</p>
+</blockquote>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/icml2025unimomo%E5%A4%9A%E8%82%BD%E5%B0%8F%E5%88%86%E5%AD%90%E6%8A%97%E4%BD%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/" class="link dim">
+                ICML 2025｜UniMoMo：多肽、小分子与抗体设计的统一生成框架
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>

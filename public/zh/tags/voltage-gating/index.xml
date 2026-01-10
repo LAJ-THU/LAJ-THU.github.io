@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Voltage Gating on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/voltage-gating/</link>
+    <description>Recent content in Voltage Gating on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 23 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/voltage-gating/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cell｜西湖大学卢培龙团队从头设计出可“感电”的人工离子通道</title>
+      <link>http://localhost:1313/zh/literature/cell%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E5%9B%A2%E9%98%9F%E4%BB%8E%E9%9B%B6%E8%AE%BE%E8%AE%A1%E5%87%BA%E5%8F%AF%E6%84%9F%E7%94%B5%E7%9A%84%E4%BA%BA%E5%B7%A5%E7%A6%BB%E5%AD%90%E9%80%9A%E9%81%93/</link>
+      <pubDate>Thu, 23 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/cell%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E5%9B%A2%E9%98%9F%E4%BB%8E%E9%9B%B6%E8%AE%BE%E8%AE%A1%E5%87%BA%E5%8F%AF%E6%84%9F%E7%94%B5%E7%9A%84%E4%BA%BA%E5%B7%A5%E7%A6%BB%E5%AD%90%E9%80%9A%E9%81%93/</guid>
+      <description>西湖大学卢培龙团队在 Cell 报道首个完全从零设计、具备电压响应能力的人工离子通道蛋白，在结构、电生理与神经元系统中均获得功能验证，展示了“可感知、可响应”蛋白的可编程设计能力。</description>
+    </item>
+  </channel>
+</rss>

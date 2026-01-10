@@ -74,3 +74,16 @@ defaultContentLanguageInSubdir = true
       name = "蓝极呢喃"
       url = "/zh/whisper/"
       weight = 50
+
+[related]
+  threshold = 80
+  includeNewer = true
+  toLower = true
+
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+
+  [[related.indices]]
+    name = "keywords"
+    weight = 80

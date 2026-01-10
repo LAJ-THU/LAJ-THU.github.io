@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PNAS on 蓝极</title>
+    <link>http://localhost:1313/zh/tags/pnas/</link>
+    <description>Recent content in PNAS on 蓝极</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 12 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/tags/pnas/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Click Fusion：基于人工设计融合蛋白的 GPCR 非活化态结构解析新策略</title>
+      <link>http://localhost:1313/zh/literature/click-fusion%E5%9F%BA%E4%BA%8E%E4%BA%BA%E5%B7%A5%E8%AE%BE%E8%AE%A1%E8%9E%8D%E5%90%88%E8%9B%8B%E7%99%BD%E7%9A%84-gpcr-%E9%9D%9E%E6%B4%BB%E5%8C%96%E6%80%81%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%E6%96%B0%E7%AD%96%E7%95%A5/</link>
+      <pubDate>Tue, 12 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/literature/click-fusion%E5%9F%BA%E4%BA%8E%E4%BA%BA%E5%B7%A5%E8%AE%BE%E8%AE%A1%E8%9E%8D%E5%90%88%E8%9B%8B%E7%99%BD%E7%9A%84-gpcr-%E9%9D%9E%E6%B4%BB%E5%8C%96%E6%80%81%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%E6%96%B0%E7%AD%96%E7%95%A5/</guid>
+      <description>提出 Click Fusion 策略，通过 de novo 设计的刚性融合蛋白稳定 GPCR 的非活化构象，使原本难以解析的 inactive 态结构可被高分辨率 cryo-EM 成功解析，并在多个受体上验证其通用性与可迁移性。</description>
+    </item>
+  </channel>
+</rss>

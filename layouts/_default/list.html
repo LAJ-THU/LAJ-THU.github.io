@@ -1,0 +1,96 @@
+{{ define "main" }}
+  <article class="pa3 pa4-ns nested-copy-line-height">
+
+    <!-- 栏目正文（来自 content/.../_index.md） -->
+    <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
+      {{- .Content -}}
+    </section>
+
+
+    {{ if eq .Section "literature" }}
+      <section class="ph3 ph5-l mb4">
+        <div class="pa3 bg-near-white br3">
+          <strong class="db mb3">按专题浏览</strong>
+
+          <div class="flex flex-wrap">
+            {{ $topics := slice
+              (dict "name" "Binder 设计" "tag" "binder")
+              (dict "name" "RFdiffusion" "tag" "rfdiffusion")
+              (dict "name" "虚拟筛选" "tag" "virtual screening")
+              (dict "name" "AlphaFold 生态" "tag" "alphafold")
+              (dict "name" "Science 系列" "tag" "science")
+            }}
+
+            {{ range $topics }}
+              <a href="{{ "/tags/" | relLangURL }}{{ .tag | urlize }}/"
+                class="link br-pill ba b--moon-gray bg-white near-black hover-bg-light-gray hover-black f6 pv2 ph3 mr2 mb2 dib">
+                {{ .name }}
+              </a>
+            {{ end }}
+          </div>
+        </div>
+      </section>
+    {{ end }}
+    
+    <!-- 热门标签，仅 literature 显示 -->
+    {{ if eq .Section "literature" }}
+      <section class="ph3 ph5-l mb4">
+        <div class="pa3 bg-near-white br3">
+          <strong class="db mb3">热门标签</strong>
+
+          {{/* 当前是否在 tag 页面 */}}
+          {{ $currentTag := "" }}
+          {{ if eq .Kind "term" }}
+            {{ $currentTag = .Title | lower }}
+          {{ end }}
+
+          {{/* 构造 tag + count 列表 */}}
+          {{ $tagList := slice }}
+          {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+            {{ $pages := where $taxonomy.Pages "Section" "literature" }}
+            {{ $count := len $pages }}
+            {{ if ge $count 1 }}
+              {{ $tagList = $tagList | append (dict "name" $name "count" $count) }}
+            {{ end }}
+          {{ end }}
+
+          {{/* 按 count 倒序排序 */}}
+          {{ $sorted := sort $tagList "count" "desc" }}
+
+          <div class="flex flex-wrap">
+            {{ range first 12 $sorted }}
+              {{ $tag := .name }}
+              {{ $count := .count }}
+              {{ $isActive := eq (lower $tag) $currentTag }}
+
+              {{/* Tag cloud 字号 */}}
+              {{ $size := cond (ge $count 5) "f4" (cond (ge $count 3) "f5" "f6") }}
+
+              <a href="{{ "/tags/" | relLangURL }}{{ $tag | urlize }}/"
+                 title="该标签下有 {{ $count }} 篇文章"
+                 class="link br-pill ba {{ $size }} pv2 ph3 mr2 mb2 dib
+                 {{ if $isActive }}
+                   bg-dark-blue white b--dark-blue
+                 {{ else }}
+                   bg-white near-black b--light-gray hover-bg-light-gray hover-black
+                 {{ end }}">
+                {{ $tag }}
+              </a>
+            {{ end }}
+          </div>
+        </div>
+      </section>
+    {{ end }}
+
+    <!-- 文章列表 -->
+    <section class="flex-ns mt4 flex-wrap justify-around">
+      {{ range .Paginator.Pages }}
+        <div class="w-100 w-30-l mb4 relative bg-white">
+          {{ .Render "summary" }}
+        </div>
+      {{ end }}
+    </section>
+
+    {{ partial "pagination.html" . -}}
+  </article>
+{{ end }}

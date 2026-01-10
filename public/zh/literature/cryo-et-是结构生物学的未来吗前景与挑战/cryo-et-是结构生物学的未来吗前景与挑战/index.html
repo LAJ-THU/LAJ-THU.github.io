@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>蓝极</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="冷冻电子断层扫描（Cryo-Electron Tomography, Cryo-ET）正逐步成为结构生物学领域探索细胞原位分子结构的核心技术。它结合了冷冻电镜的高分辨率优势与断层成像的三维重构能力，能够在接近天然状态下重建细胞内部复杂的超微结构。本文以 Turk 与 Baumeister 的经典综述为基础，系统讲解了 Cryo-ET 的工作原理、数据采集流程、图像分析策略以及与多模态技术的整合手段。同时，我们也深入讨论了该技术当前所面临的挑战与发展瓶颈，并展望其迈向“结构组学平台”的潜力路径。无论你是初入门的科研工作者，还是希望系统了解 Cryo-ET 应用逻辑的研究者，这篇文章都能为你提供坚实而清晰的理解基础。
+
+Wolfgang Baumeister 教授，是结构生物学领域的世界级先驱，现任德国马克斯·普朗克生物化学研究所（Max Planck Institute of Biochemistry）结构细胞生物学系主任。他长期致力于冷冻电镜（cryo-EM）与冷冻电子断层扫描（cryo-ET）方法的开发与应用，是推动原位结构生物学（in situ structural biology）发展的核心人物之一。
+Baumeister 教授不仅在技术创新上具有深远影响，更通过大量具有代表性的工作推动 Cryo-ET 成为研究复杂细胞过程的关键工具。他的研究团队率先将 FIB-SEM 融入 Cryo-ET 流程，奠定了“细胞层片”成像的标准范式。此外，他也是早期提出“分子社会学（molecular sociology）”概念的科学家之一，强调在细胞原位环境中研究分子结构与功能的必要性。
+联合作者Martin Turk 博士是 Baumeister 团队的重要成员，长期从事断层电镜的算法优化、结构识别以及自动化工作流程开发，参与多个高影响力研究项目，尤其在结合人工智能进行图像识别方面具有突出贡献。
+
+0. 引言：为什么我们需要“原位”结构研究技术？
+在传统的结构生物学研究中，我们已经积累了大量关于蛋白质及其复合物的高分辨率结构信息。这些成果主要来自于X射线晶体学、核磁共振（NMR）光谱和冷冻单颗粒分析（single-particle cryo-EM, SPA）等经典技术。这些方法极大地推动了我们对分子机制的理解，尤其是在药物靶点设计和酶学机制解析等方面取得了里程碑式的进展。
+然而，正如 Turk 与 Baumeister 在本文开头所指出的：
+
+These methods provide invaluable insights into molecular structures, but they fall short of placing macromolecules into the context of the cellular environment.
+这些方法虽然为我们提供了宝贵的结构信息，但它们并不能将这些大分子结构精确地置于细胞环境之中。
+
+事实上，细胞内部并非空旷的反应容器，而是一个高度拥挤、异质且动态变化的复杂环境。在这种环境下，蛋白质之间不断发生相互作用——有的稳定持久，有的则瞬时可逆。这种“分子社会”式的协作，是生命活动得以实现的基础。但遗憾的是，现有的大多数结构研究技术，往往需要对目标蛋白进行提纯、分离甚至结晶处理，从而使得这些分子脱离了其本来的生理语境。">
+    <meta name="generator" content="Hugo 0.154.3">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/zh/literature/cryo-et-%E6%98%AF%E7%BB%93%E6%9E%84%E7%94%9F%E7%89%A9%E5%AD%A6%E7%9A%84%E6%9C%AA%E6%9D%A5%E5%90%97%E5%89%8D%E6%99%AF%E4%B8%8E%E6%8C%91%E6%88%98/cryo-et-%E6%98%AF%E7%BB%93%E6%9E%84%E7%94%9F%E7%89%A9%E5%AD%A6%E7%9A%84%E6%9C%AA%E6%9D%A5%E5%90%97%E5%89%8D%E6%99%AF%E4%B8%8E%E6%8C%91%E6%88%98/">
+    
+
+    
+    
+    <meta property="og:url" content="http://localhost:1313/zh/literature/cryo-et-%E6%98%AF%E7%BB%93%E6%9E%84%E7%94%9F%E7%89%A9%E5%AD%A6%E7%9A%84%E6%9C%AA%E6%9D%A5%E5%90%97%E5%89%8D%E6%99%AF%E4%B8%8E%E6%8C%91%E6%88%98/cryo-et-%E6%98%AF%E7%BB%93%E6%9E%84%E7%94%9F%E7%89%A9%E5%AD%A6%E7%9A%84%E6%9C%AA%E6%9D%A5%E5%90%97%E5%89%8D%E6%99%AF%E4%B8%8E%E6%8C%91%E6%88%98/">
+  <meta property="og:site_name" content="蓝极">
+  <meta property="og:title" content="蓝极">
+  <meta property="og:description" content="冷冻电子断层扫描（Cryo-Electron Tomography, Cryo-ET）正逐步成为结构生物学领域探索细胞原位分子结构的核心技术。它结合了冷冻电镜的高分辨率优势与断层成像的三维重构能力，能够在接近天然状态下重建细胞内部复杂的超微结构。本文以 Turk 与 Baumeister 的经典综述为基础，系统讲解了 Cryo-ET 的工作原理、数据采集流程、图像分析策略以及与多模态技术的整合手段。同时，我们也深入讨论了该技术当前所面临的挑战与发展瓶颈，并展望其迈向“结构组学平台”的潜力路径。无论你是初入门的科研工作者，还是希望系统了解 Cryo-ET 应用逻辑的研究者，这篇文章都能为你提供坚实而清晰的理解基础。
+Wolfgang Baumeister 教授，是结构生物学领域的世界级先驱，现任德国马克斯·普朗克生物化学研究所（Max Planck Institute of Biochemistry）结构细胞生物学系主任。他长期致力于冷冻电镜（cryo-EM）与冷冻电子断层扫描（cryo-ET）方法的开发与应用，是推动原位结构生物学（in situ structural biology）发展的核心人物之一。
+Baumeister 教授不仅在技术创新上具有深远影响，更通过大量具有代表性的工作推动 Cryo-ET 成为研究复杂细胞过程的关键工具。他的研究团队率先将 FIB-SEM 融入 Cryo-ET 流程，奠定了“细胞层片”成像的标准范式。此外，他也是早期提出“分子社会学（molecular sociology）”概念的科学家之一，强调在细胞原位环境中研究分子结构与功能的必要性。
+联合作者Martin Turk 博士是 Baumeister 团队的重要成员，长期从事断层电镜的算法优化、结构识别以及自动化工作流程开发，参与多个高影响力研究项目，尤其在结合人工智能进行图像识别方面具有突出贡献。
+0. 引言：为什么我们需要“原位”结构研究技术？ 在传统的结构生物学研究中，我们已经积累了大量关于蛋白质及其复合物的高分辨率结构信息。这些成果主要来自于X射线晶体学、核磁共振（NMR）光谱和冷冻单颗粒分析（single-particle cryo-EM, SPA）等经典技术。这些方法极大地推动了我们对分子机制的理解，尤其是在药物靶点设计和酶学机制解析等方面取得了里程碑式的进展。
+然而，正如 Turk 与 Baumeister 在本文开头所指出的：
+These methods provide invaluable insights into molecular structures, but they fall short of placing macromolecules into the context of the cellular environment.
+这些方法虽然为我们提供了宝贵的结构信息，但它们并不能将这些大分子结构精确地置于细胞环境之中。
+事实上，细胞内部并非空旷的反应容器，而是一个高度拥挤、异质且动态变化的复杂环境。在这种环境下，蛋白质之间不断发生相互作用——有的稳定持久，有的则瞬时可逆。这种“分子社会”式的协作，是生命活动得以实现的基础。但遗憾的是，现有的大多数结构研究技术，往往需要对目标蛋白进行提纯、分离甚至结晶处理，从而使得这些分子脱离了其本来的生理语境。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="literature">
+
+  <meta itemprop="name" content="蓝极">
+  <meta itemprop="description" content="冷冻电子断层扫描（Cryo-Electron Tomography, Cryo-ET）正逐步成为结构生物学领域探索细胞原位分子结构的核心技术。它结合了冷冻电镜的高分辨率优势与断层成像的三维重构能力，能够在接近天然状态下重建细胞内部复杂的超微结构。本文以 Turk 与 Baumeister 的经典综述为基础，系统讲解了 Cryo-ET 的工作原理、数据采集流程、图像分析策略以及与多模态技术的整合手段。同时，我们也深入讨论了该技术当前所面临的挑战与发展瓶颈，并展望其迈向“结构组学平台”的潜力路径。无论你是初入门的科研工作者，还是希望系统了解 Cryo-ET 应用逻辑的研究者，这篇文章都能为你提供坚实而清晰的理解基础。
+Wolfgang Baumeister 教授，是结构生物学领域的世界级先驱，现任德国马克斯·普朗克生物化学研究所（Max Planck Institute of Biochemistry）结构细胞生物学系主任。他长期致力于冷冻电镜（cryo-EM）与冷冻电子断层扫描（cryo-ET）方法的开发与应用，是推动原位结构生物学（in situ structural biology）发展的核心人物之一。
+Baumeister 教授不仅在技术创新上具有深远影响，更通过大量具有代表性的工作推动 Cryo-ET 成为研究复杂细胞过程的关键工具。他的研究团队率先将 FIB-SEM 融入 Cryo-ET 流程，奠定了“细胞层片”成像的标准范式。此外，他也是早期提出“分子社会学（molecular sociology）”概念的科学家之一，强调在细胞原位环境中研究分子结构与功能的必要性。
+联合作者Martin Turk 博士是 Baumeister 团队的重要成员，长期从事断层电镜的算法优化、结构识别以及自动化工作流程开发，参与多个高影响力研究项目，尤其在结合人工智能进行图像识别方面具有突出贡献。
+0. 引言：为什么我们需要“原位”结构研究技术？ 在传统的结构生物学研究中，我们已经积累了大量关于蛋白质及其复合物的高分辨率结构信息。这些成果主要来自于X射线晶体学、核磁共振（NMR）光谱和冷冻单颗粒分析（single-particle cryo-EM, SPA）等经典技术。这些方法极大地推动了我们对分子机制的理解，尤其是在药物靶点设计和酶学机制解析等方面取得了里程碑式的进展。
+然而，正如 Turk 与 Baumeister 在本文开头所指出的：
+These methods provide invaluable insights into molecular structures, but they fall short of placing macromolecules into the context of the cellular environment.
+这些方法虽然为我们提供了宝贵的结构信息，但它们并不能将这些大分子结构精确地置于细胞环境之中。
+事实上，细胞内部并非空旷的反应容器，而是一个高度拥挤、异质且动态变化的复杂环境。在这种环境下，蛋白质之间不断发生相互作用——有的稳定持久，有的则瞬时可逆。这种“分子社会”式的协作，是生命活动得以实现的基础。但遗憾的是，现有的大多数结构研究技术，往往需要对目标蛋白进行提纯、分离甚至结晶处理，从而使得这些分子脱离了其本来的生理语境。">
+  <meta itemprop="wordCount" content="381">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="蓝极">
+  <meta name="twitter:description" content="冷冻电子断层扫描（Cryo-Electron Tomography, Cryo-ET）正逐步成为结构生物学领域探索细胞原位分子结构的核心技术。它结合了冷冻电镜的高分辨率优势与断层成像的三维重构能力，能够在接近天然状态下重建细胞内部复杂的超微结构。本文以 Turk 与 Baumeister 的经典综述为基础，系统讲解了 Cryo-ET 的工作原理、数据采集流程、图像分析策略以及与多模态技术的整合手段。同时，我们也深入讨论了该技术当前所面临的挑战与发展瓶颈，并展望其迈向“结构组学平台”的潜力路径。无论你是初入门的科研工作者，还是希望系统了解 Cryo-ET 应用逻辑的研究者，这篇文章都能为你提供坚实而清晰的理解基础。
+Wolfgang Baumeister 教授，是结构生物学领域的世界级先驱，现任德国马克斯·普朗克生物化学研究所（Max Planck Institute of Biochemistry）结构细胞生物学系主任。他长期致力于冷冻电镜（cryo-EM）与冷冻电子断层扫描（cryo-ET）方法的开发与应用，是推动原位结构生物学（in situ structural biology）发展的核心人物之一。
+Baumeister 教授不仅在技术创新上具有深远影响，更通过大量具有代表性的工作推动 Cryo-ET 成为研究复杂细胞过程的关键工具。他的研究团队率先将 FIB-SEM 融入 Cryo-ET 流程，奠定了“细胞层片”成像的标准范式。此外，他也是早期提出“分子社会学（molecular sociology）”概念的科学家之一，强调在细胞原位环境中研究分子结构与功能的必要性。
+联合作者Martin Turk 博士是 Baumeister 团队的重要成员，长期从事断层电镜的算法优化、结构识别以及自动化工作流程开发，参与多个高影响力研究项目，尤其在结合人工智能进行图像识别方面具有突出贡献。
+0. 引言：为什么我们需要“原位”结构研究技术？ 在传统的结构生物学研究中，我们已经积累了大量关于蛋白质及其复合物的高分辨率结构信息。这些成果主要来自于X射线晶体学、核磁共振（NMR）光谱和冷冻单颗粒分析（single-particle cryo-EM, SPA）等经典技术。这些方法极大地推动了我们对分子机制的理解，尤其是在药物靶点设计和酶学机制解析等方面取得了里程碑式的进展。
+然而，正如 Turk 与 Baumeister 在本文开头所指出的：
+These methods provide invaluable insights into molecular structures, but they fall short of placing macromolecules into the context of the cellular environment.
+这些方法虽然为我们提供了宝贵的结构信息，但它们并不能将这些大分子结构精确地置于细胞环境之中。
+事实上，细胞内部并非空旷的反应容器，而是一个高度拥挤、异质且动态变化的复杂环境。在这种环境下，蛋白质之间不断发生相互作用——有的稳定持久，有的则瞬时可逆。这种“分子社会”式的协作，是生命活动得以实现的基础。但遗憾的是，现有的大多数结构研究技术，往往需要对目标蛋白进行提纯、分离甚至结晶处理，从而使得这些分子脱离了其本来的生理语境。">
+
+	
+
+
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/zh/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        蓝极
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/about/" title="我是谁 页">
+              我是谁
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/projects/" title="我做过什么 页">
+              我做过什么
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/literature/" title="文献解读 页">
+              文献解读
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/tutorial/" title="AI4S 教程 页">
+              AI4S 教程
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/zh/whisper/" title="蓝极呢喃 页">
+              蓝极呢喃
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+
+  <article class="flex-l mw7 center ph3 flex-wrap justify-between">
+
+    
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+        AI4S文献
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">
+        
+      </h1>
+
+      
+
+      
+
+      
+    </header>
+
+    
+    <div class="nested-copy-line-height lh-copy
+                serif
+                f4 nested-links
+                mid-gray
+                pr4-l
+                w-100-l">
+
+      
+      <p>冷冻电子断层扫描（Cryo-Electron Tomography, Cryo-ET）正逐步成为结构生物学领域探索细胞原位分子结构的核心技术。它结合了冷冻电镜的高分辨率优势与断层成像的三维重构能力，能够在接近天然状态下重建细胞内部复杂的超微结构。本文以 Turk 与 Baumeister 的经典综述为基础，系统讲解了 Cryo-ET 的工作原理、数据采集流程、图像分析策略以及与多模态技术的整合手段。同时，我们也深入讨论了该技术当前所面临的挑战与发展瓶颈，并展望其迈向“结构组学平台”的潜力路径。无论你是初入门的科研工作者，还是希望系统了解 Cryo-ET 应用逻辑的研究者，这篇文章都能为你提供坚实而清晰的理解基础。</p>
+<p><img src="images/image-12.png" alt=""></p>
+<p><strong>Wolfgang Baumeister 教授</strong>，是结构生物学领域的世界级先驱，现任德国马克斯·普朗克生物化学研究所（Max Planck Institute of Biochemistry）结构细胞生物学系主任。他长期致力于<strong>冷冻电镜（cryo-EM）与冷冻电子断层扫描（cryo-ET）</strong>方法的开发与应用，是推动原位结构生物学（in situ structural biology）发展的核心人物之一。</p>
+<p>Baumeister 教授不仅在技术创新上具有深远影响，更通过大量具有代表性的工作推动 Cryo-ET 成为研究复杂细胞过程的关键工具。他的研究团队率先将 FIB-SEM 融入 Cryo-ET 流程，奠定了“细胞层片”成像的标准范式。此外，他也是早期提出“分子社会学（molecular sociology）”概念的科学家之一，强调在细胞原位环境中研究分子结构与功能的必要性。</p>
+<p>联合作者<strong>Martin Turk 博士</strong>是 Baumeister 团队的重要成员，长期从事断层电镜的算法优化、结构识别以及自动化工作流程开发，参与多个高影响力研究项目，尤其在结合人工智能进行图像识别方面具有突出贡献。</p>
+<hr>
+<h2 id="0-引言为什么我们需要原位结构研究技术"><strong>0. 引言：为什么我们需要“原位”结构研究技术？</strong></h2>
+<p>在传统的结构生物学研究中，我们已经积累了大量关于蛋白质及其复合物的高分辨率结构信息。这些成果主要来自于X射线晶体学、核磁共振（NMR）光谱和冷冻单颗粒分析（single-particle cryo-EM, SPA）等经典技术。这些方法极大地推动了我们对分子机制的理解，尤其是在药物靶点设计和酶学机制解析等方面取得了里程碑式的进展。</p>
+<p>然而，正如 Turk 与 Baumeister 在本文开头所指出的：</p>
+<blockquote>
+<p>These methods provide invaluable insights into molecular structures, but they fall short of placing macromolecules into the context of the cellular environment.</p>
+<p><strong>这些方法虽然为我们提供了宝贵的结构信息，但它们并不能将这些大分子结构精确地置于细胞环境之中。</strong></p>
+</blockquote>
+<p>事实上，细胞内部并非空旷的反应容器，而是一个高度拥挤、异质且动态变化的复杂环境。在这种环境下，蛋白质之间不断发生相互作用——有的稳定持久，有的则瞬时可逆。这种“分子社会”式的协作，是生命活动得以实现的基础。但遗憾的是，现有的大多数结构研究技术，往往需要对目标蛋白进行提纯、分离甚至结晶处理，从而使得这些分子脱离了其本来的生理语境。</p>
+<p><img src="images/image-14.png" alt=""></p>
+<p>因此，<strong>当代结构生物学正面临一个核心问题</strong>：我们是否能够发展出一种成像技术，既能保留细胞原位的空间结构背景，又具备纳米尺度的分辨能力，从而让我们在真实的细胞环境中直接观察蛋白质及其复合物的组织、分布与交互状态？</p>
+<p>Cryo-electron tomography（冷冻电子断层扫描，简称Cryo-ET）正是在这样的需求背景下被提出并快速发展的。它结合了冷冻样本的原位保留能力与电子断层技术的三维成像优势，能够在未经染色、无需标签的情况下，重建细胞内部区域的高分辨三维图像。作者在此开篇即将Cryo-ET定位为<strong>填补传统结构方法与细胞生物学之间空白的关键技术</strong>，具有潜力深远的科学意义。</p>
+<p><img src="images/image-13.png" alt=""></p>
+<hr>
+<h2 id="1-什么是-cryo-et技术原理与关键特性">1. <strong>什么是 Cryo-ET？技术原理与关键特性</strong></h2>
+<p>Cryo-electron tomography（Cryo-ET）是一项结合了冷冻电镜（cryo-EM）与断层扫描（tomography）原理的三维成像技术，旨在以尽可能接近原生状态的方式，对细胞或亚细胞结构进行纳米级别的三维重建。其核心思想是：通过对快速冷冻后的生物样本进行多角度倾斜成像，并利用计算算法重建出三维体积图像，从而获得样本在未染色、未标签状态下的超微结构信息。</p>
+<p><img src="images/image-10.png" alt="EM"></p>
+<p><img src="images/image-9.png" alt="Tomography"></p>
+<p>在具体操作中，样本首先被快速冷冻（vitrified），以防止冰晶形成对细胞结构造成破坏。随后，样本被置于透射电子显微镜（TEM）中，在一定倾斜范围内（通常为±60–70°）进行序列拍摄（tilt series acquisition）。所得图像经过反投影或更高级的重建算法（如SIRT、WBP）处理，形成一个三维的电子密度图像体（tomogram）。</p>
+<p>Cryo-ET 的一个突出优势在于其<strong>原位成像能力（in situ capability）</strong>。不同于单颗粒冷冻电镜（SPA），后者通常要求高度纯化和均一化的样品，Cryo-ET 可以在<strong>未经提纯或固定的天然细胞环境中直接观测结构多样性</strong>。作者指出，这使得Cryo-ET成为观察“分子社会行为”的重要工具——即不仅关注单个分子本身的结构，而是关注它如何在细胞背景中参与更大尺度的结构组织。</p>
+<p>此外，Cryo-ET 并不依赖荧光标签或染色剂，因此具有<strong>非标记、非假设驱动的发现潜力</strong>。这一特性尤其适合探索未知结构或偶发事件，如病毒装配过程、线粒体损伤、蛋白质聚集等现象。正如作者所强调：</p>
+<blockquote>
+<p>Cryo-ET reveals the molecular sociology of the cell in a noninvasive and unbiased way.</p>
+</blockquote>
+<p>虽然当前的技术还不能普遍达到原子分辨率，但通过亚断层平均（subtomogram averaging）等方法，Cryo-ET 已能够在某些高丰度、大尺寸复合体中实现亚纳米尺度的结构解析。这为研究诸如核糖体、表达体（expressome）、核孔复合体等细胞关键结构提供了切实可行的手段。</p>
+<p>综上所述，Cryo-ET 在现代结构生物学体系中扮演着一种“桥梁角色”：它弥合了传统分子解析技术与细胞尺度观察之间的空隙，使我们得以在空间上对蛋白质与细胞结构之间的关系进行整合性理解。</p>
+<hr>
+<h2 id="2-样本制备的关键挑战fib-技术的引入与意义">2. <strong>样本制备的关键挑战：FIB 技术的引入与意义</strong></h2>
+<p>尽管 Cryo-ET 在原理上具备强大的三维成像能力，但其应用在<strong>真核细胞或组织样本</strong>中仍面临显著的物理限制。其核心问题在于——<strong>电子束的穿透能力极为有限，仅适用于厚度约为100–200纳米的样本区域</strong>。而典型的哺乳动物细胞，其厚度可达几微米，这使得未经处理的细胞本体对于电子断层成像而言“过于厚重”，无法获得清晰图像。</p>
+<p><img src="images/image-4.png" alt=""></p>
+<p>早期的解决方案是仅观测靠近细胞边缘的薄区，例如膜突、细胞边缘、或天然小型生物体如细菌。但这大大限制了Cryo-ET的应用范围，无法满足对细胞内部结构（如细胞核、线粒体、内质网等）进行原位成像的需求。</p>
+<p>为突破这一限制，研究者引入了<strong>聚焦离子束（Focused Ion Beam, FIB）铣削技术</strong>，并将其与冷冻制样流程集成，从而实现对细胞厚度的精准调控。在这一过程中，FIB系统可在低温下使用高能离子束（如Ga+）逐层移除样本外部区域，最终制备出厚度合适、电子透明的“冷冻层片”（cryo-lamellae）。这一层片包含细胞内特定区域，并保留了其原始超微结构，为Cryo-ET 成像创造了物理通道。</p>
+<p>文中指出，这项技术的引入相当于“在细胞内打开一扇窗”（open a window into the cell），极大拓展了Cryo-ET在真核细胞中的适用性。特别是配合冷冻荧光显微镜（Cryo-CLEM）进行目标定位后，FIB可以实现<strong>精准、区域化的制样处理</strong>，从而聚焦于感兴趣的亚细胞结构进行高分辨率观察。</p>
+<p>然而，作者也坦率指出：<strong>尽管FIB技术极具突破性，但其操作过程复杂，时间成本高，仍然是Cryo-ET流程中最为繁重的环节之一。</strong>从样本冷冻、离子束切削、转移到电镜成像，整个工作流程对仪器精度、人员经验与环境稳定性要求极高，且容易受到污染或机械误差的影响。</p>
+<p><img src="images/image-3.png" alt="Cryo-ET workflow from sample preparation to tomogram acquisition."></p>
+<p>因此，虽然FIB集成显著扩展了Cryo-ET的可观测区域，并奠定了其“细胞级三维成像”的技术基础，但其高门槛也限制了大规模推广应用。正如作者所强调的那样，<strong>优化样本制备流程仍是推动Cryo-ET走向高通量、高可及性应用的关键瓶颈之一</strong>。</p>
+<hr>
+<h2 id="3-成像过程中的物理约束与优化手段">3. <strong>成像过程中的物理约束与优化手段</strong></h2>
+<p>在样本制备完成后，Cryo-ET 的核心工作转入成像阶段。尽管该技术可以实现纳米级别的三维结构重建，但其成像过程本身也面临一系列<strong>物理与工程上的挑战</strong>。这些问题若不能妥善解决，将直接影响到最终图像的质量、分辨率乃至结构可解释性。</p>
+<p><img src="images/image-2.png" alt=""></p>
+<h3 id="31-电子辐射剂量限制">3.1 <strong>电子辐射剂量限制</strong></h3>
+<p>最根本的挑战来自于<strong>电子束对生物样本的辐射损伤</strong>。由于冷冻样本本质上仍是高度敏感的水合有机物，它们在电子束照射下极易受到结构破坏。为保留原始结构并防止辐射诱导的伪影，Cryo-ET 成像通常需在<strong>极低剂量（low-dose）条件下进行</strong>，这在很大程度上牺牲了信噪比。</p>
+<p>为应对这一限制，成像流程采用了一种倾斜序列（tilt series）策略：将样本沿单轴逐步倾斜，每隔1–3度拍摄一张图像，最终获得约100–120张二维投影图。随后通过反投影或迭代重建算法（如WBP、SIRT）重构三维体积图像。</p>
+<p><img src="images/image-8.png" alt=""></p>
+<p>这种方法的副作用是：每张图像都必须在极低电子计数下获取，图像对比度极低、背景噪声严重，<strong>重建结果往往具有较强的模糊性与颗粒感（grainy features）</strong>，使得图像解释和后续识别工作极具挑战性。</p>
+<hr>
+<h3 id="32-成像几何局限与缺失楔问题">3.2 <strong>成像几何局限与“缺失楔”问题</strong></h3>
+<p>由于电子显微镜的机械限制，样本倾斜角度一般难以超过±70°，而理想的断层成像需要±90°全覆盖。这一角度差导致了所谓的<strong>“缺失楔”（missing wedge）问题</strong>：在三维傅里叶空间中形成了一个信息空域，使得重建图像沿Z轴方向解析度显著降低，结构显示呈现压扁、拉长等变形特征。</p>
+<p><img src="images/image-5.png" alt=""></p>
+<p>尽管已有一些数学算法（如双轴倾斜、加权投影）尝试缓解这一问题，但“缺失楔”仍然是当前Cryo-ET无法完全克服的固有限制之一。</p>
+<hr>
+<h3 id="33-对比度增强相位板的使用">3.3 <strong>对比度增强：相位板的使用</strong></h3>
+<p>为进一步提升图像质量，尤其是在低剂量条件下增强弱信号的可视化效果，Cryo-ET 借助了<strong>相位板技术（phase plate imaging）</strong>。特别是 Volta 相位板（VPP）在实际应用中已表现出较好性能。</p>
+<p><img src="images/image-6.png" alt=""></p>
+<p>VPP 能够通过改变电子波的相位关系来增强样本边界信号的干涉效果，从而在不提高剂量的前提下提升成像对比度。该技术尤其适用于观察结构小、分布密集的分子复合体，在人类细胞、病理样本的Cryo-ET应用中发挥了积极作用。</p>
+<p>作者指出，未来相位板的发展仍有潜力，例如探索更稳定、寿命更长的替代方案（如激光相位板、图案化薄膜相位板等），以进一步提升低信号条件下的成像能力。</p>
+<hr>
+<h3 id="34-自动化采集与样本定位">3.4 <strong>自动化采集与样本定位</strong></h3>
+<p>在提高成像效率方面，当前的技术发展集中在<strong>数据采集自动化与样本导航系统</strong>。随着高帧率直接电子探测器（DED）和智能样本载台的普及，Cryo-ET 的数据获取速度已显著提升，但整体仍难以满足高通量研究需求。</p>
+<p><img src="images/image-1.png" alt=""></p>
+<p>此外，如何<strong>在复杂细胞结构中快速找到目标区域</strong>也是成像流程中的关键一环。为此，Cryo-CLEM（冷冻荧光-电子显微镜整合技术）成为重要手段，通过荧光显微镜先标记、定位感兴趣结构，随后在电镜中精确对准成像区域，提高成像效率与目标针对性。</p>
+<hr>
+<h3 id="35-小结">3.5 <strong>小结：</strong></h3>
+<p>Cryo-ET 的成像流程在保持样本结构完整的前提下，必须在极低辐射剂量、角度受限、信号微弱等多重物理约束下完成数据获取。这使得图像质量提升不仅依赖于仪器升级，也需要在算法设计、相位增强和自动化采集等方面持续创新。正如作者所言，这些技术层面的优化，是将Cryo-ET从“实验室工具”推进到“通用研究平台”的关键基础。</p>
+<hr>
+<h2 id="4-从图像到认知分子识别与结构解析的关键方法">4. <strong>从图像到认知：分子识别与结构解析的关键方法</strong></h2>
+<p>完成三维体积图（tomogram）的重建之后，Cryo-ET 真正的“结构生物学价值”尚未完全实现。研究者必须进一步从这些<strong>低对比度、高噪声的重建图像中提取出具有生物学意义的分子特征</strong>，并尝试识别其身份、构象状态及空间组织方式。这一过程不仅考验成像质量，更是数据处理与计算建模能力的集中体现。</p>
+<p>在这一部分，Turk 和 Baumeister 系统讨论了两类核心策略：<strong>基于模板的方法（template-based identification）与非模板方法（template-free identification）</strong>，它们在当前Cryo-ET图像分析中各具优势与局限。</p>
+<p><img src="images/image.png" alt="Tomogram reconstruction workflow"></p>
+<hr>
+<h3 id="41-基于模板的分子识别template-matching">4.1 <strong>基于模板的分子识别（Template Matching）</strong></h3>
+<p>该方法依赖于已有的高分辨率结构信息，通常来源于X射线晶体学、单颗粒冷冻电镜（SPA），或者是AlphaFold等结构预测模型。具体而言，将这些已知结构转化为电子密度模型（或其模拟投影），与tomogram中局部密度区域进行逐一匹配，通过计算相关性得分来筛选可能存在该分子的位置。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>
+<p>适用于高丰度、构象稳定的大分子复合体；</p>
+</li>
+<li>
+<p>在目标明确、先验信息充分的条件下识别精度较高。</p>
+</li>
+</ul>
+<p><strong>局限：</strong></p>
+<ul>
+<li>
+<p>无法发现未知结构；</p>
+</li>
+<li>
+<p>受限于样本构象异质性与噪声影响，易出现假阳性或假阴性；</p>
+</li>
+<li>
+<p>大量计算资源需求高，尤其在大体积tomogram中执行全场匹配。</p>
+</li>
+</ul>
+<p><img src="images/image-7.png" alt=""></p>
+<hr>
+<h3 id="42-亚断层平均subtomogram-averaging-sta">4.2 <strong>亚断层平均（Subtomogram Averaging, STA）</strong></h3>
+<p>对于重复出现的粒子（如核糖体、线粒体 ATP 合酶等），研究者可以在多个 tomogram 或同一 tomogram 中提取出这些粒子子体（subtomograms），经过精确对齐与三维平均，显著提升信噪比，进而解析其高分辨率结构。</p>
+<p>该方法结合了 Cryo-ET 的原位优势与 SPA 的数据整合思维，是目前最有效的结构解析方式之一。</p>
+<p><img src="images/image-11.png" alt=""></p>
+<p>但作者指出，<strong>与SPA可处理百万级粒子不同，Cryo-ET的粒子数量往往仅为几千甚至几百</strong>，这限制了其分辨率上限。此外，亚断层平均也会掩盖构象异质性、位置背景信息，因此需要与定向分析、异构分类方法结合使用。</p>
+<hr>
+<h3 id="43-非模板识别与深度学习方法">4.3 <strong>非模板识别与深度学习方法</strong></h3>
+<p>考虑到很多细胞内结构尚未被解析，研究者开始尝试通过<strong>非模板、无先验的策略</strong>进行图像分类与识别。近年来，深度学习在 Cryo-ET 图像分割与粒子检测方面展现出显著潜力。</p>
+<p>例如：</p>
+<ul>
+<li>
+<p>“<strong>Topaz</strong>”等深度卷积网络被用于粒子识别；</p>
+</li>
+<li>
+<p>“<strong>Warp</strong>” 等工具实现了端到端的图像校正、分割与配准；</p>
+</li>
+<li>
+<p>“<strong>Noise2Noise</strong>”、“CryoCARE” 等学习型去噪算法，有效增强了低剂量图像中的信号质量。</p>
+</li>
+</ul>
+<p>作者指出，虽然这些方法尚未完全替代传统流程，但它们在加速图像注释、降低人工标记成本、发现非典型结构方面具有明显优势，<strong>未来有望成为Cryo-ET数据解释的核心工具链</strong>。</p>
+<hr>
+<h3 id="44-多源数据融合与辅助识别">4.4 <strong>多源数据融合与辅助识别</strong></h3>
+<p>为了进一步增强分子识别的准确性与解释力，作者也强调了结合其他实验数据的重要性。具体包括：</p>
+<ul>
+<li>
+<p><strong>交联质谱（Crosslinking-MS）</strong>：提供分子间距离约束；</p>
+</li>
+<li>
+<p><strong>标签免疫电镜（Labeling EM）</strong>：用于特定分子定位；</p>
+</li>
+<li>
+<p><strong>AI预测结构（如AlphaFold）</strong>：补充难以实验解析的构象信息；</p>
+</li>
+<li>
+<p><strong>Cryo-CLEM 成像数据</strong>：提供荧光定位线索，缩小搜索范围。</p>
+</li>
+</ul>
+<p>这种“图像 + 实验数据 + 模型预测”的融合策略，已逐渐成为当前Cryo-ET研究的主流趋势之一。</p>
+<hr>
+<h3 id="45-小结">4.5 <strong>小结：</strong></h3>
+<p>在Cryo-ET中，“看见分子”只是第一步，**“认出分子”才是真正赋予数据生物学意义的关键。**随着图像分析方法不断发展，从模板匹配到机器学习，从亚断层平均到分子建模，Cryo-ET正在逐步实现从“结构可视化”向“结构解析”的过渡。正如作者所言：<strong>分子识别能力的提升，决定了Cryo-ET能否真正走入结构组学时代。</strong></p>
+<hr>
+<h2 id="5-多模态集成从图像到生物学意义的关键桥梁">5. <strong>多模态集成：从图像到生物学意义的关键桥梁</strong></h2>
+<p>尽管 Cryo-ET 能够提供接近原位状态下的三维结构信息，但仅凭其自身仍存在一定的识别与解释局限。特别是在细胞环境高度复杂、目标分子丰度低、或结构异质性强的情况下，仅依靠 tomogram 本身常常难以准确地“指认”特定分子。这使得 <strong>多模态成像与数据集成</strong> 成为当前 Cryo-ET 发展的关键方向之一。</p>
+<p>Turk 与 Baumeister 在文中明确提出：<strong>只有将 Cryo-ET 与其他技术协同使用，才能实现从“结构重建”到“功能注释”的跨越。</strong></p>
+<hr>
+<h3 id="51-cryo-clem冷冻荧光与电子显微镜的结合">5.1 <strong>Cryo-CLEM：冷冻荧光与电子显微镜的结合</strong></h3>
+<p><img src="images/image-15.png" alt=""></p>
+<p>Cryo-CLEM（correlative light and electron microscopy）是一种结合冷冻荧光成像与冷冻电镜观察的技术流程。其核心思想是：在样本冷冻后，先利用荧光显微镜对样本进行低温下的标记和定位，再在同一块样本上使用Cryo-ET进行高分辨率成像。</p>
+<p>该方法的优势在于：</p>
+<ul>
+<li>
+<p>可以在荧光层面定位特定蛋白或结构，从而引导 FIB 选择“切片”区域；</p>
+</li>
+<li>
+<p>增加了数据采集的目的性，降低低丰度目标被遗漏的风险；</p>
+</li>
+<li>
+<p>保留了结构与功能的双重信息，有助于“结构-功能”相关性建立。</p>
+</li>
+</ul>
+<p>但Cryo-CLEM也面临诸多挑战，如标记效率低、荧光信号强度受限、图像配准精度要求高等，仍需依赖高端设备与成熟实验流程。</p>
+<hr>
+<h3 id="52-交联质谱xl-ms空间邻接信息的补充来源">5.2 <strong>交联质谱（XL-MS）：空间邻接信息的补充来源</strong></h3>
+<p>另一种重要的辅助手段是<strong>交联质谱（Crosslinking Mass Spectrometry）</strong>，即通过化学交联剂将相邻蛋白或结构域“锁定”在一定空间距离范围内，随后进行裂解与质谱分析，从而获得蛋白-蛋白之间的接触信息（通常在2–4 nm尺度上）。</p>
+<p><img src="images/image-16.png" alt=""></p>
+<p>将交联质谱数据与Cryo-ET重建图像叠加，可以：</p>
+<ul>
+<li>
+<p>辅助识别 tomogram 中的未知密度；</p>
+</li>
+<li>
+<p>提供分子组装顺序或空间构型线索；</p>
+</li>
+<li>
+<p>验证Cryo-ET所提取出的复合体模型是否合理。</p>
+</li>
+</ul>
+<p>这种方法尤其适用于结构异质性强或可逆相互作用多的系统，如信号转导通路、转录复合体等。</p>
+<hr>
+<h3 id="53-ai-结构预测如-alphafold作为先验结构库">5.3 <strong>AI 结构预测（如 AlphaFold）作为先验结构库</strong></h3>
+<p>随着 AlphaFold 等结构预测模型的广泛应用，Cryo-ET研究者得以构建更为全面的<strong>结构模板数据库</strong>。这些预测结构可以：</p>
+<ul>
+<li>
+<p>被转化为电子密度投影，用于图像匹配；</p>
+</li>
+<li>
+<p>在亚断层平均后进行拟合（fitting）以建立复合体构建模型；</p>
+</li>
+<li>
+<p>在低分辨区域辅助结构解释，提供构象可能性建议。</p>
+</li>
+</ul>
+<p>虽然 AlphaFold 的预测不具备实验验证强度，但在某些区域无法获得实验结构的条件下，它已成为一种具有实际价值的结构参考资源。</p>
+<hr>
+<h3 id="54-其他技术整合fret电镜标签与成像引导">5.4 <strong>其他技术整合：FRET、电镜标签与成像引导</strong></h3>
+<p>除了上述主流方法，研究者还尝试使用：</p>
+<ul>
+<li>
+<p><strong>FRET（荧光共振能量转移）</strong>：识别蛋白质间是否存在相邻关系；</p>
+</li>
+<li>
+<p><strong>纳米金粒子标签</strong>：用于EM图像中标记特定位点；</p>
+</li>
+<li>
+<p><strong>免疫EM或RNA原位杂交</strong>：辅助确认功能区域或结构身份。</p>
+</li>
+</ul>
+<p>这些方法虽然并非Cryo-ET体系内原生技术，但其“定向标记”能力在验证结构解释上具有重要意义。</p>
+<hr>
+<h3 id="55-小结">5.5 <strong>小结：</strong></h3>
+<p>正如作者所言，<strong>Cryo-ET 并不是孤立使用的工具，而是整个“结构与功能整合框架的核心环节。</strong>通过与光学成像、质谱分析、AI预测等手段协同，Cryo-ET 才能真正实现“在原位看到分子，并理解它们在做什么”的科学目标。</p>
+<p>在当前的技术格局中，多模态融合不仅提高了结构识别的准确性，也推动了 Cryo-ET 向细胞系统尺度扩展。这种整合式思维，也正在定义新一代结构生物学的研究范式。</p>
+<hr>
+<h2 id="6-展望从高端技术走向结构组学平台">6. <strong>展望：从高端技术走向结构组学平台</strong></h2>
+<p>在本文的最后，作者从整体的技术框架出发，对 Cryo-ET 的发展潜力与尚待解决的问题进行了系统性反思。这一段不仅是对前文各个技术点的总结，更明确提出了一个重要的愿景——<strong>将 Cryo-ET 从高精尖的图像技术演进为可以广泛应用的“结构组学平台”（structural cell biology platform）</strong>。</p>
+<p><img src="images/image-17.png" alt=""></p>
+<hr>
+<h3 id="61-科学潜力结构组学的核心支柱之一">6.1 <strong>科学潜力：结构组学的核心支柱之一</strong></h3>
+<p>Cryo-ET 能够提供分子层级的三维结构，并保留其在细胞环境中的原位组织特征，因此天然适合用于研究复杂的细胞过程，例如：</p>
+<ul>
+<li>
+<p>转录与翻译的耦合机制（transcription-translation coupling）；</p>
+</li>
+<li>
+<p>病毒入侵与复制的动态过程；</p>
+</li>
+<li>
+<p>蛋白质聚集体在神经退行性疾病中的形态特征；</p>
+</li>
+<li>
+<p>膜结构与膜蛋白复合体的装配行为；</p>
+</li>
+<li>
+<p>多酶复合体与细胞器之间的空间依赖关系等。</p>
+</li>
+</ul>
+<p>在这些研究中，Cryo-ET 提供的信息不仅是静态结构，更包含<strong>构象异质性、分布异质性和空间组织信息</strong>，有望实现细胞尺度的“结构图谱重建”。</p>
+<hr>
+<h3 id="62-主要技术瓶颈尚未完全解决">6.2 <strong>主要技术瓶颈尚未完全解决</strong></h3>
+<p>尽管Cryo-ET的潜力令人期待，但作者也清醒地指出：<strong>其距离成为常规科研手段仍有一系列关键技术瓶颈</strong>，包括但不限于：</p>
+<ul>
+<li>
+<p>❗ <strong>样本制备复杂、低通量</strong>：FIB 制备耗时高、污染风险大，缺乏自动化系统；</p>
+</li>
+<li>
+<p>❗ <strong>数据采集与处理效率低</strong>：现有流程尚不能实现高通量批处理，成像时间和数据量极为庞大；</p>
+</li>
+<li>
+<p>❗ <strong>图像识别仍依赖经验与人工干预</strong>：深度学习与自动识别算法仍处在快速发展但尚不成熟阶段；</p>
+</li>
+<li>
+<p>❗ <strong>缺乏统一注释标准与数据库支持</strong>：tomogram注释仍高度碎片化，缺少类似PDB的结构存储体系。</p>
+</li>
+</ul>
+<p>这些问题不仅制约了Cryo-ET在更大样本规模、更多样细胞模型中的应用，也阻碍了其与组学技术（如转录组、蛋白质组、空间组学）的系统融合。</p>
+<hr>
+<h3 id="63-向结构组学迈进的策略路径">6.3 <strong>向“结构组学”迈进的策略路径</strong></h3>
+<p>作者建议，要实现Cryo-ET的大规模部署，科研社区需要：</p>
+<ul>
+<li>
+<p>投资于自动化样本制备与仪器控制系统（如全自动FIB-SEM平台）；</p>
+</li>
+<li>
+<p>建立标准化的数据采集与分析流程，降低学习曲线；</p>
+</li>
+<li>
+<p>推动图像数据的可注释性、共享性与机器可读性（machine-readable annotation）；</p>
+</li>
+<li>
+<p>整合结构预测、光学定位、交联组学等辅助信息，实现多尺度、多模态的数据融合；</p>
+</li>
+<li>
+<p>培养跨领域科研人员，将电镜成像、结构建模、生物信息学与细胞生物学整合为复合团队。</p>
+</li>
+</ul>
+<p>简而言之：<strong>Cryo-ET 未来的发展不仅取决于技术迭代，更需要系统性方法论和科研生态的重构</strong>。</p>
+<hr>
+<h3 id="64-结语">6.4 <strong>结语：</strong></h3>
+<p>Turk 与 Baumeister 在本文中不仅展示了Cryo-ET的技术逻辑与应用成果，更提出了一个面向未来的愿景：<strong>将电子断层扫描从图像生成工具转化为探索细胞分子体系结构的核心平台。</strong>实现这一目标的路径并不容易，但其科学价值可能是深远的——它或将重新定义我们“看见生命”的方式。</p>
+<hr>
+<h2 id="7-总结">7. 总结：</h2>
+<p>回顾 Turk 与 Baumeister 在本文中所阐述的内容，我们可以看到 Cryo-electron tomography（Cryo-ET）已经不仅仅是一种高分辨率成像工具，更逐渐发展为一种<strong>全新的研究范式</strong>——它连接了结构生物学与细胞生物学，打破了“纯结构”与“功能语境”之间的壁垒。</p>
+<p>在当前的技术框架下，Cryo-ET 已经能够：</p>
+<ul>
+<li>
+<p>在<strong>接近原生状态</strong>下观察细胞超微结构；</p>
+</li>
+<li>
+<p>在<strong>不依赖标记</strong>的前提下识别复杂复合体；</p>
+</li>
+<li>
+<p>与光学、质谱、AI 等手段协同，实现结构“可视-可识-可注释”的整合流程。</p>
+</li>
+</ul>
+<p>但与此同时，我们也必须清醒地看到，Cryo-ET 的普及尚面临诸多障碍：从冷冻层片制备的困难、成像过程的低通量，到图像分析的算法复杂性与识别难题——这些都对实验能力、设备条件与数据解读提出极高要求。</p>
+<p>因此，Cryo-ET 的未来发展不应仅依赖于单点技术突破，而应当建立在<strong>系统性平台构建</strong>与<strong>跨学科合作机制</strong>之上。这包括：</p>
+<ul>
+<li>
+<p>推动全流程自动化；</p>
+</li>
+<li>
+<p>建立标准化注释数据库；</p>
+</li>
+<li>
+<p>培养具有图像分析与分子建模能力的复合型科研人员。</p>
+</li>
+</ul>
+<p>最终，我们可以期待这样一种结构生物学的未来图景：<strong>在一块细胞层片中，我们不仅能够“看到”一个分子、一个复合体，更能理解它在细胞环境中“如何行动”“如何协作”，甚至“如何失调”——这正是原位结构组学（in situ structural omics）所追求的目标。</strong></p>
+<hr>
+<p>🔗原文链接：https://doi.org/10.1002%2F1873-3468.13948</p>
+
+
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4 bg-near-white br2">
+        <h3 class="f4 fw6 mb3">延伸阅读</h3>
+
+        
+          <p class="f6 lh-copy mb3">
+            本文属于 <strong>AI4S文献</strong> 栏目。
+          </p>
+
+          <a href="/zh/literature/"
+             class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link ph3 pv2 mr2">
+            返回 AI4S文献 →
+          </a>
+        
+
+        
+      </section>
+
+      
+      
+      
+      <hr class="mv5">
+
+      <section class="ph3 pv4">
+        <h3 class="f4 fw6 mb3">同栏目近期文章</h3>
+
+        <ul class="list pl0">
+          
+            <li class="mb2">
+              <a href="/zh/literature/sciencedrugclip%E8%B5%B0%E5%90%91%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%B0%8F%E5%88%86%E5%AD%90%E7%AD%9B%E9%80%89/" class="link dim">
+                Science｜DrugCLIP：走向基因组级别的小分子筛选
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/boltzgen%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BBboltz%E7%94%9F%E6%80%81%E7%9A%84%E9%97%AD%E7%8E%AF%E9%80%9A%E7%94%A8binder%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BC%80%E7%AB%AF/" class="link dim">
+                BoltzGen深度解读:Boltz生态的闭环，通用Binder设计的开端？
+              </a>
+            </li>
+          
+            <li class="mb2">
+              <a href="/zh/literature/cell%E8%A5%BF%E6%B9%96%E5%8D%A2%E5%9F%B9%E9%BE%99%E5%9B%A2%E9%98%9F%E4%BB%8E%E9%9B%B6%E8%AE%BE%E8%AE%A1%E5%87%BA%E5%8F%AF%E6%84%9F%E7%94%B5%E7%9A%84%E4%BA%BA%E5%B7%A5%E7%A6%BB%E5%AD%90%E9%80%9A%E9%81%93/" class="link dim">
+                Cell｜西湖大学卢培龙团队从头设计出可“感电”的人工离子通道
+              </a>
+            </li>
+          
+        </ul>
+      </section>
+      
+
+      
+      <ul class="pa0">
+  
+</ul>
+
+
+      <div class="mt6 instapaper_ignoref">
+        
+        
+      </div>
+    </div>
+
+    
+    
+
+  </article>
+
+    </main>
+    <footer class="bg-black white-80 pv4 ph3 ph5-l">
+
+  <div class="mw8 center">
+
+    <div class="flex flex-wrap">
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f5 fw6 mb2">BlueArctic · 蓝极</h4>
+        <p class="f6 lh-copy o-80 mb3">
+          结构生物学 × 人工智能 × AI4S 文献解读与方法总结
+        </p>
+
+        <div class="mb2">
+          <a href="/zh/literature/" class="link white-80 dim mr3 f6">AI4S 文献</a>
+          <a href="/zh/tutorial/" class="link white-80 dim mr3 f6">教程</a>
+          <a href="/zh/projects/" class="link white-80 dim mr3 f6">项目</a>
+          <a href="/zh/about/" class="link white-80 dim f6">关于我</a>
+        </div>
+      </div>
+
+      
+      <div class="w-100 w-third-l mb4 mb0-l">
+        <h4 class="f6 fw6 mb2">微信公众号</h4>
+
+        <img src="/images/wechat_qrcode_complex.jpeg"
+             alt="微信公众号二维码"
+             class="db mb2"
+             style="max-width:120px;">
+
+        <p class="f7 o-70">
+          扫码关注，获取完整解读与最新更新
+        </p>
+
+        <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkxMDYwMzIzMA=="
+           class="link white-80 dim f6">
+          公众号主页 →
+        </a>
+      </div>
+
+      
+      <div class="w-100 w-third-l">
+        <h4 class="f6 fw6 mb2">小红书</h4>
+
+        <img src="/images/xhs_qrcode.jpg"
+             alt="小红书二维码"
+             class="db mb2"
+             style="max-width:100px;">
+
+        <p class="f7 o-70">
+          AI4S / 科研工具 / 学术思考碎片化记录
+        </p>
+
+        <a href="https://www.xiaohongshu.com/user/profile/5f3dc4ef00000000010031b9"
+           target="_blank"
+           rel="noopener"
+           class="link white-80 dim f6">
+          访问小红书主页 →
+        </a>
+      </div>
+
+    </div>
+
+    
+    <div class="bt b--white-10 pt3 mt4 f7 o-60">
+      © 2026 蓝极 BlueArctic
+    </div>
+
+  </div>
+
+</footer>
+  </body>
+</html>
