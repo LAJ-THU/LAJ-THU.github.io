@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glycosylation Site Mutation Viewer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg-primary: #FAFAF8;
+    --bg-secondary: #F2F1ED;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A18;
+    --text-secondary: #6B6A65;
+    --text-tertiary: #9C9B95;
+    --border-light: rgba(0,0,0,0.08);
+    --border-medium: rgba(0,0,0,0.14);
+    --accent-blue: #2563EB;
+    --accent-blue-light: #EFF6FF;
+    --accent-blue-border: #BFDBFE;
+    --accent-red: #DC2626;
+    --accent-red-light: #FEF2F2;
+    --accent-amber: #D97706;
+    --accent-amber-light: #FFFBEB;
+    --accent-green: #16A34A;
+    --accent-green-light: #F0FDF4;
+    --accent-teal: #0D9488;
+    --accent-purple: #7C3AED;
+    --accent-purple-light: #F5F3FF;
+    --sequon-bg: rgba(37,99,235,0.08);
+    --sequon-n-bg: rgba(37,99,235,0.15);
+    --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+    --font-sans: 'Noto Sans SC', 'Space Grotesk', system-ui, sans-serif;
+    --font-display: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #141413;
+      --bg-secondary: #1E1E1C;
+      --bg-card: #242422;
+      --text-primary: #EDEDEB;
+      --text-secondary: #A0A09A;
+      --text-tertiary: #6B6A65;
+      --border-light: rgba(255,255,255,0.06);
+      --border-medium: rgba(255,255,255,0.12);
+      --accent-blue-light: rgba(37,99,235,0.12);
+      --accent-blue-border: rgba(37,99,235,0.3);
+      --accent-red-light: rgba(220,38,38,0.1);
+      --accent-amber-light: rgba(217,119,6,0.1);
+      --accent-green-light: rgba(22,163,74,0.1);
+      --accent-purple-light: rgba(124,58,237,0.1);
+      --sequon-bg: rgba(37,99,235,0.12);
+      --sequon-n-bg: rgba(37,99,235,0.22);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-lg: 0 4px 20px rgba(0,0,0,0.4);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* ── Header ── */
+  .header {
+    margin-bottom: 2rem;
+  }
+  .header h1 {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  /* ── Config Panel ── */
+  .config-panel {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .config-panel h3 {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 0.75rem;
+  }
+  .config-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .config-field {
+    flex: 1;
+    min-width: 200px;
+  }
+  .config-field label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+  }
+  .config-field textarea,
+  .config-field input {
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    padding: 0.5rem 0.7rem;
+    border: 0.5px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    resize: vertical;
+    transition: border-color var(--transition);
+  }
+  .config-field textarea:focus,
+  .config-field input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+  }
+  .config-field textarea { min-height: 60px; }
+  .btn-apply {
+    align-self: flex-end;
+    padding: 0.5rem 1.25rem;
+    background: var(--accent-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+  }
+  .btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-apply:active { transform: translateY(0); }
+
+  /* ── Site Tabs ── */
+  .site-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .site-tab {
+    padding: 7px 16px;
+    border: 0.5px solid var(--border-medium);
+    border-radius: 100px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+  .site-tab:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+  }
+  .site-tab.active {
+    background: var(--accent-blue);
+    color: #fff;
+    border-color: var(--accent-blue);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+  }
+
+  /* ── Main Viewer ── */
+  .viewer-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+  .viewer-inner {
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+
+  /* ── Mutation Branch Area ── */
+  .branch-area {
+    position: relative;
+    min-height: 200px;
+    margin-bottom: 1rem;
+  }
+  .branch-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .branch-svg line, .branch-svg path {
+    stroke: var(--border-medium);
+    stroke-width: 1.2;
+    fill: none;
+  }
+  .mutation-card-wrapper {
+    position: absolute;
+    transform: translateX(-50%);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+  }
+  .mutation-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    box-shadow: var(--shadow-sm);
+    cursor: default;
+    transition: all var(--transition);
+    white-space: nowrap;
+    min-width: 100px;
+  }
+  .mutation-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+  }
+  .mutation-card.abolished {
+    border-left: 3px solid var(--accent-red);
+  }
+  .mutation-card.retained {
+    border-left: 3px solid var(--accent-green);
+  }
+  .mutation-card.reduced {
+    border-left: 3px solid var(--accent-amber);
+  }
+  .motif-display {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .motif-display .wt { color: var(--accent-blue); }
+  .motif-display .mut { color: var(--accent-red); font-weight: 700; }
+  .freq-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .freq-bar-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border-light);
+    border-radius: 2px;
+    overflow: hidden;
+    min-width: 40px;
+  }
+  .freq-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .freq-bar-fill.high { background: var(--accent-red); }
+  .freq-bar-fill.med  { background: var(--accent-amber); }
+  .freq-bar-fill.low  { background: var(--accent-green); }
+  .freq-count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    min-width: 28px;
+    text-align: right;
+  }
+  .mut-note {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+    max-width: 180px;
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  /* ── Glyco indicator ── */
+  .glyco-indicator-row {
+    display: flex;
+    min-width: fit-content;
+    margin-bottom: 2px;
+  }
+  .glyco-indicator-cell {
+    width: 42px;
+    min-width: 42px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    height: 18px;
+    line-height: 18px;
+  }
+
+  /* ── Sequence Row ── */
+  .sequence-row {
+    display: flex;
+    min-width: fit-content;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .aa-cell {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    border-right: 0.5px solid var(--border-light);
+    position: relative;
+    transition: all var(--transition);
+    background: var(--bg-secondary);
+  }
+  .aa-cell:last-child { border-right: none; }
+  .aa-cell.sequon {
+    background: var(--sequon-bg);
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+  .aa-cell.glyco-n {
+    background: var(--sequon-n-bg);
+    color: var(--accent-blue);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .aa-cell.glyco-n::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 4px; right: 4px;
+    height: 3px;
+    background: var(--accent-blue);
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* ── Position Row ── */
+  .position-row {
+    display: flex;
+    min-width: fit-content;
+    margin-top: 2px;
+  }
+  .pos-cell {
+    width: 42px;
+    min-width: 42px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
+    height: 20px;
+    line-height: 20px;
+  }
+
+  /* ── Annotation ── */
+  .annotation {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border-left: 3px solid var(--accent-blue);
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.5rem;
+    background: var(--bg-secondary);
+    border-top: 0.5px solid var(--border-light);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .legend-bar {
+    width: 16px;
+    height: 3px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── Help Section ── */
+  .help-section {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  .help-section h3 {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  .help-section pre {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  .mutation-card-wrapper { animation: fadeSlideUp 0.35s ease backwards; }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <div class="header">
+    <h1>Glycosylation Site Mutation Viewer</h1>
+    <p>N-linked 糖基化位点 sequon (N-X-S/T) 突变谱展示工具</p>
+  </div>
+
+  <!-- Config Panel -->
+  <div class="config-panel">
+    <h3>Data Configuration</h3>
+    <div class="config-row">
+      <div class="config-field" style="flex:2;">
+        <label>Protein Sequence (single-letter amino acid codes)</label>
+        <textarea id="seq-input">MKTLLLFAICSAVLAEEVRPQVGQNLTIQHPGQLFMPNTSYWGDQAEPVHNTSDDLEIFQ</textarea>
+      </div>
+    </div>
+    <div class="config-row" style="margin-top:0.75rem;">
+      <div class="config-field" style="flex:3;">
+        <label>Glycosylation Sites (JSON) — <a href="javascript:void(0)" onclick="toggleHelp()" style="color:var(--accent-blue);text-decoration:none;">view format ↓</a></label>
+        <textarea id="sites-input" style="min-height:120px;">[
+  {
+    "pos": 24,
+    "wt_motif": "NLT",
+    "label": "N25 (N-X-T)",
+    "annotation": "N-linked glycosylation sequon. Asn25 is the acceptor, Thr27 at +2.",
+    "mutations": [
+      {"motif":"NST","freq":42,"note":"S at +1, retains glycosylation","effect":"retained"},
+      {"motif":"NSS","freq":18,"note":"S at +1 & +2, reduced efficiency","effect":"reduced"},
+      {"motif":"DLT","freq":7,"note":"N→D, abolishes glycosylation","effect":"abolished"},
+      {"motif":"NLA","freq":5,"note":"T→A at +2, abolishes sequon","effect":"abolished"}
+    ]
+  },
+  {
+    "pos": 37,
+    "wt_motif": "NTS",
+    "label": "N38 (N-X-S)",
+    "annotation": "N-linked glycosylation sequon. Asn38 is the acceptor, Ser40 at +2.",
+    "mutations": [
+      {"motif":"NAS","freq":31,"note":"T→A at +1, retains glycosylation","effect":"retained"},
+      {"motif":"NTT","freq":22,"note":"S→T at +2, retains sequon","effect":"retained"},
+      {"motif":"KTS","freq":9,"note":"N→K, abolishes glycosylation","effect":"abolished"}
+    ]
+  },
+  {
+    "pos": 52,
+    "wt_motif": "NTS",
+    "label": "N53 (N-X-S)",
+    "annotation": "Potential N-glycosylation site in loop region. Context-dependent efficiency.",
+    "mutations": [
+      {"motif":"NTT","freq":55,"note":"S→T at +2, fully functional","effect":"retained"},
+      {"motif":"NIS","freq":12,"note":"T→I at +1, retains glycosylation","effect":"retained"},
+      {"motif":"NTP","freq":3,"note":"S→P at +2, Pro disrupts sequon","effect":"abolished"}
+    ]
+  }
+]</textarea>
+      </div>
+      <div style="display:flex;align-items:flex-end;">
+        <button class="btn-apply" onclick="applyConfig()">Apply Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Section (collapsed by default) -->
+  <div class="help-section" id="help-section" style="display:none; margin-top:-0.5rem; margin-bottom:1.5rem;">
+    <h3>Data Format Reference</h3>
+    <pre>Each site object:
+{
+  "pos": 24,              // 0-indexed position of N in sequence
+  "wt_motif": "NLT",     // wild-type sequon triplet (N-X-S/T)
+  "label": "N25 (N-X-T)",// display label (1-indexed recommended)
+  "annotation": "...",    // description shown below the viewer
+  "mutations": [
+    {
+      "motif": "NST",     // mutated sequon triplet
+      "freq": 42,         // occurrence count
+      "note": "...",      // short explanation
+      "effect": "retained"// one of: "retained", "reduced", "abolished"
+    }
+  ]
+}</pre>
+  </div>
+
+  <!-- Site Tabs -->
+  <div class="site-tabs" id="site-tabs"></div>
+
+  <!-- Viewer -->
+  <div class="viewer-card">
+    <div class="viewer-inner" id="viewer"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue);"></div><span>Sequon region (N-X-S/T)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-red);"></div><span>Mutated residue</span></div>
+      <div class="legend-item"><div class="legend-bar" style="background:var(--accent-red);"></div><span>High freq (≥30)</span></div>
+      <div class="legend-item"><div class="legend-bar" style="background:var(--accent-amber);"></div><span>Medium (10–29)</span></div>
+      <div class="legend-item"><div class="legend-bar" style="background:var(--accent-green);"></div><span>Low (&lt;10)</span></div>
+      <div class="legend-item" style="gap:3px;">
+        <span style="width:4px;height:16px;border-radius:1px;background:var(--accent-green);"></span><span>Retained</span>
+        <span style="width:4px;height:16px;border-radius:1px;background:var(--accent-amber);margin-left:6px;"></span><span>Reduced</span>
+        <span style="width:4px;height:16px;border-radius:1px;background:var(--accent-red);margin-left:6px;"></span><span>Abolished</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let sequence = '';
+let sites = [];
+let activeSite = 0;
+
+// ── Initialize ──
+function init() {
+  sequence = document.getElementById('seq-input').value.trim().toUpperCase();
+  try {
+    sites = JSON.parse(document.getElementById('sites-input').value);
+  } catch(e) {
+    alert('JSON parse error: ' + e.message);
+    return;
+  }
+  activeSite = 0;
+  renderTabs();
+  renderViewer();
+}
+
+function applyConfig() { init(); }
+
+function toggleHelp() {
+  const el = document.getElementById('help-section');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── Render Tabs ──
+function renderTabs() {
+  const container = document.getElementById('site-tabs');
+  container.innerHTML = sites.map((s, i) =>
+    `<button class="site-tab ${i === activeSite ? 'active' : ''}" onclick="selectSite(${i})">${s.label}</button>`
+  ).join('');
+}
+
+function selectSite(i) {
+  activeSite = i;
+  renderTabs();
+  renderViewer();
+}
+
+// ── Helpers ──
+function freqClass(f) {
+  return f >= 30 ? 'high' : f >= 10 ? 'med' : 'low';
+}
+
+function effectClass(e) {
+  return e === 'abolished' ? 'abolished' : e === 'reduced' ? 'reduced' : 'retained';
+}
+
+// ── Render Viewer ──
+function renderViewer() {
+  if (!sites.length) return;
+  const site = sites[activeSite];
+  const seq = sequence;
+
+  // Window around the site
+  const winStart = Math.max(0, site.pos - 7);
+  const winEnd = Math.min(seq.length, site.pos + 13);
+  const residues = [];
+  for (let i = winStart; i < winEnd; i++) {
+    residues.push({ aa: seq[i] || '?', pos: i });
+  }
+
+  const sequonSet = new Set([site.pos, site.pos + 1, site.pos + 2]);
+  const maxFreq = Math.max(...site.mutations.map(m => m.freq), 1);
+  const cellW = 42;
+  const nIdx = residues.findIndex(r => r.pos === site.pos);
+  const centerX = nIdx * cellW + cellW / 2;
+
+  // Layout mutation cards
+  const cardH = 72;
+  const cardGap = 10;
+  const muts = site.mutations;
+  const numMuts = muts.length;
+  const spreadX = Math.min(120, 600 / Math.max(numMuts, 1));
+  const startY = 12;
+  const totalBranchH = startY + numMuts * (cardH + cardGap) + 20;
+
+  // ── Branch Area with SVG connectors ──
+  let html = `<div class="branch-area" style="min-height:${totalBranchH}px; min-width:${residues.length * cellW}px;">`;
+
+  // SVG connectors
+  html += `<svg class="branch-svg" viewBox="0 0 ${residues.length * cellW} ${totalBranchH}" preserveAspectRatio="xMidYMid meet">`;
+
+  // Trunk line
+  const trunkTop = startY + cardH + 6;
+  const trunkBot = totalBranchH;
+  html += `<line x1="${centerX}" y1="${trunkTop}" x2="${centerX}" y2="${trunkBot}" stroke-width="1.5"/>`;
+
+  // Branch lines to each card
+  muts.forEach((m, mi) => {
+    const yCard = startY + mi * (cardH + cardGap);
+    const offset = (mi - (numMuts - 1) / 2) * spreadX;
+    const xCard = centerX + offset;
+    const branchY = yCard + cardH + 4;
+    html += `<path d="M${centerX},${branchY} C${centerX},${branchY - 8} ${xCard},${branchY + 8} ${xCard},${branchY}" stroke-width="1"/>`;
+  });
+  html += '</svg>';
+
+  // Mutation cards
+  muts.forEach((m, mi) => {
+    const yCard = startY + mi * (cardH + cardGap);
+    const offset = (mi - (numMuts - 1) / 2) * spreadX;
+    const xCard = centerX + offset;
+
+    // Build motif HTML
+    let motifHtml = '';
+    for (let c = 0; c < m.motif.length; c++) {
+      if (m.motif[c] !== site.wt_motif[c]) {
+        motifHtml += `<span class="mut">${m.motif[c]}</span>`;
+      } else {
+        motifHtml += `<span class="wt">${m.motif[c]}</span>`;
+      }
+    }
+
+    const eff = m.effect || 'retained';
+    html += `<div class="mutation-card-wrapper" style="left:${xCard}px; top:${yCard}px; animation-delay:${mi * 0.06}s;">
+      <div class="mutation-card ${effectClass(eff)}" title="${m.note || ''}">
+        <div class="motif-display">${motifHtml}</div>
+        <div class="freq-row">
+          <div class="freq-bar-track">
+            <div class="freq-bar-fill ${freqClass(m.freq)}" style="width:${(m.freq / maxFreq * 100).toFixed(0)}%"></div>
+          </div>
+          <span class="freq-count">${m.freq}×</span>
+        </div>
+        ${m.note ? `<div class="mut-note">${m.note}</div>` : ''}
+      </div>
+    </div>`;
+  });
+
+  html += '</div>';
+
+  // ── Glyco indicator ──
+  html += '<div class="glyco-indicator-row">';
+  residues.forEach(r => {
+    html += r.pos === site.pos
+      ? `<div class="glyco-indicator-cell">▼ N</div>`
+      : `<div class="glyco-indicator-cell"></div>`;
+  });
+  html += '</div>';
+
+  // ── Sequence Row ──
+  html += '<div class="sequence-row">';
+  residues.forEach(r => {
+    const isSequon = sequonSet.has(r.pos);
+    const isN = r.pos === site.pos;
+    const cls = isN ? 'aa-cell glyco-n' : isSequon ? 'aa-cell sequon' : 'aa-cell';
+    html += `<div class="${cls}">${r.aa}</div>`;
+  });
+  html += '</div>';
+
+  // ── Position Row ──
+  html += '<div class="position-row">';
+  residues.forEach(r => {
+    html += `<div class="pos-cell">${r.pos + 1}</div>`;
+  });
+  html += '</div>';
+
+  // ── Annotation ──
+  if (site.annotation) {
+    html += `<div class="annotation">${site.annotation}</div>`;
+  }
+
+  document.getElementById('viewer').innerHTML = html;
+}
+
+// ── Boot ──
+init();
+</script>
+</body>
+</html>
