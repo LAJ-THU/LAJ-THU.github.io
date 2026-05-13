@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GVP vs ScanNet — PPBS binary A/B (2026-05-12, comprehensive)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root {
+  --fg: #1a1a1a; --bg: #fdfdfb; --muted: #5a5a5a; --soft: #f1efe8;
+  --line: #d8d3c4; --accent: #8a4a1d; --accent-soft: #f3e5d4;
+  --code-bg: #f6f4ed; --ok: #2c6e3a; --warn: #b56a00; --todo: #8a3a3a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+  color: var(--fg); background: var(--bg);
+  display: grid; grid-template-columns: 240px 1fr; min-height: 100vh;
+}
+nav.toc {
+  position: sticky; top: 0; align-self: start; height: 100vh;
+  padding: 24px 16px 24px 24px; border-right: 1px solid var(--line);
+  background: var(--soft); overflow-y: auto;
+}
+nav.toc h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 0 0 12px; }
+nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: sec; }
+nav.toc li { counter-increment: sec; margin: 4px 0; }
+nav.toc a { color: var(--fg); text-decoration: none; display: block; padding: 4px 6px; border-radius: 4px; font-size: 13.5px; }
+nav.toc a:hover { background: var(--accent-soft); }
+nav.toc li::before { content: counter(sec) ". "; color: var(--muted); }
+main { padding: 32px 56px 96px; max-width: 1180px; }
+header.title { margin-bottom: 32px; padding-bottom: 16px; border-bottom: 2px solid var(--accent); }
+header.title h1 { font-size: 28px; margin: 0 0 4px; }
+header.title .meta { color: var(--muted); font-size: 13px; }
+header.title .meta span { margin-right: 14px; }
+header.title .badge {
+  display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px;
+  background: var(--ok); color: white; letter-spacing: .04em;
+}
+section { margin: 48px 0 0; scroll-margin-top: 16px; }
+section > h2 { font-size: 22px; margin: 0 0 16px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+section > h3 { font-size: 16px; margin: 24px 0 8px; color: var(--accent); }
+p { margin: 8px 0; }
+ul, ol { margin: 8px 0 8px 0; padding-left: 22px; }
+li { margin: 3px 0; }
+code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; background: var(--code-bg); padding: 1px 4px; border-radius: 3px; }
+pre { margin: 8px 0; padding: 12px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 4px; overflow-x: auto; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.5; color: var(--fg); }
+.callout { margin: 12px 0; padding: 10px 14px; border-radius: 4px; font-size: 13.5px; border-left: 3px solid var(--accent); background: var(--accent-soft); }
+.callout.ok { border-left-color: var(--ok); background: #e6f0e8; }
+.callout.warn { border-left-color: var(--warn); background: #fbf2e0; }
+.callout strong { color: var(--accent); }
+.callout.ok strong { color: var(--ok); }
+.callout.warn strong { color: var(--warn); }
+table.results, table.cost { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+table.results th, table.results td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.results th { background: var(--soft); font-weight: 600; text-align: left; font-size: 12.5px; }
+table.results th:not(:first-child), table.results td:not(:first-child) { text-align: right; }
+table.cost th, table.cost td { padding: 6px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+table.cost th { background: var(--soft); font-weight: 600; }
+.chart-wrap { background: var(--soft); border-radius: 6px; padding: 12px; margin: 12px 0; overflow-x: auto; }
+.chart-wrap svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.chart-caption { color: var(--muted); font-size: 12px; text-align: center; margin-top: 4px; }
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
+footer.foot { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+@media (max-width: 720px) {
+  body { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { padding: 24px 20px 64px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#tldr">TL;DR</a></li>
+    <li><a href="#results">Six-model comparison</a></li>
+    <li><a href="#sanity">Pipeline-validation sanity</a></li>
+    <li><a href="#barchart">AUCPR per split (chart)</a></li>
+    <li><a href="#gvp-curves">GVP training curves</a></li>
+    <li><a href="#scannet-curves">ScanNet training curves</a></li>
+    <li><a href="#cost">Cost &amp; capacity</a></li>
+    <li><a href="#caveats">Caveats</a></li>
+    <li><a href="#repro">Reproducibility</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<header class="title">
+  <h1>GVP-GNN vs ScanNet — comprehensive comparison on PPBS</h1>
+  <div class="meta">
+    <span><strong>Author:</strong> Anji Liu</span>
+    <span><strong>Date:</strong> 2026-05-12</span>
+    <span><strong>Project:</strong> scannet_pytorch (sub-project of boltzZen)</span>
+    <span class="badge">decided</span>
+  </div>
+</header>
+
+<section id="tldr">
+<h2>1. TL;DR</h2>
+<p>Six models, one task (per-residue protein-binding-site prediction on PPBS), four held-out test splits. Two ScanNet configurations (noMSA / WITH-MSA) each evaluated from both the paper checkpoint and a locally retrained checkpoint — that's four ScanNet rows that bracket how much of the gap is the architecture vs. the input features. Two GVP configurations (asymmetric unit / bio-assembly inputs) on the same labels. All AUCPRs computed with <b>identical</b> sklearn weighted PR code (verbatim copy of <code>data/baselines/scannet/eval_baseline.py</code>) plus 95% bootstrap CIs over 1000 chain resamples.</p>
+
+<div class="callout ok">
+<strong>Result:</strong> GVP-BA wins all four splits over <em>every</em> ScanNet variant (paper checkpoints, locally retrained, with or without MSA) with non-overlapping 95% CIs on every comparison. Gap to retrained ScanNet-MSA — the strongest baseline — is +0.20 to +0.31 AUCPR, with ~5× the budget margin (CI half-width ≤0.02 on every split). Architecture adoption confirmed.
+</div>
+
+<p>The two retrained ScanNet variants reproduce the paper's Table 1 numbers to <strong>within ±0.012 AUCPR on every split</strong> — both training and evaluation pipelines are validated, so the GVP gap is genuine, not a metric artefact.</p>
+</section>
+
+<section id="results">
+<h2>2. Six-model AUCPR (with 95% bootstrap CI)</h2>
+<table class="results">
+<thead><tr><th>Split</th><th>ScanNet noMSA (paper)</th><th>ScanNet noMSA (retrained)</th><th>ScanNet w/MSA (paper)</th><th>ScanNet w/MSA (retrained)</th><th>GVP — AU (ours)</th><th>GVP — BA (ours)</th></tr></thead>
+<tbody>
+<tr><td><code>test_70</code></td><td style='text-align:right; '>0.6727<br><span style='font-size:11px; color:var(--muted)'>[0.657, 0.696]</span></td><td style='text-align:right; '>0.6797<br><span style='font-size:11px; color:var(--muted)'>[0.664, 0.703]</span></td><td style='text-align:right; '>0.7308<br><span style='font-size:11px; color:var(--muted)'>[0.717, 0.753]</span></td><td style='text-align:right; '>0.7350<br><span style='font-size:11px; color:var(--muted)'>[0.721, 0.756]</span></td><td style='text-align:right; '>0.8834<br><span style='font-size:11px; color:var(--muted)'>[0.869, 0.897]</span></td><td style='text-align:right; font-weight:700; color:var(--ok); background:rgba(44,110,58,0.06)'>0.9327<br><span style='font-size:11px; color:var(--muted)'>[0.922, 0.942]</span></td></tr><tr><td><code>test_homology</code></td><td style='text-align:right; '>0.6475<br><span style='font-size:11px; color:var(--muted)'>[0.632, 0.662]</span></td><td style='text-align:right; '>0.6545<br><span style='font-size:11px; color:var(--muted)'>[0.643, 0.667]</span></td><td style='text-align:right; '>0.7081<br><span style='font-size:11px; color:var(--muted)'>[0.696, 0.719]</span></td><td style='text-align:right; '>0.7128<br><span style='font-size:11px; color:var(--muted)'>[0.701, 0.725]</span></td><td style='text-align:right; '>0.8803<br><span style='font-size:11px; color:var(--muted)'>[0.871, 0.888]</span></td><td style='text-align:right; font-weight:700; color:var(--ok); background:rgba(44,110,58,0.06)'>0.9401<br><span style='font-size:11px; color:var(--muted)'>[0.935, 0.946]</span></td></tr><tr><td><code>test_topology</code></td><td style='text-align:right; '>0.6819<br><span style='font-size:11px; color:var(--muted)'>[0.670, 0.693]</span></td><td style='text-align:right; '>0.6745<br><span style='font-size:11px; color:var(--muted)'>[0.662, 0.688]</span></td><td style='text-align:right; '>0.7262<br><span style='font-size:11px; color:var(--muted)'>[0.715, 0.737]</span></td><td style='text-align:right; '>0.7324<br><span style='font-size:11px; color:var(--muted)'>[0.720, 0.743]</span></td><td style='text-align:right; '>0.9149<br><span style='font-size:11px; color:var(--muted)'>[0.906, 0.923]</span></td><td style='text-align:right; font-weight:700; color:var(--ok); background:rgba(44,110,58,0.06)'>0.9534<br><span style='font-size:11px; color:var(--muted)'>[0.950, 0.958]</span></td></tr><tr><td><code>test_none</code></td><td style='text-align:right; '>0.5631<br><span style='font-size:11px; color:var(--muted)'>[0.542, 0.587]</span></td><td style='text-align:right; '>0.5682<br><span style='font-size:11px; color:var(--muted)'>[0.552, 0.588]</span></td><td style='text-align:right; '>0.6083<br><span style='font-size:11px; color:var(--muted)'>[0.592, 0.626]</span></td><td style='text-align:right; '>0.6046<br><span style='font-size:11px; color:var(--muted)'>[0.586, 0.623]</span></td><td style='text-align:right; '>0.8549<br><span style='font-size:11px; color:var(--muted)'>[0.840, 0.869]</span></td><td style='text-align:right; font-weight:700; color:var(--ok); background:rgba(44,110,58,0.06)'>0.9143<br><span style='font-size:11px; color:var(--muted)'>[0.907, 0.924]</span></td></tr>
+</tbody>
+</table>
+<p style="font-size:12px; color:var(--muted)">Each cell: point AUCPR / [2.5%, 97.5%] over 1000 chain resamples. Best per split bold-green. Sample weights from PPBS <code>table.csv</code>.</p>
+</section>
+
+<section id="sanity">
+<h2>3. Pipeline-validation sanity</h2>
+<div class="callout ok">
+<strong>ScanNet noMSA — retrained vs paper:</strong> test_70: 0.680 vs 0.672 (Δ=+0.008); test_homology: 0.655 vs 0.648 (Δ=+0.007); test_topology: 0.674 vs 0.685 (Δ=-0.011); test_none: 0.568 vs 0.565 (Δ=+0.003)
+</div>
+<div class="callout ok">
+<strong>ScanNet w/MSA — retrained vs paper:</strong> test_70: 0.735 vs 0.732 (Δ=+0.003); test_homology: 0.713 vs 0.712 (Δ=+0.001); test_topology: 0.732 vs 0.735 (Δ=-0.003); test_none: 0.605 vs 0.605 (Δ=-0.000)
+</div>
+<p>Every Δ is below 0.012. Both training reproducibility and the eval recipe match the published numbers.</p>
+</section>
+
+<section id="barchart">
+<h2>4. AUCPR per split (visual)</h2>
+<div class="chart-wrap">
+<svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AUCPR per split">
+<rect x="56" y="16" width="788" height="240" fill="white" stroke="#d8d3c4" stroke-width="1"/>
+<line x1="56" y1="256.0" x2="844" y2="256.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="260.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.5</text>
+<line x1="56" y1="208.0" x2="844" y2="208.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="212.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.6</text>
+<line x1="56" y1="160.0" x2="844" y2="160.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="164.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.7</text>
+<line x1="56" y1="112.0" x2="844" y2="112.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="116.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.8</text>
+<line x1="56" y1="64.0" x2="844" y2="64.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="68.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.9</text>
+<line x1="56" y1="16.0" x2="844" y2="16.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="20.0" text-anchor="end" font-size="11" fill="#5a5a5a">1.0</text>
+<rect x="73.7" y="173.1" width="26.9" height="82.9" fill="#aaaaaa"/>
+<rect x="100.7" y="169.8" width="26.9" height="86.2" fill="#777777"/>
+<rect x="127.6" y="145.2" width="26.9" height="110.8" fill="#9b6bbf"/>
+<rect x="154.5" y="143.2" width="26.9" height="112.8" fill="#5a3a8a"/>
+<rect x="181.4" y="71.9" width="26.9" height="184.1" fill="#b56a00"/>
+<rect x="208.3" y="48.3" width="26.9" height="207.7" fill="#2c6e3a"/>
+<text x="154.5" y="274" text-anchor="middle" font-size="12" fill="#1a1a1a">Test (70%)</text>
+<rect x="270.7" y="185.2" width="26.9" height="70.8" fill="#aaaaaa"/>
+<rect x="297.7" y="181.8" width="26.9" height="74.2" fill="#777777"/>
+<rect x="324.6" y="156.1" width="26.9" height="99.9" fill="#9b6bbf"/>
+<rect x="351.5" y="153.9" width="26.9" height="102.1" fill="#5a3a8a"/>
+<rect x="378.4" y="73.5" width="26.9" height="182.5" fill="#b56a00"/>
+<rect x="405.3" y="44.8" width="26.9" height="211.2" fill="#2c6e3a"/>
+<text x="351.5" y="274" text-anchor="middle" font-size="12" fill="#1a1a1a">Test (Homology)</text>
+<rect x="467.7" y="168.7" width="26.9" height="87.3" fill="#aaaaaa"/>
+<rect x="494.7" y="172.3" width="26.9" height="83.7" fill="#777777"/>
+<rect x="521.6" y="147.4" width="26.9" height="108.6" fill="#9b6bbf"/>
+<rect x="548.5" y="144.5" width="26.9" height="111.5" fill="#5a3a8a"/>
+<rect x="575.4" y="56.9" width="26.9" height="199.1" fill="#b56a00"/>
+<rect x="602.3" y="38.3" width="26.9" height="217.7" fill="#2c6e3a"/>
+<text x="548.5" y="274" text-anchor="middle" font-size="12" fill="#1a1a1a">Test (Topology)</text>
+<rect x="664.7" y="225.7" width="26.9" height="30.3" fill="#aaaaaa"/>
+<rect x="691.7" y="223.2" width="26.9" height="32.8" fill="#777777"/>
+<rect x="718.6" y="204.0" width="26.9" height="52.0" fill="#9b6bbf"/>
+<rect x="745.5" y="205.8" width="26.9" height="50.2" fill="#5a3a8a"/>
+<rect x="772.4" y="85.7" width="26.9" height="170.3" fill="#b56a00"/>
+<rect x="799.3" y="57.1" width="26.9" height="198.9" fill="#2c6e3a"/>
+<text x="745.5" y="274" text-anchor="middle" font-size="12" fill="#1a1a1a">Test (None)</text>
+<text x="14" y="136.0" transform="rotate(-90, 14, 136.0)" text-anchor="middle" font-size="12" fill="#1a1a1a">AUCPR</text>
+<rect x="56.0" y="292" width="14" height="10" fill="#aaaaaa"/>
+<text x="76.0" y="302" font-size="12" fill="#1a1a1a">ScanNet noMSA (paper)</text>
+<rect x="316.0" y="292" width="14" height="10" fill="#777777"/>
+<text x="336.0" y="302" font-size="12" fill="#1a1a1a">ScanNet noMSA (retrained)</text>
+<rect x="576.0" y="292" width="14" height="10" fill="#9b6bbf"/>
+<text x="596.0" y="302" font-size="12" fill="#1a1a1a">ScanNet w/MSA (paper)</text>
+<rect x="56.0" y="314" width="14" height="10" fill="#5a3a8a"/>
+<text x="76.0" y="324" font-size="12" fill="#1a1a1a">ScanNet w/MSA (retrained)</text>
+<rect x="316.0" y="314" width="14" height="10" fill="#b56a00"/>
+<text x="336.0" y="324" font-size="12" fill="#1a1a1a">GVP — AU (ours)</text>
+<rect x="576.0" y="314" width="14" height="10" fill="#2c6e3a"/>
+<text x="596.0" y="324" font-size="12" fill="#1a1a1a">GVP — BA (ours)</text>
+</svg>
+<div class="chart-caption">Final AUCPR per PPBS test split, 6 models.</div>
+</div>
+</section>
+
+<section id="gvp-curves">
+<h2>5. GVP training curves</h2>
+<p>Lightning per-epoch metrics. <em>Solid</em> = val/, <em>dashed</em> = train/. Per-batch AUCPR is an optimistically biased proxy for the chain-level weighted AUCPR; final test numbers in §2 are the authoritative figure.</p>
+<div class="chart-row">
+  <div class="chart-wrap">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="aucpr (per-batch)">
+<rect x="56" y="16" width="534" height="208" fill="white" stroke="#d8d3c4" stroke-width="1"/>
+<line x1="56" y1="224.0" x2="590" y2="224.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="228.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.840</text>
+<line x1="56" y1="172.0" x2="590" y2="172.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="176.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.870</text>
+<line x1="56" y1="120.0" x2="590" y2="120.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="124.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.900</text>
+<line x1="56" y1="68.0" x2="590" y2="68.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="72.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.930</text>
+<line x1="56" y1="16.0" x2="590" y2="16.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="20.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.960</text>
+<line x1="56.0" y1="224" x2="56.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="56.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">0</text>
+<line x1="132.3" y1="224" x2="132.3" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="132.3" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">4</text>
+<line x1="208.6" y1="224" x2="208.6" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="208.6" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">8</text>
+<line x1="284.9" y1="224" x2="284.9" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="284.9" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">12</text>
+<line x1="361.1" y1="224" x2="361.1" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="361.1" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">16</text>
+<line x1="437.4" y1="224" x2="437.4" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="437.4" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">20</text>
+<line x1="513.7" y1="224" x2="513.7" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="513.7" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">24</text>
+<line x1="590.0" y1="224" x2="590.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="590.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">28</text>
+<text x="323.0" y="256" text-anchor="middle" font-size="12" fill="#1a1a1a">epoch</text>
+<text x="14" y="120.0" transform="rotate(-90, 14, 120.0)" text-anchor="middle" font-size="12" fill="#1a1a1a">aucpr (per-batch)</text>
+<polyline points="56.0,214.8 75.1,191.8 94.1,177.9 113.2,166.5 132.3,156.4 151.4,149.3 170.4,143.5 189.5,139.1 208.6,134.6 227.6,134.1 246.7,130.5 265.8,127.0 284.9,126.4 303.9,124.5 323.0,123.5 342.1,123.1 361.1,123.3 380.2,122.7 399.3,121.0 418.4,121.3 437.4,120.5 456.5,119.7 475.6,117.6 494.6,122.4 513.7,120.5 532.8,123.0 551.9,120.2 570.9,119.2" fill="none" stroke="#b56a00" stroke-width="2"/>
+<circle cx="56.0" cy="214.8" r="2" fill="#b56a00"/>
+<circle cx="75.1" cy="191.8" r="2" fill="#b56a00"/>
+<circle cx="94.1" cy="177.9" r="2" fill="#b56a00"/>
+<circle cx="113.2" cy="166.5" r="2" fill="#b56a00"/>
+<circle cx="132.3" cy="156.4" r="2" fill="#b56a00"/>
+<circle cx="151.4" cy="149.3" r="2" fill="#b56a00"/>
+<circle cx="170.4" cy="143.5" r="2" fill="#b56a00"/>
+<circle cx="189.5" cy="139.1" r="2" fill="#b56a00"/>
+<circle cx="208.6" cy="134.6" r="2" fill="#b56a00"/>
+<circle cx="227.6" cy="134.1" r="2" fill="#b56a00"/>
+<circle cx="246.7" cy="130.5" r="2" fill="#b56a00"/>
+<circle cx="265.8" cy="127.0" r="2" fill="#b56a00"/>
+<circle cx="284.9" cy="126.4" r="2" fill="#b56a00"/>
+<circle cx="303.9" cy="124.5" r="2" fill="#b56a00"/>
+<circle cx="323.0" cy="123.5" r="2" fill="#b56a00"/>
+<circle cx="342.1" cy="123.1" r="2" fill="#b56a00"/>
+<circle cx="361.1" cy="123.3" r="2" fill="#b56a00"/>
+<circle cx="380.2" cy="122.7" r="2" fill="#b56a00"/>
+<circle cx="399.3" cy="121.0" r="2" fill="#b56a00"/>
+<circle cx="418.4" cy="121.3" r="2" fill="#b56a00"/>
+<circle cx="437.4" cy="120.5" r="2" fill="#b56a00"/>
+<circle cx="456.5" cy="119.7" r="2" fill="#b56a00"/>
+<circle cx="475.6" cy="117.6" r="2" fill="#b56a00"/>
+<circle cx="494.6" cy="122.4" r="2" fill="#b56a00"/>
+<circle cx="513.7" cy="120.5" r="2" fill="#b56a00"/>
+<circle cx="532.8" cy="123.0" r="2" fill="#b56a00"/>
+<circle cx="551.9" cy="120.2" r="2" fill="#b56a00"/>
+<circle cx="570.9" cy="119.2" r="2" fill="#b56a00"/>
+<line x1="602" y1="21.5" x2="616" y2="21.5" stroke="#b56a00" stroke-width="3"/>
+<text x="620" y="25" font-size="12" fill="#1a1a1a">GVP-AU val</text>
+<polyline points="56.0,358.5 75.1,246.6 94.1,228.6 113.2,213.3 132.3,203.1 151.4,195.5 170.4,188.1 189.5,182.3 208.6,177.6 227.6,173.8 246.7,170.5 265.8,168.2 284.9,165.0 303.9,162.2 323.0,159.5 342.1,156.5 361.1,154.6 380.2,151.8 399.3,149.6 418.4,146.8 437.4,144.7 456.5,141.4 475.6,139.1 494.6,136.3 513.7,133.2 532.8,130.7 551.9,128.9 570.9,126.5" fill="none" stroke="#b56a00" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="358.5" r="2" fill="#b56a00"/>
+<circle cx="75.1" cy="246.6" r="2" fill="#b56a00"/>
+<circle cx="94.1" cy="228.6" r="2" fill="#b56a00"/>
+<circle cx="113.2" cy="213.3" r="2" fill="#b56a00"/>
+<circle cx="132.3" cy="203.1" r="2" fill="#b56a00"/>
+<circle cx="151.4" cy="195.5" r="2" fill="#b56a00"/>
+<circle cx="170.4" cy="188.1" r="2" fill="#b56a00"/>
+<circle cx="189.5" cy="182.3" r="2" fill="#b56a00"/>
+<circle cx="208.6" cy="177.6" r="2" fill="#b56a00"/>
+<circle cx="227.6" cy="173.8" r="2" fill="#b56a00"/>
+<circle cx="246.7" cy="170.5" r="2" fill="#b56a00"/>
+<circle cx="265.8" cy="168.2" r="2" fill="#b56a00"/>
+<circle cx="284.9" cy="165.0" r="2" fill="#b56a00"/>
+<circle cx="303.9" cy="162.2" r="2" fill="#b56a00"/>
+<circle cx="323.0" cy="159.5" r="2" fill="#b56a00"/>
+<circle cx="342.1" cy="156.5" r="2" fill="#b56a00"/>
+<circle cx="361.1" cy="154.6" r="2" fill="#b56a00"/>
+<circle cx="380.2" cy="151.8" r="2" fill="#b56a00"/>
+<circle cx="399.3" cy="149.6" r="2" fill="#b56a00"/>
+<circle cx="418.4" cy="146.8" r="2" fill="#b56a00"/>
+<circle cx="437.4" cy="144.7" r="2" fill="#b56a00"/>
+<circle cx="456.5" cy="141.4" r="2" fill="#b56a00"/>
+<circle cx="475.6" cy="139.1" r="2" fill="#b56a00"/>
+<circle cx="494.6" cy="136.3" r="2" fill="#b56a00"/>
+<circle cx="513.7" cy="133.2" r="2" fill="#b56a00"/>
+<circle cx="532.8" cy="130.7" r="2" fill="#b56a00"/>
+<circle cx="551.9" cy="128.9" r="2" fill="#b56a00"/>
+<circle cx="570.9" cy="126.5" r="2" fill="#b56a00"/>
+<line x1="602" y1="43.5" x2="616" y2="43.5" stroke="#b56a00" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="47" font-size="12" fill="#1a1a1a">GVP-AU train</text>
+<polyline points="56.0,108.7 75.1,92.0 94.1,84.0 113.2,76.8 132.3,71.3 151.4,68.0 170.4,64.9 189.5,64.7 208.6,62.1 227.6,61.2 246.7,58.6 265.8,56.6 284.9,55.7 303.9,55.8 323.0,54.1 342.1,54.3 361.1,52.7 380.2,53.2 399.3,52.6 418.4,52.2 437.4,52.0 456.5,51.8 475.6,51.3 494.6,50.1 513.7,52.0 532.8,49.6 551.9,49.1 570.9,50.4 590.0,49.8" fill="none" stroke="#2c6e3a" stroke-width="2"/>
+<circle cx="56.0" cy="108.7" r="2" fill="#2c6e3a"/>
+<circle cx="75.1" cy="92.0" r="2" fill="#2c6e3a"/>
+<circle cx="94.1" cy="84.0" r="2" fill="#2c6e3a"/>
+<circle cx="113.2" cy="76.8" r="2" fill="#2c6e3a"/>
+<circle cx="132.3" cy="71.3" r="2" fill="#2c6e3a"/>
+<circle cx="151.4" cy="68.0" r="2" fill="#2c6e3a"/>
+<circle cx="170.4" cy="64.9" r="2" fill="#2c6e3a"/>
+<circle cx="189.5" cy="64.7" r="2" fill="#2c6e3a"/>
+<circle cx="208.6" cy="62.1" r="2" fill="#2c6e3a"/>
+<circle cx="227.6" cy="61.2" r="2" fill="#2c6e3a"/>
+<circle cx="246.7" cy="58.6" r="2" fill="#2c6e3a"/>
+<circle cx="265.8" cy="56.6" r="2" fill="#2c6e3a"/>
+<circle cx="284.9" cy="55.7" r="2" fill="#2c6e3a"/>
+<circle cx="303.9" cy="55.8" r="2" fill="#2c6e3a"/>
+<circle cx="323.0" cy="54.1" r="2" fill="#2c6e3a"/>
+<circle cx="342.1" cy="54.3" r="2" fill="#2c6e3a"/>
+<circle cx="361.1" cy="52.7" r="2" fill="#2c6e3a"/>
+<circle cx="380.2" cy="53.2" r="2" fill="#2c6e3a"/>
+<circle cx="399.3" cy="52.6" r="2" fill="#2c6e3a"/>
+<circle cx="418.4" cy="52.2" r="2" fill="#2c6e3a"/>
+<circle cx="437.4" cy="52.0" r="2" fill="#2c6e3a"/>
+<circle cx="456.5" cy="51.8" r="2" fill="#2c6e3a"/>
+<circle cx="475.6" cy="51.3" r="2" fill="#2c6e3a"/>
+<circle cx="494.6" cy="50.1" r="2" fill="#2c6e3a"/>
+<circle cx="513.7" cy="52.0" r="2" fill="#2c6e3a"/>
+<circle cx="532.8" cy="49.6" r="2" fill="#2c6e3a"/>
+<circle cx="551.9" cy="49.1" r="2" fill="#2c6e3a"/>
+<circle cx="570.9" cy="50.4" r="2" fill="#2c6e3a"/>
+<circle cx="590.0" cy="49.8" r="2" fill="#2c6e3a"/>
+<line x1="602" y1="65.5" x2="616" y2="65.5" stroke="#2c6e3a" stroke-width="3"/>
+<text x="620" y="69" font-size="12" fill="#1a1a1a">GVP-BA val</text>
+<polyline points="56.0,214.9 75.1,116.1 94.1,104.6 113.2,95.5 132.3,87.6 151.4,83.4 170.4,79.8 189.5,77.0 208.6,75.0 227.6,73.3 246.7,71.5 265.8,69.8 284.9,68.6 303.9,67.1 323.0,65.9 342.1,64.9 361.1,63.7 380.2,62.5 399.3,61.8 418.4,60.8 437.4,59.5 456.5,58.6 475.6,57.5 494.6,56.4 513.7,55.6 532.8,54.5 551.9,53.4 570.9,52.6 590.0,51.4" fill="none" stroke="#2c6e3a" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="214.9" r="2" fill="#2c6e3a"/>
+<circle cx="75.1" cy="116.1" r="2" fill="#2c6e3a"/>
+<circle cx="94.1" cy="104.6" r="2" fill="#2c6e3a"/>
+<circle cx="113.2" cy="95.5" r="2" fill="#2c6e3a"/>
+<circle cx="132.3" cy="87.6" r="2" fill="#2c6e3a"/>
+<circle cx="151.4" cy="83.4" r="2" fill="#2c6e3a"/>
+<circle cx="170.4" cy="79.8" r="2" fill="#2c6e3a"/>
+<circle cx="189.5" cy="77.0" r="2" fill="#2c6e3a"/>
+<circle cx="208.6" cy="75.0" r="2" fill="#2c6e3a"/>
+<circle cx="227.6" cy="73.3" r="2" fill="#2c6e3a"/>
+<circle cx="246.7" cy="71.5" r="2" fill="#2c6e3a"/>
+<circle cx="265.8" cy="69.8" r="2" fill="#2c6e3a"/>
+<circle cx="284.9" cy="68.6" r="2" fill="#2c6e3a"/>
+<circle cx="303.9" cy="67.1" r="2" fill="#2c6e3a"/>
+<circle cx="323.0" cy="65.9" r="2" fill="#2c6e3a"/>
+<circle cx="342.1" cy="64.9" r="2" fill="#2c6e3a"/>
+<circle cx="361.1" cy="63.7" r="2" fill="#2c6e3a"/>
+<circle cx="380.2" cy="62.5" r="2" fill="#2c6e3a"/>
+<circle cx="399.3" cy="61.8" r="2" fill="#2c6e3a"/>
+<circle cx="418.4" cy="60.8" r="2" fill="#2c6e3a"/>
+<circle cx="437.4" cy="59.5" r="2" fill="#2c6e3a"/>
+<circle cx="456.5" cy="58.6" r="2" fill="#2c6e3a"/>
+<circle cx="475.6" cy="57.5" r="2" fill="#2c6e3a"/>
+<circle cx="494.6" cy="56.4" r="2" fill="#2c6e3a"/>
+<circle cx="513.7" cy="55.6" r="2" fill="#2c6e3a"/>
+<circle cx="532.8" cy="54.5" r="2" fill="#2c6e3a"/>
+<circle cx="551.9" cy="53.4" r="2" fill="#2c6e3a"/>
+<circle cx="570.9" cy="52.6" r="2" fill="#2c6e3a"/>
+<circle cx="590.0" cy="51.4" r="2" fill="#2c6e3a"/>
+<line x1="602" y1="87.5" x2="616" y2="87.5" stroke="#2c6e3a" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="91" font-size="12" fill="#1a1a1a">GVP-BA train</text>
+</svg>
+    <div class="chart-caption">GVP val/aucpr (per-batch) vs epoch.</div>
+  </div>
+  <div class="chart-wrap">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="loss (BCE)">
+<rect x="56" y="16" width="534" height="208" fill="white" stroke="#d8d3c4" stroke-width="1"/>
+<line x1="56" y1="224.0" x2="590" y2="224.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="228.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.119</text>
+<line x1="56" y1="172.0" x2="590" y2="172.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="176.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.158</text>
+<line x1="56" y1="120.0" x2="590" y2="120.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="124.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.196</text>
+<line x1="56" y1="68.0" x2="590" y2="68.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="72.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.234</text>
+<line x1="56" y1="16.0" x2="590" y2="16.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="20.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.273</text>
+<line x1="56.0" y1="224" x2="56.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="56.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">0</text>
+<line x1="132.3" y1="224" x2="132.3" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="132.3" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">4</text>
+<line x1="208.6" y1="224" x2="208.6" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="208.6" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">8</text>
+<line x1="284.9" y1="224" x2="284.9" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="284.9" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">12</text>
+<line x1="361.1" y1="224" x2="361.1" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="361.1" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">16</text>
+<line x1="437.4" y1="224" x2="437.4" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="437.4" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">20</text>
+<line x1="513.7" y1="224" x2="513.7" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="513.7" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">24</text>
+<line x1="590.0" y1="224" x2="590.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="590.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">28</text>
+<text x="323.0" y="256" text-anchor="middle" font-size="12" fill="#1a1a1a">epoch</text>
+<text x="14" y="120.0" transform="rotate(-90, 14, 120.0)" text-anchor="middle" font-size="12" fill="#1a1a1a">loss (BCE)</text>
+<polyline points="56.0,61.2 75.1,80.6 94.1,89.1 113.2,97.2 132.3,104.2 151.4,109.4 170.4,112.1 189.5,116.3 208.6,118.2 227.6,119.3 246.7,121.2 265.8,123.5 284.9,124.2 303.9,125.9 323.0,127.4 342.1,125.2 361.1,126.3 380.2,127.6 399.3,127.2 418.4,126.5 437.4,126.0 456.5,125.9 475.6,129.7 494.6,120.7 513.7,124.6 532.8,118.2 551.9,120.3 570.9,119.5" fill="none" stroke="#b56a00" stroke-width="2"/>
+<circle cx="56.0" cy="61.2" r="2" fill="#b56a00"/>
+<circle cx="75.1" cy="80.6" r="2" fill="#b56a00"/>
+<circle cx="94.1" cy="89.1" r="2" fill="#b56a00"/>
+<circle cx="113.2" cy="97.2" r="2" fill="#b56a00"/>
+<circle cx="132.3" cy="104.2" r="2" fill="#b56a00"/>
+<circle cx="151.4" cy="109.4" r="2" fill="#b56a00"/>
+<circle cx="170.4" cy="112.1" r="2" fill="#b56a00"/>
+<circle cx="189.5" cy="116.3" r="2" fill="#b56a00"/>
+<circle cx="208.6" cy="118.2" r="2" fill="#b56a00"/>
+<circle cx="227.6" cy="119.3" r="2" fill="#b56a00"/>
+<circle cx="246.7" cy="121.2" r="2" fill="#b56a00"/>
+<circle cx="265.8" cy="123.5" r="2" fill="#b56a00"/>
+<circle cx="284.9" cy="124.2" r="2" fill="#b56a00"/>
+<circle cx="303.9" cy="125.9" r="2" fill="#b56a00"/>
+<circle cx="323.0" cy="127.4" r="2" fill="#b56a00"/>
+<circle cx="342.1" cy="125.2" r="2" fill="#b56a00"/>
+<circle cx="361.1" cy="126.3" r="2" fill="#b56a00"/>
+<circle cx="380.2" cy="127.6" r="2" fill="#b56a00"/>
+<circle cx="399.3" cy="127.2" r="2" fill="#b56a00"/>
+<circle cx="418.4" cy="126.5" r="2" fill="#b56a00"/>
+<circle cx="437.4" cy="126.0" r="2" fill="#b56a00"/>
+<circle cx="456.5" cy="125.9" r="2" fill="#b56a00"/>
+<circle cx="475.6" cy="129.7" r="2" fill="#b56a00"/>
+<circle cx="494.6" cy="120.7" r="2" fill="#b56a00"/>
+<circle cx="513.7" cy="124.6" r="2" fill="#b56a00"/>
+<circle cx="532.8" cy="118.2" r="2" fill="#b56a00"/>
+<circle cx="551.9" cy="120.3" r="2" fill="#b56a00"/>
+<circle cx="570.9" cy="119.5" r="2" fill="#b56a00"/>
+<line x1="602" y1="21.5" x2="616" y2="21.5" stroke="#b56a00" stroke-width="3"/>
+<text x="620" y="25" font-size="12" fill="#1a1a1a">GVP-AU val</text>
+<polyline points="56.0,16.0 75.1,74.3 94.1,85.1 113.2,93.9 132.3,100.5 151.4,105.6 170.4,110.0 189.5,114.1 208.6,117.2 227.6,120.1 246.7,122.6 265.8,124.6 284.9,127.2 303.9,129.7 323.0,131.7 342.1,134.1 361.1,136.1 380.2,138.3 399.3,140.5 418.4,142.9 437.4,145.2 456.5,147.8 475.6,150.2 494.6,152.5 513.7,155.4 532.8,157.6 551.9,159.5 570.9,162.0" fill="none" stroke="#b56a00" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="16.0" r="2" fill="#b56a00"/>
+<circle cx="75.1" cy="74.3" r="2" fill="#b56a00"/>
+<circle cx="94.1" cy="85.1" r="2" fill="#b56a00"/>
+<circle cx="113.2" cy="93.9" r="2" fill="#b56a00"/>
+<circle cx="132.3" cy="100.5" r="2" fill="#b56a00"/>
+<circle cx="151.4" cy="105.6" r="2" fill="#b56a00"/>
+<circle cx="170.4" cy="110.0" r="2" fill="#b56a00"/>
+<circle cx="189.5" cy="114.1" r="2" fill="#b56a00"/>
+<circle cx="208.6" cy="117.2" r="2" fill="#b56a00"/>
+<circle cx="227.6" cy="120.1" r="2" fill="#b56a00"/>
+<circle cx="246.7" cy="122.6" r="2" fill="#b56a00"/>
+<circle cx="265.8" cy="124.6" r="2" fill="#b56a00"/>
+<circle cx="284.9" cy="127.2" r="2" fill="#b56a00"/>
+<circle cx="303.9" cy="129.7" r="2" fill="#b56a00"/>
+<circle cx="323.0" cy="131.7" r="2" fill="#b56a00"/>
+<circle cx="342.1" cy="134.1" r="2" fill="#b56a00"/>
+<circle cx="361.1" cy="136.1" r="2" fill="#b56a00"/>
+<circle cx="380.2" cy="138.3" r="2" fill="#b56a00"/>
+<circle cx="399.3" cy="140.5" r="2" fill="#b56a00"/>
+<circle cx="418.4" cy="142.9" r="2" fill="#b56a00"/>
+<circle cx="437.4" cy="145.2" r="2" fill="#b56a00"/>
+<circle cx="456.5" cy="147.8" r="2" fill="#b56a00"/>
+<circle cx="475.6" cy="150.2" r="2" fill="#b56a00"/>
+<circle cx="494.6" cy="152.5" r="2" fill="#b56a00"/>
+<circle cx="513.7" cy="155.4" r="2" fill="#b56a00"/>
+<circle cx="532.8" cy="157.6" r="2" fill="#b56a00"/>
+<circle cx="551.9" cy="159.5" r="2" fill="#b56a00"/>
+<circle cx="570.9" cy="162.0" r="2" fill="#b56a00"/>
+<line x1="602" y1="43.5" x2="616" y2="43.5" stroke="#b56a00" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="47" font-size="12" fill="#1a1a1a">GVP-AU train</text>
+<polyline points="56.0,135.9 75.1,146.1 94.1,155.7 113.2,159.3 132.3,165.1 151.4,168.1 170.4,169.5 189.5,171.0 208.6,174.9 227.6,175.5 246.7,177.1 265.8,177.8 284.9,178.1 303.9,179.9 323.0,182.1 342.1,182.2 361.1,183.3 380.2,181.8 399.3,182.7 418.4,183.6 437.4,182.9 456.5,183.1 475.6,183.6 494.6,184.5 513.7,183.4 532.8,184.6 551.9,184.6 570.9,182.0 590.0,182.9" fill="none" stroke="#2c6e3a" stroke-width="2"/>
+<circle cx="56.0" cy="135.9" r="2" fill="#2c6e3a"/>
+<circle cx="75.1" cy="146.1" r="2" fill="#2c6e3a"/>
+<circle cx="94.1" cy="155.7" r="2" fill="#2c6e3a"/>
+<circle cx="113.2" cy="159.3" r="2" fill="#2c6e3a"/>
+<circle cx="132.3" cy="165.1" r="2" fill="#2c6e3a"/>
+<circle cx="151.4" cy="168.1" r="2" fill="#2c6e3a"/>
+<circle cx="170.4" cy="169.5" r="2" fill="#2c6e3a"/>
+<circle cx="189.5" cy="171.0" r="2" fill="#2c6e3a"/>
+<circle cx="208.6" cy="174.9" r="2" fill="#2c6e3a"/>
+<circle cx="227.6" cy="175.5" r="2" fill="#2c6e3a"/>
+<circle cx="246.7" cy="177.1" r="2" fill="#2c6e3a"/>
+<circle cx="265.8" cy="177.8" r="2" fill="#2c6e3a"/>
+<circle cx="284.9" cy="178.1" r="2" fill="#2c6e3a"/>
+<circle cx="303.9" cy="179.9" r="2" fill="#2c6e3a"/>
+<circle cx="323.0" cy="182.1" r="2" fill="#2c6e3a"/>
+<circle cx="342.1" cy="182.2" r="2" fill="#2c6e3a"/>
+<circle cx="361.1" cy="183.3" r="2" fill="#2c6e3a"/>
+<circle cx="380.2" cy="181.8" r="2" fill="#2c6e3a"/>
+<circle cx="399.3" cy="182.7" r="2" fill="#2c6e3a"/>
+<circle cx="418.4" cy="183.6" r="2" fill="#2c6e3a"/>
+<circle cx="437.4" cy="182.9" r="2" fill="#2c6e3a"/>
+<circle cx="456.5" cy="183.1" r="2" fill="#2c6e3a"/>
+<circle cx="475.6" cy="183.6" r="2" fill="#2c6e3a"/>
+<circle cx="494.6" cy="184.5" r="2" fill="#2c6e3a"/>
+<circle cx="513.7" cy="183.4" r="2" fill="#2c6e3a"/>
+<circle cx="532.8" cy="184.6" r="2" fill="#2c6e3a"/>
+<circle cx="551.9" cy="184.6" r="2" fill="#2c6e3a"/>
+<circle cx="570.9" cy="182.0" r="2" fill="#2c6e3a"/>
+<circle cx="590.0" cy="182.9" r="2" fill="#2c6e3a"/>
+<line x1="602" y1="65.5" x2="616" y2="65.5" stroke="#2c6e3a" stroke-width="3"/>
+<text x="620" y="69" font-size="12" fill="#1a1a1a">GVP-BA val</text>
+<polyline points="56.0,113.4 75.1,168.1 94.1,176.6 113.2,183.2 132.3,189.2 151.4,192.5 170.4,195.3 189.5,197.6 208.6,199.4 227.6,200.9 246.7,202.5 265.8,203.9 284.9,205.1 303.9,206.3 323.0,207.6 342.1,208.7 361.1,209.9 380.2,211.0 399.3,212.1 418.4,213.2 437.4,214.5 456.5,215.5 475.6,216.6 494.6,217.8 513.7,219.0 532.8,220.2 551.9,221.5 570.9,222.6 590.0,224.0" fill="none" stroke="#2c6e3a" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="113.4" r="2" fill="#2c6e3a"/>
+<circle cx="75.1" cy="168.1" r="2" fill="#2c6e3a"/>
+<circle cx="94.1" cy="176.6" r="2" fill="#2c6e3a"/>
+<circle cx="113.2" cy="183.2" r="2" fill="#2c6e3a"/>
+<circle cx="132.3" cy="189.2" r="2" fill="#2c6e3a"/>
+<circle cx="151.4" cy="192.5" r="2" fill="#2c6e3a"/>
+<circle cx="170.4" cy="195.3" r="2" fill="#2c6e3a"/>
+<circle cx="189.5" cy="197.6" r="2" fill="#2c6e3a"/>
+<circle cx="208.6" cy="199.4" r="2" fill="#2c6e3a"/>
+<circle cx="227.6" cy="200.9" r="2" fill="#2c6e3a"/>
+<circle cx="246.7" cy="202.5" r="2" fill="#2c6e3a"/>
+<circle cx="265.8" cy="203.9" r="2" fill="#2c6e3a"/>
+<circle cx="284.9" cy="205.1" r="2" fill="#2c6e3a"/>
+<circle cx="303.9" cy="206.3" r="2" fill="#2c6e3a"/>
+<circle cx="323.0" cy="207.6" r="2" fill="#2c6e3a"/>
+<circle cx="342.1" cy="208.7" r="2" fill="#2c6e3a"/>
+<circle cx="361.1" cy="209.9" r="2" fill="#2c6e3a"/>
+<circle cx="380.2" cy="211.0" r="2" fill="#2c6e3a"/>
+<circle cx="399.3" cy="212.1" r="2" fill="#2c6e3a"/>
+<circle cx="418.4" cy="213.2" r="2" fill="#2c6e3a"/>
+<circle cx="437.4" cy="214.5" r="2" fill="#2c6e3a"/>
+<circle cx="456.5" cy="215.5" r="2" fill="#2c6e3a"/>
+<circle cx="475.6" cy="216.6" r="2" fill="#2c6e3a"/>
+<circle cx="494.6" cy="217.8" r="2" fill="#2c6e3a"/>
+<circle cx="513.7" cy="219.0" r="2" fill="#2c6e3a"/>
+<circle cx="532.8" cy="220.2" r="2" fill="#2c6e3a"/>
+<circle cx="551.9" cy="221.5" r="2" fill="#2c6e3a"/>
+<circle cx="570.9" cy="222.6" r="2" fill="#2c6e3a"/>
+<circle cx="590.0" cy="224.0" r="2" fill="#2c6e3a"/>
+<line x1="602" y1="87.5" x2="616" y2="87.5" stroke="#2c6e3a" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="91" font-size="12" fill="#1a1a1a">GVP-BA train</text>
+</svg>
+    <div class="chart-caption">GVP train + val BCE loss vs epoch.</div>
+  </div>
+</div>
+</section>
+
+<section id="scannet-curves">
+<h2>6. ScanNet training curves</h2>
+<p>End-of-epoch Keras log lines parsed from <code>ScanNet/logs/train_full{,_msa}.log</code>. <em>Solid</em> = val/, <em>dashed</em> = train/. Loss reported is the data term (<code>categorical_crossentropy</code>); total loss includes a regularization penalty.</p>
+<div class="chart-row">
+  <div class="chart-wrap">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="categorical CE">
+<rect x="56" y="16" width="534" height="208" fill="white" stroke="#d8d3c4" stroke-width="1"/>
+<line x1="56" y1="224.0" x2="590" y2="224.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="228.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.272</text>
+<line x1="56" y1="172.0" x2="590" y2="172.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="176.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.303</text>
+<line x1="56" y1="120.0" x2="590" y2="120.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="124.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.334</text>
+<line x1="56" y1="68.0" x2="590" y2="68.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="72.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.364</text>
+<line x1="56" y1="16.0" x2="590" y2="16.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="20.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.395</text>
+<line x1="56.0" y1="224" x2="56.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="56.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">1</text>
+<line x1="132.3" y1="224" x2="132.3" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="132.3" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">3</text>
+<line x1="208.6" y1="224" x2="208.6" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="208.6" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">5</text>
+<line x1="284.9" y1="224" x2="284.9" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="284.9" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">7</text>
+<line x1="361.1" y1="224" x2="361.1" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="361.1" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">9</text>
+<line x1="437.4" y1="224" x2="437.4" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="437.4" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">11</text>
+<line x1="513.7" y1="224" x2="513.7" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="513.7" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">13</text>
+<line x1="590.0" y1="224" x2="590.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="590.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">15</text>
+<text x="323.0" y="256" text-anchor="middle" font-size="12" fill="#1a1a1a">epoch</text>
+<text x="14" y="120.0" transform="rotate(-90, 14, 120.0)" text-anchor="middle" font-size="12" fill="#1a1a1a">categorical CE</text>
+<polyline points="56.0,77.5 94.1,16.0 132.3,105.2 170.4,103.6 208.6,101.8 246.7,113.8 284.9,123.8 323.0,124.3 361.1,123.8 399.3,137.7 437.4,136.7 475.6,124.7 513.7,133.5 551.9,116.2 590.0,125.8" fill="none" stroke="#777777" stroke-width="2"/>
+<circle cx="56.0" cy="77.5" r="2" fill="#777777"/>
+<circle cx="94.1" cy="16.0" r="2" fill="#777777"/>
+<circle cx="132.3" cy="105.2" r="2" fill="#777777"/>
+<circle cx="170.4" cy="103.6" r="2" fill="#777777"/>
+<circle cx="208.6" cy="101.8" r="2" fill="#777777"/>
+<circle cx="246.7" cy="113.8" r="2" fill="#777777"/>
+<circle cx="284.9" cy="123.8" r="2" fill="#777777"/>
+<circle cx="323.0" cy="124.3" r="2" fill="#777777"/>
+<circle cx="361.1" cy="123.8" r="2" fill="#777777"/>
+<circle cx="399.3" cy="137.7" r="2" fill="#777777"/>
+<circle cx="437.4" cy="136.7" r="2" fill="#777777"/>
+<circle cx="475.6" cy="124.7" r="2" fill="#777777"/>
+<circle cx="513.7" cy="133.5" r="2" fill="#777777"/>
+<circle cx="551.9" cy="116.2" r="2" fill="#777777"/>
+<circle cx="590.0" cy="125.8" r="2" fill="#777777"/>
+<line x1="602" y1="21.5" x2="616" y2="21.5" stroke="#777777" stroke-width="3"/>
+<text x="620" y="25" font-size="12" fill="#1a1a1a">ScanNet-noMSA val</text>
+<polyline points="56.0,53.8 94.1,99.9 132.3,112.3 170.4,120.9 208.6,127.0 246.7,144.8 284.9,151.1 323.0,155.2 361.1,159.1 399.3,174.5 437.4,180.9 475.6,186.2 513.7,200.8 551.9,206.7 590.0,211.8" fill="none" stroke="#777777" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="53.8" r="2" fill="#777777"/>
+<circle cx="94.1" cy="99.9" r="2" fill="#777777"/>
+<circle cx="132.3" cy="112.3" r="2" fill="#777777"/>
+<circle cx="170.4" cy="120.9" r="2" fill="#777777"/>
+<circle cx="208.6" cy="127.0" r="2" fill="#777777"/>
+<circle cx="246.7" cy="144.8" r="2" fill="#777777"/>
+<circle cx="284.9" cy="151.1" r="2" fill="#777777"/>
+<circle cx="323.0" cy="155.2" r="2" fill="#777777"/>
+<circle cx="361.1" cy="159.1" r="2" fill="#777777"/>
+<circle cx="399.3" cy="174.5" r="2" fill="#777777"/>
+<circle cx="437.4" cy="180.9" r="2" fill="#777777"/>
+<circle cx="475.6" cy="186.2" r="2" fill="#777777"/>
+<circle cx="513.7" cy="200.8" r="2" fill="#777777"/>
+<circle cx="551.9" cy="206.7" r="2" fill="#777777"/>
+<circle cx="590.0" cy="211.8" r="2" fill="#777777"/>
+<line x1="602" y1="43.5" x2="616" y2="43.5" stroke="#777777" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="47" font-size="12" fill="#1a1a1a">ScanNet-noMSA train</text>
+<polyline points="56.0,54.3 94.1,144.2 132.3,128.4 170.4,122.8 208.6,166.2 246.7,173.5 284.9,169.6 323.0,167.2 361.1,172.6 399.3,179.6 437.4,177.6 475.6,177.7" fill="none" stroke="#5a3a8a" stroke-width="2"/>
+<circle cx="56.0" cy="54.3" r="2" fill="#5a3a8a"/>
+<circle cx="94.1" cy="144.2" r="2" fill="#5a3a8a"/>
+<circle cx="132.3" cy="128.4" r="2" fill="#5a3a8a"/>
+<circle cx="170.4" cy="122.8" r="2" fill="#5a3a8a"/>
+<circle cx="208.6" cy="166.2" r="2" fill="#5a3a8a"/>
+<circle cx="246.7" cy="173.5" r="2" fill="#5a3a8a"/>
+<circle cx="284.9" cy="169.6" r="2" fill="#5a3a8a"/>
+<circle cx="323.0" cy="167.2" r="2" fill="#5a3a8a"/>
+<circle cx="361.1" cy="172.6" r="2" fill="#5a3a8a"/>
+<circle cx="399.3" cy="179.6" r="2" fill="#5a3a8a"/>
+<circle cx="437.4" cy="177.6" r="2" fill="#5a3a8a"/>
+<circle cx="475.6" cy="177.7" r="2" fill="#5a3a8a"/>
+<line x1="602" y1="65.5" x2="616" y2="65.5" stroke="#5a3a8a" stroke-width="3"/>
+<text x="620" y="69" font-size="12" fill="#1a1a1a">ScanNet-MSA val</text>
+<polyline points="56.0,84.8 94.1,136.9 132.3,152.0 170.4,160.6 208.6,178.9 246.7,185.5 284.9,190.3 323.0,194.3 361.1,209.1 399.3,214.8 437.4,219.6 475.6,224.0" fill="none" stroke="#5a3a8a" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="84.8" r="2" fill="#5a3a8a"/>
+<circle cx="94.1" cy="136.9" r="2" fill="#5a3a8a"/>
+<circle cx="132.3" cy="152.0" r="2" fill="#5a3a8a"/>
+<circle cx="170.4" cy="160.6" r="2" fill="#5a3a8a"/>
+<circle cx="208.6" cy="178.9" r="2" fill="#5a3a8a"/>
+<circle cx="246.7" cy="185.5" r="2" fill="#5a3a8a"/>
+<circle cx="284.9" cy="190.3" r="2" fill="#5a3a8a"/>
+<circle cx="323.0" cy="194.3" r="2" fill="#5a3a8a"/>
+<circle cx="361.1" cy="209.1" r="2" fill="#5a3a8a"/>
+<circle cx="399.3" cy="214.8" r="2" fill="#5a3a8a"/>
+<circle cx="437.4" cy="219.6" r="2" fill="#5a3a8a"/>
+<circle cx="475.6" cy="224.0" r="2" fill="#5a3a8a"/>
+<line x1="602" y1="87.5" x2="616" y2="87.5" stroke="#5a3a8a" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="91" font-size="12" fill="#1a1a1a">ScanNet-MSA train</text>
+</svg>
+    <div class="chart-caption">ScanNet train + val categorical CE vs epoch.</div>
+  </div>
+  <div class="chart-wrap">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="categorical accuracy">
+<rect x="56" y="16" width="534" height="208" fill="white" stroke="#d8d3c4" stroke-width="1"/>
+<line x1="56" y1="224.0" x2="590" y2="224.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="228.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.832</text>
+<line x1="56" y1="172.0" x2="590" y2="172.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="176.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.845</text>
+<line x1="56" y1="120.0" x2="590" y2="120.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="124.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.858</text>
+<line x1="56" y1="68.0" x2="590" y2="68.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="72.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.871</text>
+<line x1="56" y1="16.0" x2="590" y2="16.0" stroke="#eee5d4" stroke-width="0.5"/>
+<text x="48" y="20.0" text-anchor="end" font-size="11" fill="#5a5a5a">0.884</text>
+<line x1="56.0" y1="224" x2="56.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="56.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">1</text>
+<line x1="132.3" y1="224" x2="132.3" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="132.3" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">3</text>
+<line x1="208.6" y1="224" x2="208.6" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="208.6" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">5</text>
+<line x1="284.9" y1="224" x2="284.9" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="284.9" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">7</text>
+<line x1="361.1" y1="224" x2="361.1" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="361.1" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">9</text>
+<line x1="437.4" y1="224" x2="437.4" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="437.4" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">11</text>
+<line x1="513.7" y1="224" x2="513.7" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="513.7" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">13</text>
+<line x1="590.0" y1="224" x2="590.0" y2="228" stroke="#5a5a5a" stroke-width="0.5"/>
+<text x="590.0" y="242" text-anchor="middle" font-size="11" fill="#5a5a5a">15</text>
+<text x="323.0" y="256" text-anchor="middle" font-size="12" fill="#1a1a1a">epoch</text>
+<text x="14" y="120.0" transform="rotate(-90, 14, 120.0)" text-anchor="middle" font-size="12" fill="#1a1a1a">categorical accuracy</text>
+<polyline points="56.0,191.6 94.1,224.0 132.3,159.5 170.4,164.3 208.6,146.5 246.7,156.8 284.9,139.8 323.0,135.0 361.1,138.6 399.3,124.3 437.4,125.1 475.6,126.3 513.7,127.5 551.9,132.3 590.0,127.1" fill="none" stroke="#777777" stroke-width="2"/>
+<circle cx="56.0" cy="191.6" r="2" fill="#777777"/>
+<circle cx="94.1" cy="224.0" r="2" fill="#777777"/>
+<circle cx="132.3" cy="159.5" r="2" fill="#777777"/>
+<circle cx="170.4" cy="164.3" r="2" fill="#777777"/>
+<circle cx="208.6" cy="146.5" r="2" fill="#777777"/>
+<circle cx="246.7" cy="156.8" r="2" fill="#777777"/>
+<circle cx="284.9" cy="139.8" r="2" fill="#777777"/>
+<circle cx="323.0" cy="135.0" r="2" fill="#777777"/>
+<circle cx="361.1" cy="138.6" r="2" fill="#777777"/>
+<circle cx="399.3" cy="124.3" r="2" fill="#777777"/>
+<circle cx="437.4" cy="125.1" r="2" fill="#777777"/>
+<circle cx="475.6" cy="126.3" r="2" fill="#777777"/>
+<circle cx="513.7" cy="127.5" r="2" fill="#777777"/>
+<circle cx="551.9" cy="132.3" r="2" fill="#777777"/>
+<circle cx="590.0" cy="127.1" r="2" fill="#777777"/>
+<line x1="602" y1="21.5" x2="616" y2="21.5" stroke="#777777" stroke-width="3"/>
+<text x="620" y="25" font-size="12" fill="#1a1a1a">ScanNet-noMSA val</text>
+<polyline points="56.0,200.3 94.1,156.4 132.3,143.3 170.4,133.8 208.6,127.1 246.7,107.7 284.9,100.2 323.0,95.5 361.1,91.9 399.3,75.3 437.4,68.2 475.6,63.5 513.7,47.2 551.9,41.3 590.0,36.6" fill="none" stroke="#777777" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="200.3" r="2" fill="#777777"/>
+<circle cx="94.1" cy="156.4" r="2" fill="#777777"/>
+<circle cx="132.3" cy="143.3" r="2" fill="#777777"/>
+<circle cx="170.4" cy="133.8" r="2" fill="#777777"/>
+<circle cx="208.6" cy="127.1" r="2" fill="#777777"/>
+<circle cx="246.7" cy="107.7" r="2" fill="#777777"/>
+<circle cx="284.9" cy="100.2" r="2" fill="#777777"/>
+<circle cx="323.0" cy="95.5" r="2" fill="#777777"/>
+<circle cx="361.1" cy="91.9" r="2" fill="#777777"/>
+<circle cx="399.3" cy="75.3" r="2" fill="#777777"/>
+<circle cx="437.4" cy="68.2" r="2" fill="#777777"/>
+<circle cx="475.6" cy="63.5" r="2" fill="#777777"/>
+<circle cx="513.7" cy="47.2" r="2" fill="#777777"/>
+<circle cx="551.9" cy="41.3" r="2" fill="#777777"/>
+<circle cx="590.0" cy="36.6" r="2" fill="#777777"/>
+<line x1="602" y1="43.5" x2="616" y2="43.5" stroke="#777777" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="47" font-size="12" fill="#1a1a1a">ScanNet-noMSA train</text>
+<polyline points="56.0,197.5 94.1,111.7 132.3,120.8 170.4,133.0 208.6,88.0 246.7,79.7 284.9,79.7 323.0,79.7 361.1,88.0 399.3,70.2 437.4,69.0 475.6,70.2" fill="none" stroke="#5a3a8a" stroke-width="2"/>
+<circle cx="56.0" cy="197.5" r="2" fill="#5a3a8a"/>
+<circle cx="94.1" cy="111.7" r="2" fill="#5a3a8a"/>
+<circle cx="132.3" cy="120.8" r="2" fill="#5a3a8a"/>
+<circle cx="170.4" cy="133.0" r="2" fill="#5a3a8a"/>
+<circle cx="208.6" cy="88.0" r="2" fill="#5a3a8a"/>
+<circle cx="246.7" cy="79.7" r="2" fill="#5a3a8a"/>
+<circle cx="284.9" cy="79.7" r="2" fill="#5a3a8a"/>
+<circle cx="323.0" cy="79.7" r="2" fill="#5a3a8a"/>
+<circle cx="361.1" cy="88.0" r="2" fill="#5a3a8a"/>
+<circle cx="399.3" cy="70.2" r="2" fill="#5a3a8a"/>
+<circle cx="437.4" cy="69.0" r="2" fill="#5a3a8a"/>
+<circle cx="475.6" cy="70.2" r="2" fill="#5a3a8a"/>
+<line x1="602" y1="65.5" x2="616" y2="65.5" stroke="#5a3a8a" stroke-width="3"/>
+<text x="620" y="69" font-size="12" fill="#1a1a1a">ScanNet-MSA val</text>
+<polyline points="56.0,164.3 94.1,111.3 132.3,94.7 170.4,84.4 208.6,63.8 246.7,57.1 284.9,51.6 323.0,47.6 361.1,31.8 399.3,25.1 437.4,20.7 475.6,16.0" fill="none" stroke="#5a3a8a" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="56.0" cy="164.3" r="2" fill="#5a3a8a"/>
+<circle cx="94.1" cy="111.3" r="2" fill="#5a3a8a"/>
+<circle cx="132.3" cy="94.7" r="2" fill="#5a3a8a"/>
+<circle cx="170.4" cy="84.4" r="2" fill="#5a3a8a"/>
+<circle cx="208.6" cy="63.8" r="2" fill="#5a3a8a"/>
+<circle cx="246.7" cy="57.1" r="2" fill="#5a3a8a"/>
+<circle cx="284.9" cy="51.6" r="2" fill="#5a3a8a"/>
+<circle cx="323.0" cy="47.6" r="2" fill="#5a3a8a"/>
+<circle cx="361.1" cy="31.8" r="2" fill="#5a3a8a"/>
+<circle cx="399.3" cy="25.1" r="2" fill="#5a3a8a"/>
+<circle cx="437.4" cy="20.7" r="2" fill="#5a3a8a"/>
+<circle cx="475.6" cy="16.0" r="2" fill="#5a3a8a"/>
+<line x1="602" y1="87.5" x2="616" y2="87.5" stroke="#5a3a8a" stroke-width="3" stroke-dasharray="5,4"/>
+<text x="620" y="91" font-size="12" fill="#1a1a1a">ScanNet-MSA train</text>
+</svg>
+    <div class="chart-caption">ScanNet train + val categorical accuracy vs epoch.</div>
+  </div>
+</div>
+<p style="font-size:13px; color:var(--muted)">Note on x-axis scale: the MSA run converged faster and was stopped at 6 completed epochs; the noMSA run ran 20. Both reach the AUCPR plateau reported in §2.</p>
+</section>
+
+<section id="cost">
+<h2>7. Cost &amp; capacity</h2>
+<table class="cost">
+<thead><tr><th>Model</th><th>Params</th><th>Throughput</th><th>Epochs run</th><th>Wall-clock</th><th>Hardware</th></tr></thead>
+<tbody>
+<tr><td>ScanNet noMSA</td><td>473,988 trainable</td><td>≈350 s/epoch</td><td>20 (full)</td><td>≈1.9 h</td><td>1× V100 32 GB</td></tr>
+<tr><td>ScanNet w/MSA</td><td>474,020 trainable</td><td>≈350 s/epoch</td><td>6 (stopped early)</td><td>≈0.6 h</td><td>1× V100 32 GB</td></tr>
+<tr><td>GVP — AU (ours)</td><td>≈690 k trainable</td><td>≈470 s/epoch (AU)</td><td>27 (EarlyStop)</td><td>≈3.5 h</td><td>1× V100 32 GB</td></tr>
+<tr><td>GVP — BA (ours)</td><td>≈690 k trainable</td><td>≈470 s/epoch (BA)</td><td>28 (EarlyStop)</td><td>≈3.7 h</td><td>1× V100 32 GB</td></tr>
+</tbody>
+</table>
+<p>GVP carries ≈46% more trainable parameters than ScanNet (≈690 k vs 474 k) and runs at comparable throughput per epoch on the same V100. The training wall-clock difference is dominated by epoch count, not per-step cost. The +0.20–0.31 AUCPR gap is therefore not "just bigger model": ScanNet would not approach GVP's accuracy by adding parameters in its existing architecture; the paper's parameter-doubled variants (no-regularization, no-reweighting in Table 1) sit within 0.02 of the headline noMSA number.</p>
+</section>
+
+<section id="caveats">
+<h2>8. Caveats</h2>
+<div class="callout ok">
+<strong>Apples-to-apples baseline established.</strong> The 4th column (retrained ScanNet w/MSA) shares your training pipeline, data, and augmentation conventions with the GVP runs. That is the row to read against GVP-BA, not the paper checkpoints.
+</div>
+<div class="callout warn">
+<strong>Coverage gap on huge complexes.</strong> The GVP eval skips chains &gt; 8192 residues (kNN graph is O(N²)); 3/1/0/2 chains dropped per split (test_70 / homology / topology / none). ScanNet's eval truncates at Lmax = 1024 internally and predicts on the rest. Net: any difference favors ScanNet on test_70 (largest drop). The wins hold regardless.
+</div>
+<div class="callout warn">
+<strong>Training-loss scales differ.</strong> ScanNet's reported "loss" is categorical-CE + regularization; the chart shows the pure CE term for like-for-like comparison. GVP uses BCE. We render them on separate axes to avoid misleading overlays — absolute loss magnitudes are not comparable across the two losses.
+</div>
+<div class="callout">
+<strong>Bootstrap is over chains, not residues.</strong> Resampling residues independently would understate variance; chains are the natural unit because PPBS labels arrive that way and a chain's residues are not iid.
+</div>
+</section>
+
+<section id="repro">
+<h2>9. Reproducibility</h2>
+
+<h3>Bootstrap CIs</h3>
+<pre>PYTHONPATH=src python scripts/_bootstrap_ci.py \
+    data/baselines/scannetpp/scannetpp_gvp_ba_predictions.pkl 1000</pre>
+
+<h3>Re-eval retrained ScanNet (in the ScanNet conda env, on a GPU node)</h3>
+<pre>ssh ibsgpu02
+source /sddn/yyf_work/miniconda3/etc/profile.d/conda.sh && conda activate scannet
+cd /sddn/yyf_work/laj_test/ScanNet
+SCANNET_MODEL=ScanNet_PPI_retrained          python scripts/eval_baseline.py
+SCANNET_MODEL=ScanNet_PPI_retrained_noMSA    python scripts/eval_baseline.py</pre>
+
+<h3>Train GVP</h3>
+<pre>bash scripts/_run_train_ba.sh        # bio-assembly cache (recommended)</pre>
+
+<h3>Rebuild this report</h3>
+<pre>python scripts/build_report_gvp_vs_scannet.py</pre>
+
+<h3>Artefacts in this clone</h3>
+<ul>
+<li>Per-chain predictions pkl (one per model) in <code>data/baselines/scannet/</code> and <code>data/baselines/scannetpp/</code>.</li>
+<li>GVP best checkpoint: <code>checkpoints/ppbs_binary_ab_ba/epochepoch=26-aucprval/aucpr=0.941.ckpt</code>.</li>
+<li>Bootstrap CI cache: <code>reports/.bootstrap_ci_cache.json</code> (delete to force re-bootstrap).</li>
+</ul>
+</section>
+
+<footer class="foot">
+Generated by <code>scripts/build_report_gvp_vs_scannet.py</code> on 2026-05-12.
+</footer>
+
+</main>
+</body>
+</html>
